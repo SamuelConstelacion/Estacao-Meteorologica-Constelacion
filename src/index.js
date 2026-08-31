@@ -75,6 +75,25 @@ export default {
 
 
     // ==========================================
+    
+    // ==========================================
+// API - ALERTA RIO
+// ==========================================
+
+if (
+  url.pathname === "/api/alertario" &&
+  request.method === "GET"
+) {
+
+  return Response.json({
+    sucesso: true,
+    fonte: "Sistema Alerta Rio - Prefeitura do Rio de Janeiro",
+    cidade: "Rio de Janeiro",
+    estacoes: 33,
+    mensagem: "Integração com Alerta Rio preparada"
+  });
+}
+    
     // SITE
     // ==========================================
 
