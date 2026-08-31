@@ -75,8 +75,6 @@ export default {
 
 
     // ==========================================
-    
-    // ==========================================
 // API - ALERTA RIO
 // ==========================================
 
@@ -85,13 +83,164 @@ if (
   request.method === "GET"
 ) {
 
-  return Response.json({
-    sucesso: true,
-    fonte: "Sistema Alerta Rio - Prefeitura do Rio de Janeiro",
-    cidade: "Rio de Janeiro",
-    estacoes: 33,
-    mensagem: "Integração com Alerta Rio preparada"
-  });
+  try {
+
+    const resposta = await fetch(
+      "https://websempre.rio.rj.gov.br/estacoes/"
+    );
+
+    if (!resposta.ok) {
+      throw new Error(
+        "Erro ao acessar o Alerta Rio"
+      );
+    }
+
+    const html = await resposta.text();
+
+
+    // ------------------------------------------
+    // Localiza a linha meteorológica de
+    // São Cristóvão
+    // ------------------------------------------
+
+    const linhas =
+      html.match(/<tr[\s\S]*?<\/tr>/gi) || [];
+
+
+    let dadosMeteorologicos = null;
+
+
+    for (const linha of linhas) {
+
+      if (
+        linha.includes("São Cristóvão") ||
+        linha.includes("S%C3%A3o")
+      ) {
+
+        const celulas =
+          linha.match(
+            /<td[\s\S]*?<\/td>/gi
+          ) || [];
+
+        const valores =
+          celulas.map(celula =>
+            celula
+              .replace(/<[^>]*>/g, "")
+              .replace(/&nbsp;/g, " ")
+              .trim()
+          );
+
+
+        /*
+         * A linha meteorológica possui:
+         *
+         * Estação
+         * Hora
+         * Temperatura
+         * Umidade
+         * Pressão
+         * Ponto de orvalho
+         * Vento
+         * Direção
+         *
+         * A linha de chuva possui muitas
+         * colunas, portanto ignoramos essa.
+         */
+
+        if (valores.length >= 8) {
+
+          dadosMeteorologicos = valores;
+
+        }
+
+      }
+
+    }
+
+
+    if (!dadosMeteorologicos) {
+
+      return Response.json(
+        {
+          sucesso: false,
+          erro:
+            "Não foi possível localizar São Cristóvão"
+        },
+        { status: 502 }
+      );
+
+    }
+
+
+    // ------------------------------------------
+    // Retorna os dados
+    // ------------------------------------------
+
+    return Response.json({
+
+      sucesso: true,
+
+      fonte:
+        "Sistema Alerta Rio - Prefeitura do Rio de Janeiro",
+
+      estacao:
+        "São Cristóvão",
+
+      numero_estacao:
+        32,
+
+      dados: {
+
+        horario:
+          dadosMeteorologicos[1],
+
+        temperatura:
+          dadosMeteorologicos[2],
+
+        umidade:
+          dadosMeteorologicos[3],
+
+        pressao:
+          dadosMeteorologicos[4],
+
+        ponto_orvalho:
+          dadosMeteorologicos[5],
+
+        vento:
+          dadosMeteorologicos[6],
+
+        direcao_vento:
+          dadosMeteorologicos[7]
+
+      }
+
+    });
+
+
+  } catch (erro) {
+
+    console.error(
+      "Erro Alerta Rio:",
+      erro
+    );
+
+
+    return Response.json(
+
+      {
+        sucesso: false,
+
+        erro:
+          "Não foi possível consultar o Alerta Rio"
+
+      },
+
+      { status: 502 }
+
+    );
+
+  }
+
 }
     
     // SITE
