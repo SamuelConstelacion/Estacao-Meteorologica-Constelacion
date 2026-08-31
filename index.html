@@ -533,29 +533,157 @@ async function atualizarAlertaRio() {
             await resposta.json();
 
         if (!dados.sucesso) {
-            throw new Error('Alerta Rio indisponível');
+            throw new Error(
+                'Alerta Rio indisponível'
+            );
         }
 
-        /*
-         * A rota está funcionando.
-         * Os dados meteorológicos reais serão
-         * conectados na próxima etapa.
-         */
+        const dadosRio =
+            dados.dados;
+
+
+        const container =
+            document.getElementById(
+                'dadosAlertaRio'
+            );
+
+
+        container.innerHTML = `
+
+            <div class="card">
+
+                <div class="icon">
+                    🌡️
+                </div>
+
+                <div class="label">
+                    Temperatura
+                </div>
+
+                <div class="value">
+                    ${dadosRio.temperatura}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    💧
+                </div>
+
+                <div class="label">
+                    Umidade
+                </div>
+
+                <div class="value">
+                    ${dadosRio.umidade}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    ⬇️
+                </div>
+
+                <div class="label">
+                    Pressão
+                </div>
+
+                <div class="value">
+                    ${dadosRio.pressao}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    💨
+                </div>
+
+                <div class="label">
+                    Vento
+                </div>
+
+                <div class="value">
+                    ${dadosRio.vento}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="icon">
+                    🧭
+                </div>
+
+                <div class="label">
+                    Direção
+                </div>
+
+                <div class="value">
+                    ${dadosRio.direcao_vento}
+                </div>
+
+            </div>
+
+        `;
+
+
+        // Atualização
+
+        const titulo =
+            document.querySelector(
+                '#dadosAlertaRio'
+            ).parentElement;
+
 
         console.log(
-            'Alerta Rio conectado:',
-            dados
+            'Alerta Rio atualizado:',
+            dadosRio.horario
         );
+
 
     } catch (erro) {
 
         console.error(
-            'Erro Alerta Rio:',
+            'Erro ao atualizar Alerta Rio:',
             erro
         );
 
+
+        const container =
+            document.getElementById(
+                'dadosAlertaRio'
+            );
+
+
+        container.innerHTML = `
+
+            <div style="
+                grid-column: 1 / -1;
+                text-align: center;
+                padding: 20px;
+                color: #c62828;
+            ">
+
+                🔴 Dados do Alerta Rio
+                indisponíveis no momento.
+
+            </div>
+
+        `;
+
     }
-    }
+
+}
     
 async function atualizarPrevisao() {
 
