@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Estação Meteorológica</title>
+    <title>Estação Meteorológica Constelación</title>
 
     <style>
         body {
@@ -42,6 +42,7 @@
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .cards {
@@ -74,16 +75,52 @@
             margin-top: 5px;
         }
 
+        .historico {
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .historico h2 {
+            margin-top: 0;
+            font-size: 19px;
+            text-align: center;
+        }
+
+        .grafico {
+            width: 100%;
+            height: 260px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ultima-atualizacao {
+            text-align: center;
+            color: #607d8b;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
         footer {
             text-align: center;
             padding: 30px;
             color: #78909c;
             font-size: 13px;
         }
+
+        .simulado {
+            color: #ef6c00;
+            font-weight: bold;
+        }
     </style>
 </head>
 
-    <body>
+<body>
 
 <header>
     <h1>🌦️ Estação Meteorológica Constelación</h1>
@@ -92,8 +129,8 @@
 
 <div class="container">
 
-    <div class="status">
-        🟢 Sistema em implantação
+    <div class="status" id="status">
+        🟡 Conectando ao sistema...
     </div>
 
     <div class="cards">
@@ -101,105 +138,284 @@
         <div class="card">
             <div class="icon">🌡️</div>
             <div class="label">Temperatura</div>
-            <div class="value">-- °C</div>
+            <div class="value" id="temperatura">-- °C</div>
         </div>
 
         <div class="card">
             <div class="icon">💧</div>
             <div class="label">Umidade</div>
-            <div class="value">-- %</div>
+            <div class="value" id="umidade">-- %</div>
         </div>
 
         <div class="card">
             <div class="icon">⬇️</div>
             <div class="label">Pressão</div>
-            <div class="value">-- hPa</div>
+            <div class="value" id="pressao">-- hPa</div>
         </div>
 
         <div class="card">
             <div class="icon">🌧️</div>
             <div class="label">Chuva</div>
-            <div class="value">-- mm</div>
+            <div class="value" id="chuva">-- mm</div>
         </div>
 
         <div class="card">
             <div class="icon">💨</div>
             <div class="label">Vento</div>
-            <div class="value">-- km/h</div>
+            <div class="value" id="vento">-- km/h</div>
         </div>
 
         <div class="card">
             <div class="icon">🧭</div>
             <div class="label">Direção do vento</div>
-            <div class="value">--</div>
+            <div class="value" id="direcao">--</div>
         </div>
 
+    </div>
+
+    <div class="historico">
+        <h2>📈 Temperatura — últimas leituras</h2>
+
+        <div class="grafico">
+            <canvas id="graficoTemperatura"></canvas>
+        </div>
+    </div>
+
+    <div class="historico">
+        <h2>💧 Umidade — últimas leituras</h2>
+
+        <div class="grafico">
+            <canvas id="graficoUmidade"></canvas>
+        </div>
+    </div>
+
+    <div class="ultima-atualizacao" id="ultimaAtualizacao">
+        Última atualização: --
     </div>
 
 </div>
 
 <footer>
     Estação Meteorológica Constelación<br>
-    Dados meteorológicos em tempo real
+    <span class="simulado">⚠️ Dados atualmente simulados</span>
 </footer>
 
 <script>
+
 async function atualizarDados() {
+
     try {
+
         const resposta = await fetch('/api/leituras');
+
         const dados = await resposta.json();
 
         if (!dados.sucesso || dados.leituras.length === 0) {
-            return;
+            throw new Error('Nenhuma leitura disponível');
         }
 
-        const leitura = dados.leituras[0];
+        const leituras = dados.leituras;
 
-        const valores = document.querySelectorAll('.value');
+        const atual = leituras[0];
 
-        valores[0].textContent =
-            leitura.temperatura !== null
-                ? `${leitura.temperatura} °C`
+        // Dados atuais
+
+        document.getElementById('temperatura').textContent =
+            atual.temperatura !== null
+                ? `${atual.temperatura} °C`
                 : '-- °C';
 
-        valores[1].textContent =
-            leitura.umidade !== null
-                ? `${leitura.umidade} %`
+        document.getElementById('umidade').textContent =
+            atual.umidade !== null
+                ? `${atual.umidade} %`
                 : '-- %';
 
-        valores[2].textContent =
-            leitura.pressao !== null
-                ? `${leitura.pressao} hPa`
+        document.getElementById('pressao').textContent =
+            atual.pressao !== null
+                ? `${atual.pressao} hPa`
                 : '-- hPa';
 
-        valores[3].textContent =
-            leitura.chuva !== null
-                ? `${leitura.chuva} mm`
+        document.getElementById('chuva').textContent =
+            atual.chuva !== null
+                ? `${atual.chuva} mm`
                 : '-- mm';
 
-        valores[4].textContent =
-            leitura.vento !== null
-                ? `${leitura.vento} km/h`
+        document.getElementById('vento').textContent =
+            atual.vento !== null
+                ? `${atual.vento} km/h`
                 : '-- km/h';
 
-        valores[5].textContent =
-            leitura.direcao_vento || '--';
+        document.getElementById('direcao').textContent =
+            atual.direcao_vento || '--';
 
-        document.querySelector('.status').innerHTML =
-            '🟢 Dados recebidos do sistema';
+
+        // Status
+
+        document.getElementById('status').innerHTML =
+            '🟢 Sistema online — dados recebidos';
+
+        
+        // Última atualização
+
+        const data = new Date(atual.data_hora);
+
+        document.getElementById('ultimaAtualizacao').textContent =
+            'Última atualização: ' +
+            data.toLocaleString('pt-BR');
+
+
+        // Gráficos
+
+        desenharGrafico(
+            'graficoTemperatura',
+            leituras,
+            'temperatura',
+            '°C'
+        );
+
+        desenharGrafico(
+            'graficoUmidade',
+            leituras,
+            'umidade',
+            '%'
+        );
 
     } catch (erro) {
-        console.error('Erro ao obter dados:', erro);
 
-        document.querySelector('.status').innerHTML =
+        console.error(erro);
+
+        document.getElementById('status').innerHTML =
             '🔴 Não foi possível atualizar os dados';
+
     }
 }
 
+
+// ------------------------------------
+// DESENHAR GRÁFICO
+// ------------------------------------
+
+function desenharGrafico(canvasId, leituras, campo, unidade) {
+
+    const canvas = document.getElementById(canvasId);
+
+    const contexto = canvas.getContext('2d');
+
+    const largura = canvas.clientWidth;
+    const altura = canvas.clientHeight;
+
+    const escala = window.devicePixelRatio || 1;
+
+    canvas.width = largura * escala;
+    canvas.height = altura * escala;
+
+    contexto.scale(escala, escala);
+
+    contexto.clearRect(0, 0, largura, altura);
+
+
+    const valores = leituras
+        .slice()
+        .reverse()
+        .map(leitura => Number(leitura[campo]))
+        .filter(valor => !isNaN(valor));
+
+
+    if (valores.length < 2) {
+        contexto.font = '14px Arial';
+        contexto.fillText(
+            'Aguardando mais dados...',
+            20,
+            altura / 2
+        );
+        return;
+    }
+
+
+    const minimo = Math.min(...valores);
+    const maximo = Math.max(...valores);
+
+    const margem = 30;
+
+    const intervalo =
+        (maximo - minimo) === 0
+            ? 1
+            : (maximo - minimo);
+
+
+    contexto.beginPath();
+
+
+    valores.forEach((valor, indice) => {
+
+        const x =
+            margem +
+            (indice / (valores.length - 1)) *
+            (largura - margem * 2);
+
+
+        const y =
+            altura -
+            margem -
+            ((valor - minimo) / intervalo) *
+            (altura - margem * 2);
+
+
+        if (indice === 0) {
+
+            contexto.moveTo(x, y);
+
+        } else {
+
+            contexto.lineTo(x, y);
+
+        }
+
+    });
+
+
+    contexto.stroke();
+
+
+    // Valores mínimo e máximo
+
+    contexto.font = '12px Arial';
+
+    contexto.fillText(
+        `${maximo.toFixed(1)} ${unidade}`,
+        5,
+        15
+    );
+
+    contexto.fillText(
+        `${minimo.toFixed(1)} ${unidade}`,
+        5,
+        altura - 5
+    );
+}
+
+
+// Atualização inicial
+
 atualizarDados();
 
-// Atualiza os dados a cada 60 segundos
-setInterval(atualizarDados, 60000);
-    </script>
-    </body>
-          </html>
+
+// Atualiza a cada 60 segundos
+
+setInterval(
+    atualizarDados,
+    60000
+);
+
+
+// Redesenha os gráficos quando a tela muda de tamanho
+
+window.addEventListener(
+    'resize',
+    atualizarDados
+);
+
+</script>
+
+</body>
+</html>
