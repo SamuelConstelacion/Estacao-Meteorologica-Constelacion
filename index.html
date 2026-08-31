@@ -281,11 +281,80 @@
         color: #78909c;
         font-size: 12px;
     ">
-        Fonte: Sistema Alerta Rio — Prefeitura do Rio de Janeiro
+        
+</div>
+
+    <!-- ==========================================
+     CHUVA - IRAJÁ
+========================================== -->
+
+<div class="card" style="margin-top: 20px;">
+
+    <div class="icon">🌧️</div>
+
+    <div class="label">
+        Chuva — Alerta Rio
+    </div>
+
+    <div style="
+        font-size: 14px;
+        color: #607d8b;
+        margin-top: 8px;
+    ">
+        📍 Estação Irajá
+    </div>
+
+    <div style="
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 15px;
+    ">
+
+        <div>
+            <div class="label">5 min</div>
+            <div class="value" id="chuva5min">
+                -- mm
+            </div>
+        </div>
+
+        <div>
+            <div class="label">1 hora</div>
+            <div class="value" id="chuva1h">
+                -- mm
+            </div>
+        </div>
+
+        <div>
+            <div class="label">6 horas</div>
+            <div class="value" id="chuva6h">
+                -- mm
+            </div>
+        </div>
+
+        <div>
+            <div class="label">24 horas</div>
+            <div class="value" id="chuva24h">
+                -- mm
+            </div>
+        </div>
+
+    </div>
+
+    <div id="horarioChuva" style="
+        margin-top: 15px;
+        color: #78909c;
+        font-size: 12px;
+    ">
+        Última leitura: --
     </div>
 
 </div>
 
+Fonte: Sistema Alerta Rio — Prefeitura do Rio de Janeiro
+</div>
+
+    
  <!-- ==========================================
      DEFESA CIVIL / COR-RIO
 ========================================== -->
@@ -386,7 +455,65 @@
 
 <script>
 
-async function atualizarDados() {
+
+    async function atualizarAlertaRio() {
+
+    try {
+
+        const resposta =
+            await fetch('/api/alertario');
+
+        const dados =
+            await resposta.json();
+
+        if (!dados.sucesso) {
+            return;
+        }
+
+        // --------------------------------------
+        // CHUVA - IRAJÁ
+        // --------------------------------------
+
+        if (dados.chuva) {
+
+            document.getElementById(
+                'chuva5min'
+            ).textContent =
+                `${dados.chuva.cinco_minutos} mm`;
+
+            document.getElementById(
+                'chuva1h'
+            ).textContent =
+                `${dados.chuva.uma_hora} mm`;
+
+            document.getElementById(
+                'chuva6h'
+            ).textContent =
+                `${dados.chuva.seis_horas} mm`;
+
+            document.getElementById(
+                'chuva24h'
+            ).textContent =
+                `${dados.chuva.vinte_quatro_horas} mm`;
+
+            document.getElementById(
+                'horarioChuva'
+            ).textContent =
+                `Última leitura: ${dados.chuva.horario}`;
+
+        }
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao atualizar chuva:',
+            erro
+        );
+
+    }
+
+    }
+    async function atualizarDados() {
 
     try {
 
@@ -595,7 +722,7 @@ setInterval(
     
 setInterval(
     atualizarAlertaRio,
-    300000
+    60000
 );
     
 setInterval(
