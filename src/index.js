@@ -97,7 +97,26 @@ if (
 
     const html = await resposta.text();
 
+console.log(
+  "TAMANHO HTML:",
+  html.length
+);
 
+console.log(
+  "TEM IRAJÁ:",
+  html.includes("Irajá")
+);
+
+console.log(
+  "TEM IRAJA:",
+  html.includes("Iraja")
+);
+
+console.log(
+  "TEM SÃO CRISTÓVÃO:",
+  html.includes("São Cristóvão")
+);
+    
     // ------------------------------------------
     // Localiza a linha meteorológica de
     // São Cristóvão
