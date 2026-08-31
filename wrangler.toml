@@ -9,3 +9,6 @@ database_id = "a6ce745d-8edc-4770-9ac7-5e5f9df75fc2"
 
 [assets]
 directory = "."
+
+[triggers]
+crons = ["*/5 * * * *"]
