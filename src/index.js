@@ -162,6 +162,138 @@ if (
 
       return Response.json(
         {
+// ==========================================
+// API - ALERTA RIO
+// ==========================================
+
+if (
+  url.pathname === "/api/alertario" &&
+  request.method === "GET"
+) {
+
+  try {
+
+    const resposta = await fetch(
+      "https://websempre.rio.rj.gov.br/estacoes/"
+    );
+
+    if (!resposta.ok) {
+      throw new Error(
+        "Erro ao acessar o Alerta Rio"
+      );
+    }
+
+    const html = await resposta.text();
+
+    const linhas =
+      html.match(/<tr[\s\S]*?<\/tr>/gi) || [];
+
+
+    // ==========================================
+    // DADOS METEOROLÓGICOS - SÃO CRISTÓVÃO
+    // ==========================================
+
+    let dadosMeteorologicos = null;
+
+
+    for (const linha of linhas) {
+
+      if (
+        linha.includes("São Cristóvão")
+      ) {
+
+        const celulas =
+          linha.match(
+            /<td[\s\S]*?<\/td>/gi
+          ) || [];
+
+        const valores =
+          celulas.map(celula =>
+            celula
+              .replace(/<[^>]*>/g, "")
+              .replace(/&nbsp;/g, " ")
+              .trim()
+          );
+
+
+        if (valores.length >= 8) {
+
+          dadosMeteorologicos = valores;
+
+        }
+
+      }
+
+    }
+
+
+    // ==========================================
+    // DADOS DE CHUVA - IRAJÁ
+    // ==========================================
+
+    let dadosChuva = null;
+
+
+    for (const linha of linhas) {
+
+      if (
+        linha.includes("Irajá")
+      ) {
+
+        const celulas =
+          linha.match(
+            /<td[\s\S]*?<\/td>/gi
+          ) || [];
+
+        const valores =
+          celulas.map(celula =>
+            celula
+              .replace(/<[^>]*>/g, "")
+              .replace(/&nbsp;/g, " ")
+              .trim()
+          );
+
+
+        /*
+         * Estrutura da tabela:
+         *
+         * 0 = número
+         * 1 = estação
+         * 2 = localização
+         * 3 = hora
+         * 4 = 5 minutos
+         * 5 = 10 minutos
+         * 6 = 15 minutos
+         * 7 = 30 minutos
+         * 8 = 1 hora
+         * 9 = 2 horas
+         * 10 = 3 horas
+         * 11 = 4 horas
+         * 12 = 6 horas
+         * 13 = 12 horas
+         * 14 = 24 horas
+         * 15 = 96 horas
+         */
+
+        if (valores.length >= 16) {
+
+          dadosChuva = valores;
+
+        }
+
+      }
+
+    }
+
+
+    // ==========================================
+    // VERIFICAÇÃO
+    // ==========================================
+
+    if (!dadosMeteorologicos) {
+
+      return Response.json(
+        {
           sucesso: false,
           erro:
             "Não foi possível localizar São Cristóvão"
@@ -172,9 +304,23 @@ if (
     }
 
 
-    // ------------------------------------------
-    // Retorna os dados
-    // ------------------------------------------
+    if (!dadosChuva) {
+
+      return Response.json(
+        {
+          sucesso: false,
+          erro:
+            "Não foi possível localizar Irajá"
+        },
+        { status: 502 }
+      );
+
+    }
+
+
+    // ==========================================
+    // RETORNO
+    // ==========================================
 
     return Response.json({
 
@@ -182,6 +328,11 @@ if (
 
       fonte:
         "Sistema Alerta Rio - Prefeitura do Rio de Janeiro",
+
+
+      // ----------------------------------------
+      // ESTAÇÃO METEOROLÓGICA
+      // ----------------------------------------
 
       estacao:
         "São Cristóvão",
@@ -211,6 +362,60 @@ if (
 
         direcao_vento:
           dadosMeteorologicos[7]
+
+      },
+
+
+      // ----------------------------------------
+      // ESTAÇÃO PLUVIOMÉTRICA
+      // ----------------------------------------
+
+      chuva: {
+
+        estacao:
+          "Irajá",
+
+        numero_estacao:
+          11,
+
+        horario:
+          dadosChuva[3],
+
+        cinco_minutos:
+          dadosChuva[4],
+
+        dez_minutos:
+          dadosChuva[5],
+
+        quinze_minutos:
+          dadosChuva[6],
+
+        trinta_minutos:
+          dadosChuva[7],
+
+        uma_hora:
+          dadosChuva[8],
+
+        duas_horas:
+          dadosChuva[9],
+
+        tres_horas:
+          dadosChuva[10],
+
+        quatro_horas:
+          dadosChuva[11],
+
+        seis_horas:
+          dadosChuva[12],
+
+        doze_horas:
+          dadosChuva[13],
+
+        vinte_quatro_horas:
+          dadosChuva[14],
+
+        noventa_e_seis_horas:
+          dadosChuva[15]
 
       }
 
