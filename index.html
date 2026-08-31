@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Estação Meteorológica</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f2f5f7;
+            color: #263238;
+        }
+
+        header {
+            background: #1976d2;
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .status {
+            text-align: center;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .icon {
+            font-size: 32px;
+        }
+
+        .label {
+            margin-top: 10px;
+            font-size: 15px;
+            color: #607d8b;
+        }
+
+        .value {
+            font-size: 27px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #78909c;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🌦️ Estação Meteorológica</h1>
+    <p>Condomínio Constelacion</p>
+</header>
+
+<div class="container">
+
+    <div class="status">
+        🟢 Sistema em implantação
+    </div>
+
+    <div class="cards">
+
+        <div class="card">
+            <div class="icon">🌡️</div>
+            <div class="label">Temperatura</div>
+            <div class="value">-- °C</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">💧</div>
+            <div class="label">Umidade</div>
+            <div class="value">-- %</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">⬇️</div>
+            <div class="label">Pressão</div>
+            <div class="value">-- hPa</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">🌧️</div>
+            <div class="label">Chuva</div>
+            <div class="value">-- mm</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">💨</div>
+            <div class="label">Vento</div>
+            <div class="value">-- km/h</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">🧭</div>
+            <div class="label">Direção do vento</div>
+            <div class="value">--</div>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    Estação Meteorológica do Condomínio<br>
+    Dados em tempo real — projeto em implantação
+</footer>
+
+</body>
+          </html>
