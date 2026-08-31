@@ -1,5 +1,7 @@
 name = "estacao-meteorologica-constelacion"
 compatibility_date = "2026-08-30"
 
-[assets]
-directory = "."
+[[d1_databases]]
+binding = "DB"
+database_name = "estacao-meteorologica-db"
+database_id = "a6ce745d-8edc-4770-9ac7-5e5f9df75fc2"
