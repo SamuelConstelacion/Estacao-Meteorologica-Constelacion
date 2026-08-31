@@ -83,7 +83,7 @@
     </style>
 </head>
 
-<body>
+    <body>
 
 <header>
     <h1>🌦️ Estação Meteorológica Constelación</h1>
@@ -143,5 +143,63 @@
     Dados meteorológicos em tempo real
 </footer>
 
-</body>
+<script>
+async function atualizarDados() {
+    try {
+        const resposta = await fetch('/api/leituras');
+        const dados = await resposta.json();
+
+        if (!dados.sucesso || dados.leituras.length === 0) {
+            return;
+        }
+
+        const leitura = dados.leituras[0];
+
+        const valores = document.querySelectorAll('.value');
+
+        valores[0].textContent =
+            leitura.temperatura !== null
+                ? `${leitura.temperatura} °C`
+                : '-- °C';
+
+        valores[1].textContent =
+            leitura.umidade !== null
+                ? `${leitura.umidade} %`
+                : '-- %';
+
+        valores[2].textContent =
+            leitura.pressao !== null
+                ? `${leitura.pressao} hPa`
+                : '-- hPa';
+
+        valores[3].textContent =
+            leitura.chuva !== null
+                ? `${leitura.chuva} mm`
+                : '-- mm';
+
+        valores[4].textContent =
+            leitura.vento !== null
+                ? `${leitura.vento} km/h`
+                : '-- km/h';
+
+        valores[5].textContent =
+            leitura.direcao_vento || '--';
+
+        document.querySelector('.status').innerHTML =
+            '🟢 Dados recebidos do sistema';
+
+    } catch (erro) {
+        console.error('Erro ao obter dados:', erro);
+
+        document.querySelector('.status').innerHTML =
+            '🔴 Não foi possível atualizar os dados';
+    }
+}
+
+atualizarDados();
+
+// Atualiza os dados a cada 60 segundos
+setInterval(atualizarDados, 60000);
+    </script>
+    </body>
           </html>
