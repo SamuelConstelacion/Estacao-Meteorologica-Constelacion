@@ -217,6 +217,74 @@
     </p>
     </div>
 
+<!-- ==========================================
+     ALERTA RIO
+========================================== -->
+
+<div class="historico">
+
+    <h2>🏙️ Alerta Rio</h2>
+
+    <p style="
+        text-align: center;
+        color: #607d8b;
+        font-size: 13px;
+        margin-top: -10px;
+    ">
+        Monitoramento meteorológico da Prefeitura do Rio de Janeiro
+    </p>
+
+    <div id="dadosAlertaRio"
+        style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+        "
+    >
+
+        <div class="card">
+            <div class="icon">🌡️</div>
+            <div class="label">Temperatura</div>
+            <div class="value">-- °C</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">💧</div>
+            <div class="label">Umidade</div>
+            <div class="value">-- %</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">🌧️</div>
+            <div class="label">Chuva</div>
+            <div class="value">-- mm</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">💨</div>
+            <div class="label">Vento</div>
+            <div class="value">-- km/h</div>
+        </div>
+
+        <div class="card">
+            <div class="icon">⬇️</div>
+            <div class="label">Pressão</div>
+            <div class="value">-- hPa</div>
+        </div>
+
+    </div>
+
+    <div style="
+        text-align: center;
+        margin-top: 15px;
+        color: #78909c;
+        font-size: 12px;
+    ">
+        Fonte: Sistema Alerta Rio — Prefeitura do Rio de Janeiro
+    </div>
+
+</div>
+    
     <div class="ultima-atualizacao" id="ultimaAtualizacao">
         Última atualização: --
     </div>
@@ -426,6 +494,7 @@ function desenharGrafico(canvasId, leituras, campo, unidade) {
 // Atualização inicial
 
 atualizarDados();
+atualizarAlertaRio();
 atualizarPrevisao();
 
 
@@ -435,6 +504,12 @@ setInterval(
     atualizarDados,
     60000
 );
+    
+setInterval(
+    atualizarAlertaRio,
+    300000
+);
+    
 setInterval(
     atualizarPrevisao,
     1800000
@@ -446,6 +521,42 @@ window.addEventListener(
     'resize',
     atualizarDados
 );
+
+async function atualizarAlertaRio() {
+
+    try {
+
+        const resposta =
+            await fetch('/api/alertario');
+
+        const dados =
+            await resposta.json();
+
+        if (!dados.sucesso) {
+            throw new Error('Alerta Rio indisponível');
+        }
+
+        /*
+         * A rota está funcionando.
+         * Os dados meteorológicos reais serão
+         * conectados na próxima etapa.
+         */
+
+        console.log(
+            'Alerta Rio conectado:',
+            dados
+        );
+
+    } catch (erro) {
+
+        console.error(
+            'Erro Alerta Rio:',
+            erro
+        );
+
+    }
+    }
+    
 async function atualizarPrevisao() {
 
     try {
