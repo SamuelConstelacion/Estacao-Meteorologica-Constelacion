@@ -188,6 +188,34 @@
             <canvas id="graficoUmidade"></canvas>
         </div>
     </div>
+    
+    <div class="historico">
+    <h2>🌐 Previsão meteorológica</h2>
+
+    <div id="previsao" style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+    ">
+        <div style="
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        ">
+            ⏳ Carregando previsão...
+        </div>
+    </div>
+
+    <p style="
+        text-align: center;
+        color: #78909c;
+        font-size: 12px;
+        margin-bottom: 0;
+    ">
+        Fonte: Open-Meteo
+    </p>
+    </div>
 
     <div class="ultima-atualizacao" id="ultimaAtualizacao">
         Última atualização: --
@@ -398,6 +426,7 @@ function desenharGrafico(canvasId, leituras, campo, unidade) {
 // Atualização inicial
 
 atualizarDados();
+atualizarPrevisao();
 
 
 // Atualiza a cada 60 segundos
@@ -406,7 +435,10 @@ setInterval(
     atualizarDados,
     60000
 );
-
+setInterval(
+    atualizarPrevisao,
+    1800000
+);
 
 // Redesenha os gráficos quando a tela muda de tamanho
 
@@ -414,7 +446,120 @@ window.addEventListener(
     'resize',
     atualizarDados
 );
+async function atualizarPrevisao() {
 
+    try {
+
+        const resposta =
+            await fetch('/api/previsao');
+
+        const dados =
+            await resposta.json();
+
+        if (!dados.sucesso) {
+            throw new Error('Previsão indisponível');
+        }
+
+        const horario =
+            dados.previsao.hourly.time;
+
+        const temperaturas =
+            dados.previsao.hourly.temperature_2m;
+
+        const chuva =
+            dados.previsao.hourly.precipitation_probability;
+
+        const vento =
+            dados.previsao.hourly.wind_speed_10m;
+
+
+        const previsao =
+            document.getElementById('previsao');
+
+
+        previsao.innerHTML = '';
+
+
+        // Mostra as próximas 6 horas
+
+        for (
+            let i = 0;
+            i < 6 && i < horario.length;
+            i++
+        ) {
+
+            const data =
+                new Date(horario[i]);
+
+
+            const hora =
+                data.toLocaleTimeString(
+                    'pt-BR',
+                    {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }
+                );
+
+
+            previsao.innerHTML += `
+
+                <div style="
+                    background: #f5f5f5;
+                    padding: 15px;
+                    border-radius: 10px;
+                    text-align: center;
+                ">
+
+                    <strong>${hora}</strong>
+
+                    <div style="
+                        font-size: 25px;
+                        margin: 8px 0;
+                    ">
+                        🌡️
+                    </div>
+
+                    <strong>
+                        ${temperaturas[i]} °C
+                    </strong>
+
+                    <div style="
+                        margin-top: 8px;
+                        font-size: 13px;
+                    ">
+                        🌧️ ${chuva[i]}%
+                    </div>
+
+                    <div style="
+                        margin-top: 5px;
+                        font-size: 13px;
+                    ">
+                        💨 ${vento[i]} km/h
+                    </div>
+
+                </div>
+            `;
+        }
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        document.getElementById(
+            'previsao'
+        ).innerHTML = `
+            <div style="
+                padding: 15px;
+                text-align: center;
+                color: #c62828;
+            ">
+                🔴 Previsão indisponível
+            </div>
+        `;
+    }
+            }
+    
 </script>
 
 </body>
