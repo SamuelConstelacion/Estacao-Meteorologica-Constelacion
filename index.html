@@ -3,1340 +3,1247 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Estação Meteorológica Constelación</title>
 
 <style>
+
 :root{
-  --navy:#10233f;
-  --blue:#1478f2;
-  --cyan:#09a9d8;
-  --green:#43b947;
-  --orange:#ff7a00;
-  --purple:#8d4de8;
-  --yellow:#e9b900;
-  --red:#e84d4d;
-  --ink:#132238;
-  --muted:#65748a;
-  --line:#e5ebf2;
-  --soft:#f7faff;
-  --white:#ffffff;
-  --shadow:0 8px 24px rgba(22,48,82,.08);
+    --blue:#1877e8;
+    --blue-dark:#135fbb;
+    --blue-light:#eaf4ff;
+
+    --orange:#ff8618;
+    --orange-light:#fff2e4;
+
+    --green:#4caf50;
+    --green-light:#edf9ee;
+
+    --purple:#9b51e0;
+    --purple-light:#f6edff;
+
+    --cyan:#17a8c7;
+    --cyan-light:#e8f9fc;
+
+    --yellow:#e3b900;
+    --yellow-light:#fffbea;
+
+    --red:#e74c3c;
+
+    --text:#172235;
+    --text2:#596779;
+    --muted:#7c8997;
+
+    --bg:#f5f8fc;
+    --card:#ffffff;
+    --border:#e2e8f0;
+
+    --shadow:0 8px 25px rgba(29,55,85,.07);
+    --radius:20px;
 }
 
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
 
 body{
-  margin:0;
-  background:#f7f9fc;
-  color:var(--ink);
-  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 }
 
-button,a{
-  font:inherit;
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header{
+    background:white;
+    border-bottom:1px solid var(--border);
+    padding:18px 24px;
+    position:sticky;
+    top:0;
+    z-index:20;
 }
 
-/* =========================
-   ESTRUTURA
-========================= */
+.header-inner{
+    max-width:1400px;
+    margin:auto;
 
-.app{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:82px 1fr;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
 }
 
-/* =========================
-   MENU LATERAL
-========================= */
-
-.sidebar{
-  position:sticky;
-  top:0;
-  height:100vh;
-  background:#fff;
-  border-right:1px solid var(--line);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:18px 8px;
-  z-index:10;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:15px;
 }
 
-.brand-mini{
-  width:48px;
-  height:48px;
-  border-radius:14px;
-  background:#eef6ff;
-  display:grid;
-  place-items:center;
-  color:var(--blue);
-  font-size:25px;
-  margin-bottom:22px;
+.brand-symbol{
+    width:54px;
+    height:54px;
+    border-radius:16px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:var(--blue-light);
+    color:var(--blue);
+
+    font-size:30px;
+    font-weight:700;
 }
 
-.nav{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  width:100%;
+.brand-small{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:1.4px;
+    color:#526174;
 }
 
-.nav button{
-  border:0;
-  background:transparent;
-  color:#506079;
-  border-radius:14px;
-  padding:11px 3px;
-  cursor:pointer;
-  font-size:11px;
+.brand-title{
+    margin:1px 0 0;
+    font-size:27px;
+    font-weight:800;
+    letter-spacing:.5px;
 }
 
-.nav button span{
-  display:block;
-  font-size:21px;
-  margin-bottom:4px;
-}
-
-.nav button.active{
-  background:#eaf4ff;
-  color:var(--blue);
-  font-weight:700;
-}
-
-.sidebar-bottom{
-  margin-top:auto;
-  color:#8190a4;
-  font-size:12px;
-}
-
-/* =========================
-   CABEÇALHO
-========================= */
-
-main{
-  min-width:0;
-}
-
-.topbar{
-  background:#fff;
-  border-bottom:1px solid var(--line);
-  min-height:82px;
-  padding:14px 28px;
-  display:grid;
-  grid-template-columns:minmax(260px,1fr) auto auto;
-  gap:30px;
-  align-items:center;
-}
-
-.logo-wrap{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.logo-mark{
-  width:54px;
-  height:54px;
-  display:grid;
-  place-items:center;
-  color:var(--navy);
-  font-size:38px;
-}
-
-.brand-title small{
-  display:block;
-  font-size:12px;
-  letter-spacing:.08em;
-  font-weight:700;
-}
-
-.brand-title strong{
-  display:block;
-  font-size:25px;
-  letter-spacing:.03em;
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
 }
 
 .location{
-  font-size:12px;
-  color:#4e5f75;
-  line-height:1.5;
+    font-size:13px;
+    color:var(--text2);
 }
 
-.location b{
-  color:var(--ink);
-  font-size:13px;
+.location strong{
+    color:var(--text);
 }
 
 .online{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  border:1px solid #dcefe0;
-  color:#168b2a;
-  background:#f6fff7;
-  padding:9px 14px;
-  border-radius:12px;
-  font-size:12px;
-  font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    padding:11px 16px;
+
+    border-radius:30px;
+
+    background:var(--green-light);
+    border:1px solid #d7efd9;
+
+    color:#24862a;
+
+    font-size:13px;
+    font-weight:800;
 }
 
-.dot{
-  width:8px;
-  height:8px;
-  background:#19a83a;
-  border-radius:50%;
+.online-dot{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#28a745;
+    box-shadow:0 0 0 4px rgba(40,167,69,.10);
 }
 
-.updated{
-  text-align:right;
-  font-size:11px;
-  color:var(--muted);
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container{
+    max-width:1400px;
+    margin:auto;
+    padding:24px;
 }
 
-.updated b{
-  display:block;
-  color:var(--ink);
-  font-size:12px;
-  margin-top:3px;
+/* =====================================================
+   HIERARCHY
+===================================================== */
+
+.hierarchy{
+    background:white;
+    border:1px solid var(--border);
+    border-left:6px solid var(--blue);
+
+    border-radius:var(--radius);
+
+    padding:20px 24px;
+
+    box-shadow:var(--shadow);
+
+    margin-bottom:22px;
 }
 
-.refresh{
-  border:0;
-  background:#fff;
-  color:var(--navy);
-  font-size:22px;
-  cursor:pointer;
+.hierarchy-title{
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:7px;
 }
 
-/* =========================
-   CONTEÚDO
-========================= */
-
-.content{
-  padding:18px 22px 30px;
-  max-width:1700px;
-  margin:auto;
+.hierarchy-title span{
+    color:var(--text2);
+    font-weight:500;
 }
 
-.source-banner{
-  background:#fff;
-  border:1px solid var(--line);
-  border-left:5px solid var(--blue);
-  border-radius:14px;
-  padding:10px 14px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:16px;
-  box-shadow:0 4px 14px rgba(22,48,82,.04);
+.hierarchy-text{
+    margin:0 0 15px;
+    color:var(--text2);
+    line-height:1.6;
 }
 
-.source-banner strong{
-  font-size:12px;
+.legend{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
-.source-banner span{
-  font-size:11px;
-  color:var(--muted);
+.legend-item{
+    padding:8px 13px;
+    border-radius:12px;
+
+    font-size:12px;
+    font-weight:800;
 }
 
-.badge{
-  padding:5px 9px;
-  border-radius:8px;
-  font-size:10px;
-  font-weight:800;
-  white-space:nowrap;
+.legend-own{
+    background:#eaf4ff;
+    color:#2373c8;
 }
 
-.badge-own{
-  background:#eaf4ff;
-  color:#126fe5;
+.legend-external{
+    background:#f1f3f7;
+    color:#697587;
 }
 
-.badge-external{
-  background:#f3f5f8;
-  color:#536278;
+/* =====================================================
+   SECTION
+===================================================== */
+
+.section{
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius);
+
+    padding:22px;
+
+    box-shadow:var(--shadow);
+
+    margin-bottom:22px;
 }
 
-/* =========================
-   GRID PRINCIPAL
-========================= */
-
-.grid{
-  display:grid;
-  grid-template-columns:1.1fr 1fr 1.35fr;
-  gap:16px;
+.section.own-section{
+    border-top:5px solid var(--blue);
 }
 
-.card{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:17px;
-  box-shadow:var(--shadow);
-  overflow:hidden;
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:15px;
+
+    margin-bottom:18px;
 }
 
-.card-head{
-  padding:14px 17px 8px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
+.section-kicker{
+    color:var(--blue);
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:.5px;
+    text-transform:uppercase;
 }
 
-.card-title{
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.02em;
+.section-title{
+    margin:3px 0 0;
+    font-size:22px;
+    font-weight:800;
 }
 
-.card-title span{
-  color:var(--muted);
-  font-weight:500;
+.section-title span{
+    color:var(--text2);
+    font-weight:500;
 }
 
-.card-source{
-  font-size:9px;
-  color:#748198;
-  background:#f5f7fa;
-  border-radius:7px;
-  padding:4px 7px;
+.source-badge{
+    background:#f4f6f9;
+    color:#697687;
+
+    padding:9px 13px;
+
+    border-radius:12px;
+
+    font-size:12px;
+    font-weight:700;
+
+    white-space:nowrap;
 }
 
-.card-body{
-  padding:10px 14px 15px;
-}
+/* =====================================================
+   OUR DATA CARDS
+===================================================== */
 
-/* =========================
-   NOSSA ESTAÇÃO
-========================= */
-
-.own{
-  grid-column:1;
-  grid-row:1 / span 2;
-  border-top:4px solid var(--blue);
-}
-
-.own .card-head{
-  padding-top:12px;
-}
-
-.own-tag{
-  color:var(--blue);
-  font-size:10px;
-  font-weight:800;
-  text-transform:uppercase;
-}
-
-.metrics{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
+.metrics-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
 }
 
 .metric{
-  min-height:125px;
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:13px;
-  position:relative;
-  background:linear-gradient(180deg,#fff,#fbfdff);
+    min-height:140px;
+
+    border:1px solid var(--border);
+    border-radius:18px;
+
+    padding:18px;
+
+    background:linear-gradient(
+        145deg,
+        #ffffff,
+        #fbfdff
+    );
+
+    position:relative;
+    overflow:hidden;
+}
+
+.metric::after{
+    content:"";
+
+    position:absolute;
+
+    width:90px;
+    height:90px;
+
+    right:-35px;
+    bottom:-40px;
+
+    border-radius:50%;
+
+    background:rgba(24,119,232,.035);
 }
 
 .metric-icon{
-  font-size:22px;
-  margin-bottom:7px;
+    font-size:25px;
+    margin-bottom:14px;
 }
 
-.metric-name{
-  font-size:10px;
-  font-weight:800;
-  text-transform:uppercase;
-  color:#526178;
+.metric-label{
+    font-size:13px;
+    font-weight:800;
+    color:#596779;
+
+    text-transform:uppercase;
 }
 
 .metric-value{
-  font-size:23px;
-  font-weight:800;
-  margin-top:7px;
-  white-space:nowrap;
+    margin-top:5px;
+
+    font-size:27px;
+    font-weight:850;
+
+    letter-spacing:-.5px;
 }
 
-.metric-unit{
-  font-size:13px;
-  font-weight:600;
+.metric-description{
+    margin-top:6px;
+
+    font-size:12px;
+    color:var(--muted);
 }
 
-.metric-note{
-  font-size:9px;
-  color:var(--muted);
-  margin-top:4px;
+.temperature .metric-icon,
+.temperature .metric-value{
+    color:var(--orange);
 }
 
-.metric-line{
-  position:absolute;
-  left:13px;
-  right:13px;
-  bottom:10px;
-  height:22px;
+.humidity .metric-icon,
+.humidity .metric-value{
+    color:#2583df;
 }
 
-.metric.temp .metric-icon,
-.metric.temp .metric-value{
-  color:var(--orange);
+.pressure .metric-icon,
+.pressure .metric-value{
+    color:var(--purple);
 }
 
-.metric.hum .metric-icon,
-.metric.hum .metric-value{
-  color:var(--blue);
+.wind .metric-icon,
+.wind .metric-value{
+    color:var(--green);
 }
 
-.metric.press .metric-icon,
-.metric.press .metric-value{
-  color:var(--purple);
+.rain .metric-icon,
+.rain .metric-value{
+    color:var(--cyan);
 }
 
-.metric.wind .metric-icon,
-.metric.wind .metric-value{
-  color:var(--green);
+.direction .metric-icon,
+.direction .metric-value{
+    color:var(--yellow);
 }
 
-.metric.rain .metric-icon,
-.metric.rain .metric-value{
-  color:var(--cyan);
+/* =====================================================
+   GRIDS
+===================================================== */
+
+.two-columns{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
 }
 
-.metric.dir .metric-icon,
-.metric.dir .metric-value{
-  color:var(--yellow);
+.three-columns{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
 }
 
-.simulated{
-  margin-top:11px;
-  background:#fff8e8;
-  border:1px solid #f6dfaa;
-  color:#8a6500;
-  padding:9px 11px;
-  border-radius:10px;
-  font-size:10px;
-  line-height:1.4;
+/* =====================================================
+   CHART CARD
+===================================================== */
+
+.chart-card{
+    background:white;
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius);
+
+    padding:20px;
+
+    box-shadow:var(--shadow);
 }
 
-/* =========================
-   GRÁFICOS
-========================= */
-
-.chart-card canvas{
-  width:100%;
-  height:210px;
-  display:block;
+.chart-title{
+    font-size:16px;
+    font-weight:800;
 }
 
-.chart-card.small canvas{
-  height:185px;
+.chart-subtitle{
+    margin-top:4px;
+
+    font-size:12px;
+    color:var(--muted);
 }
 
-/* =========================
-   PREVISÃO
-========================= */
+.canvas-wrap{
+    width:100%;
+    height:250px;
 
-.forecast{
-  grid-column:3;
-  grid-row:1 / span 2;
+    margin-top:15px;
 }
 
-.forecast-main{
-  height:245px;
+canvas{
+    width:100%;
+    height:100%;
+    display:block;
 }
 
-.forecast-hours{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  border-top:1px solid var(--line);
-  margin-top:6px;
+/* =====================================================
+   FORECAST
+===================================================== */
+
+.forecast-chart{
+    height:330px;
+}
+
+.forecast-info{
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:10px;
+
+    margin-top:16px;
+}
+
+.forecast-item{
+    border:1px solid var(--border);
+    border-radius:14px;
+
+    padding:12px;
+
+    background:#fbfcfe;
 }
 
 .forecast-hour{
-  padding:10px 5px;
-  text-align:center;
-  border-right:1px solid var(--line);
-}
-
-.forecast-hour:last-child{
-  border-right:0;
-}
-
-.forecast-hour b{
-  font-size:10px;
-}
-
-.forecast-icon{
-  font-size:24px;
-  margin:6px 0;
+    font-size:11px;
+    color:var(--muted);
+    font-weight:700;
 }
 
 .forecast-temp{
-  font-weight:800;
-  font-size:15px;
+    font-size:19px;
+    font-weight:800;
+    margin-top:5px;
 }
 
 .forecast-rain{
-  font-size:9px;
-  color:var(--blue);
-  margin-top:4px;
+    font-size:11px;
+    color:#2583df;
+    margin-top:3px;
 }
 
-/* =========================
+/* =====================================================
+   EXTERNAL DATA
+===================================================== */
+
+.external-section{
+    border-top:5px solid #aeb7c4;
+}
+
+.external-section .section-kicker{
+    color:#697687;
+}
+
+/* =====================================================
    ALERTA RIO
-========================= */
-
-.alert{
-  grid-column:1 / span 2;
-}
+===================================================== */
 
 .alert-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  border:1px solid var(--line);
-  border-radius:13px;
-  overflow:hidden;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
 }
 
-.alert-item{
-  padding:12px 9px;
-  text-align:center;
-  border-right:1px solid var(--line);
-}
+.alert-metric{
+    border:1px solid var(--border);
 
-.alert-item:last-child{
-  border-right:0;
+    border-radius:16px;
+
+    padding:16px;
+
+    text-align:center;
+
+    background:#fcfdff;
 }
 
 .alert-icon{
-  font-size:19px;
-}
-
-.alert-value{
-  font-size:17px;
-  font-weight:800;
-  margin-top:4px;
+    font-size:24px;
 }
 
 .alert-label{
-  font-size:9px;
-  color:var(--muted);
-  margin-top:3px;
+    margin-top:7px;
+
+    font-size:11px;
+    font-weight:800;
+    color:var(--muted);
+
+    text-transform:uppercase;
 }
 
-/* =========================
-   CHUVA IRAJÁ
-========================= */
+.alert-value{
+    margin-top:4px;
 
-.rain{
-  grid-column:3;
+    font-size:20px;
+    font-weight:800;
 }
 
-.rain canvas{
-  height:190px;
-}
-
-/* =========================
-   ACUMULADOS
-========================= */
-
-.accum{
-  grid-column:3;
-}
-
-.accum-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:9px;
-}
-
-.accum-box{
-  border:1px solid #dce8f7;
-  border-radius:12px;
-  text-align:center;
-  padding:13px 5px;
-}
-
-.accum-box strong{
-  display:block;
-  color:var(--blue);
-  font-size:18px;
-}
-
-.accum-box span{
-  font-size:9px;
-  color:var(--muted);
-}
-
-/* =========================
-   HISTÓRICO
-========================= */
-
-.history{
-  grid-column:1 / span 2;
-}
-
-.history-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.history-grid .mini{
-  border:1px solid var(--line);
-  border-radius:13px;
-  overflow:hidden;
-}
-
-.mini-title{
-  font-size:10px;
-  font-weight:800;
-  padding:9px 11px 0;
-}
-
-/* =========================
+/* =====================================================
    DEFESA CIVIL
-========================= */
+===================================================== */
 
 .defesa{
-  grid-column:1 / span 2;
+    border-top:5px solid #4caf50;
 }
 
-.defesa-grid{
-  display:grid;
-  grid-template-columns:1.2fr 1fr;
-  gap:12px;
+.defesa-content{
+    display:flex;
+    align-items:center;
+    gap:20px;
 }
 
-.status-box,
-.channels{
-  border:1px solid var(--line);
-  border-radius:13px;
-  padding:15px;
+.defesa-icon{
+    width:65px;
+    height:65px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:18px;
+
+    background:var(--green-light);
+
+    font-size:35px;
 }
 
-.status-row{
-  display:flex;
-  gap:13px;
-  align-items:center;
+.defesa-status{
+    font-size:20px;
+    font-weight:850;
+    color:#26872d;
 }
 
-.shield{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  background:#effbf1;
-  color:#20a536;
-  display:grid;
-  place-items:center;
-  font-size:25px;
+.defesa-text{
+    margin-top:4px;
+
+    font-size:13px;
+    color:var(--text2);
 }
 
-.status-box strong{
-  color:#168b2a;
-  font-size:13px;
+/* =====================================================
+   LEVEL BAR
+===================================================== */
+
+.level-bar{
+    margin-top:18px;
 }
 
-.status-box p{
-  margin:5px 0 0;
-  font-size:10px;
-  color:var(--muted);
-  line-height:1.5;
-}
+.level-line{
+    height:9px;
 
-.levels{
-  display:flex;
-  gap:4px;
-  margin-top:15px;
-}
+    border-radius:10px;
 
-.level{
-  height:7px;
-  flex:1;
-  border-radius:20px;
-  background:#dce3ec;
-}
-
-.level.active{
-  background:#6fcb38;
+    background:linear-gradient(
+        90deg,
+        #55b957 0%,
+        #a9d72c 25%,
+        #ffd028 50%,
+        #ff8144 70%,
+        #e94b68 85%,
+        #8d53d9 100%
+    );
 }
 
 .level-labels{
-  display:flex;
-  justify-content:space-between;
-  font-size:7px;
-  color:#748198;
-  margin-top:4px;
+    display:flex;
+    justify-content:space-between;
+
+    font-size:10px;
+    color:#6d7886;
+
+    margin-top:6px;
 }
 
-.channels b{
-  font-size:10px;
-}
-
-.channels div{
-  font-size:10px;
-  color:#526178;
-  margin-top:8px;
-}
-
-/* =========================
-   SATÉLITE
-========================= */
+/* =====================================================
+   SATELLITE
+===================================================== */
 
 .satellite{
-  grid-column:3;
+    border-top:5px solid #3b75d6;
+}
+
+.satellite-box{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+
+    gap:20px;
 }
 
 .satellite-preview{
-  height:205px;
-  border-radius:13px;
-  overflow:hidden;
-  position:relative;
-  background:
-    radial-gradient(circle at 45% 45%,rgba(255,255,255,.75),transparent 17%),
-    linear-gradient(140deg,#263b53,#84929e 40%,#23384d);
+    min-height:240px;
+
+    border-radius:18px;
+
+    background:
+        radial-gradient(
+            circle at 35% 35%,
+            rgba(255,255,255,.9) 0 3%,
+            transparent 4%
+        ),
+        linear-gradient(
+            145deg,
+            #102d54,
+            #1e5e99,
+            #72a7d5
+        );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:white;
+
+    position:relative;
+    overflow:hidden;
 }
 
-.satellite-preview:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(ellipse at 62% 60%,#547c5c 0 13%,transparent 14%),
-    radial-gradient(ellipse at 47% 45%,#657c62 0 10%,transparent 11%),
-    radial-gradient(ellipse at 75% 32%,rgba(255,255,255,.7) 0 9%,transparent 10%),
-    radial-gradient(ellipse at 25% 70%,rgba(255,255,255,.55) 0 12%,transparent 13%);
-  filter:blur(2px);
-  opacity:.9;
+.satellite-preview::before{
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+    height:180px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.12);
+
+    left:25%;
+    top:18%;
 }
 
-.sat-label{
-  position:absolute;
-  left:11px;
-  top:10px;
-  background:rgba(0,0,0,.55);
-  color:#fff;
-  padding:5px 8px;
-  border-radius:7px;
-  font-size:9px;
-  font-weight:700;
+.satellite-preview-content{
+    position:relative;
+    z-index:2;
+
+    text-align:center;
 }
 
-.sat-buttons{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:5px;
-  margin-top:9px;
+.satellite-icon{
+    font-size:50px;
 }
 
-.sat-buttons button{
-  border:1px solid var(--line);
-  background:#fff;
-  border-radius:8px;
-  padding:7px 2px;
-  font-size:8px;
-  cursor:pointer;
+.satellite-title{
+    font-size:22px;
+    font-weight:850;
+    margin-top:8px;
 }
 
-.sat-buttons button.active{
-  background:var(--blue);
-  color:#fff;
-  border-color:var(--blue);
+.satellite-text{
+    font-size:12px;
+    opacity:.85;
+    margin-top:5px;
 }
 
-.open-sat{
-  display:block;
-  text-align:center;
-  margin-top:9px;
-  background:var(--blue);
-  color:#fff;
-  text-decoration:none;
-  border-radius:9px;
-  padding:9px;
-  font-size:10px;
-  font-weight:800;
+.satellite-info{
+    border:1px solid var(--border);
+    border-radius:18px;
+
+    padding:20px;
 }
 
-/* =========================
-   FONTES
-========================= */
-
-.sources{
-  margin-top:16px;
-  border:1px solid var(--line);
-  background:#fff;
-  border-radius:17px;
-  box-shadow:var(--shadow);
+.info-title{
+    font-weight:800;
+    font-size:16px;
 }
 
-.sources-head{
-  padding:13px 17px;
-  font-size:12px;
-  font-weight:800;
+.info-text{
+    color:var(--text2);
+    font-size:13px;
+    line-height:1.65;
+
+    margin-top:10px;
 }
 
-.sources-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  border-top:1px solid var(--line);
+.satellite-button{
+    display:inline-block;
+
+    margin-top:16px;
+
+    padding:11px 17px;
+
+    background:var(--blue);
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:12px;
+
+    font-size:13px;
+    font-weight:800;
 }
+
+/* =====================================================
+   SOURCE
+===================================================== */
 
 .source{
-  padding:14px;
-  border-right:1px solid var(--line);
+    margin-top:14px;
+
+    font-size:11px;
+    color:#7c8794;
 }
 
-.source:last-child{
-  border-right:0;
+.source strong{
+    color:#5d6877;
 }
 
-.source b{
-  font-size:10px;
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.footer{
+    max-width:1400px;
+    margin:auto;
+
+    padding:20px 24px 35px;
+
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+
+    font-size:11px;
+    color:#7c8794;
 }
 
-.source span{
-  display:block;
-  font-size:9px;
-  color:var(--muted);
-  margin-top:4px;
-  line-height:1.4;
+.footer strong{
+    color:#5d6877;
 }
 
-.source-code{
-  display:inline-block;
-  margin-bottom:6px;
-  font-size:9px;
-  font-weight:800;
-  color:var(--blue);
-  background:#eef6ff;
-  padding:4px 6px;
-  border-radius:6px;
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading{
+    color:#8894a3;
 }
 
-/* =========================
-   RODAPÉ
-========================= */
+/* =====================================================
+   RESPONSIVE
+===================================================== */
 
-footer{
-  padding:14px 4px 0;
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  color:#77859a;
-  font-size:9px;
+@media(max-width:1000px){
+
+    .metrics-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .three-columns{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .alert-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .satellite-box{
+        grid-template-columns:1fr;
+    }
 }
 
-/* =========================
-   RESPONSIVO
-========================= */
+@media(max-width:700px){
 
-@media(max-width:1200px){
+    .header{
+        padding:13px 15px;
+    }
 
-  .grid{
-    grid-template-columns:1fr 1fr;
-  }
+    .header-inner{
+        align-items:center;
+    }
 
-  .own,
-  .forecast,
-  .alert,
-  .rain,
-  .accum,
-  .history,
-  .defesa,
-  .satellite{
-    grid-column:auto;
-    grid-row:auto;
-  }
+    .brand-symbol{
+        width:43px;
+        height:43px;
+        font-size:24px;
+        border-radius:13px;
+    }
 
-  .forecast{
-    grid-column:1 / span 2;
-  }
+    .brand-small{
+        font-size:9px;
+        letter-spacing:1px;
+    }
 
-  .satellite{
-    grid-column:1 / span 2;
-  }
+    .brand-title{
+        font-size:21px;
+    }
 
-  .sources-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
+    .location{
+        display:none;
+    }
 
-  .source:nth-child(2n){
-    border-right:0;
-  }
+    .online{
+        padding:8px 10px;
+        font-size:10px;
+    }
 
-  .source{
-    border-bottom:1px solid var(--line);
-  }
+    .container{
+        padding:15px;
+    }
+
+    .hierarchy{
+        padding:18px;
+    }
+
+    .hierarchy-title{
+        font-size:16px;
+    }
+
+    .hierarchy-text{
+        font-size:13px;
+    }
+
+    .section{
+        padding:17px;
+        border-radius:18px;
+    }
+
+    .section-header{
+        flex-direction:column;
+    }
+
+    .section-title{
+        font-size:19px;
+    }
+
+    .source-badge{
+        font-size:10px;
+    }
+
+    /*
+       IMPORTANTE:
+       No celular continuam 2 cartões por linha,
+       conforme o modelo que você aprovou.
+    */
+
+    .metrics-grid{
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+
+    .metric{
+        min-height:145px;
+        padding:15px;
+    }
+
+    .metric-icon{
+        font-size:23px;
+    }
+
+    .metric-label{
+        font-size:11px;
+    }
+
+    .metric-value{
+        font-size:22px;
+    }
+
+    .metric-description{
+        font-size:10px;
+    }
+
+    .two-columns,
+    .three-columns{
+        grid-template-columns:1fr;
+        gap:15px;
+    }
+
+    .alert-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .forecast-info{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .canvas-wrap{
+        height:220px;
+    }
+
+    .forecast-chart{
+        height:270px;
+    }
+
+    .defesa-content{
+        align-items:flex-start;
+    }
+
+    .footer{
+        padding:15px;
+
+        flex-direction:column;
+
+        text-align:center;
+    }
 }
 
-@media(max-width:760px){
+@media(max-width:390px){
 
-  .app{
-    display:block;
-  }
+    .brand-title{
+        font-size:18px;
+    }
 
-  .sidebar{
-    display:none;
-  }
+    .online{
+        font-size:9px;
+    }
 
-  .topbar{
-    grid-template-columns:1fr auto;
-    padding:13px 15px;
-  }
+    .metric{
+        padding:12px;
+    }
 
-  .location,
-  .updated{
-    display:none;
-  }
-
-  .content{
-    padding:12px;
-  }
-
-  .grid{
-    display:block;
-  }
-
-  .card{
-    margin-bottom:12px;
-  }
-
-  .metrics{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .alert-grid{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .alert-item:nth-child(2n){
-    border-right:0;
-  }
-
-  .alert-item{
-    border-bottom:1px solid var(--line);
-  }
-
-  .forecast-hours{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .forecast-hour:nth-child(3){
-    border-right:0;
-  }
-
-  .history-grid,
-  .defesa-grid{
-    grid-template-columns:1fr;
-  }
-
-  .sources-grid{
-    grid-template-columns:1fr;
-  }
-
-  .source{
-    border-right:0!important;
-  }
-
-  footer{
-    flex-direction:column;
-  }
-
-  .source-banner{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .sat-buttons{
-    grid-template-columns:repeat(3,1fr);
-  }
+    .metric-value{
+        font-size:20px;
+    }
 }
+
 </style>
 </head>
 
 <body>
 
-<div class="app">
-
 <!-- =====================================================
-     MENU LATERAL
+     HEADER
 ===================================================== -->
 
-<aside class="sidebar">
+<header class="header">
 
-  <div class="brand-mini">✣</div>
+<div class="header-inner">
 
-  <nav class="nav">
+    <div class="brand">
 
-    <button class="active">
-      <span>▦</span>
-      Dashboard
-    </button>
+        <div class="brand-symbol">
+            ✣
+        </div>
 
-    <button onclick="scrollToId('nossa-estacao')">
-      <span>♨</span>
-      Estação
-    </button>
+        <div>
+            <div class="brand-small">
+                ESTAÇÃO METEOROLÓGICA
+            </div>
 
-    <button onclick="scrollToId('previsao-card')">
-      <span>☁</span>
-      Previsão
-    </button>
-
-    <button onclick="scrollToId('alerta-card')">
-      <span>♧</span>
-      Alerta Rio
-    </button>
-
-    <button onclick="scrollToId('defesa-card')">
-      <span>✓</span>
-      Defesa Civil
-    </button>
-
-    <button onclick="scrollToId('satellite-card')">
-      <span>◉</span>
-      Satélite
-    </button>
-
-    <button onclick="scrollToId('fontes')">
-      <span>◌</span>
-      Fontes
-    </button>
-
-  </nav>
-
-  <div class="sidebar-bottom">
-    v3.0
-  </div>
-
-</aside>
-
-
-<main>
-
-<!-- =====================================================
-     CABEÇALHO
-===================================================== -->
-
-<header class="topbar">
-
-  <div class="logo-wrap">
-
-    <div class="logo-mark">
-      ✣
-    </div>
-
-    <div class="brand-title">
-      <small>ESTAÇÃO METEOROLÓGICA</small>
-      <strong>CONSTELACIÓN</strong>
-    </div>
-
-  </div>
-
-
-  <div class="location">
-
-    📍 <b>Colégio – Rio de Janeiro</b><br>
-
-    <span>
-      -22.8456° S · -43.3385° W · 12 m
-    </span>
-
-  </div>
-
-
-  <div style="display:flex;align-items:center;gap:22px">
-
-    <div class="online">
-      <i class="dot"></i>
-      SISTEMA ONLINE
-    </div>
-
-    <div class="updated">
-
-      Última atualização
-
-      <b id="ultimaAtualizacao">
-        --/--/---- – --:--:--
-      </b>
+            <div class="brand-title">
+                CONSTELACIÓN
+            </div>
+        </div>
 
     </div>
 
-    <button
-      class="refresh"
-      onclick="atualizarTudo()"
-      title="Atualizar"
-    >
-      ↻
-    </button>
+    <div class="header-right">
 
-  </div>
+        <div class="location">
+            📍 <strong>Colégio — Rio de Janeiro</strong>
+        </div>
+
+        <div class="online">
+            <span class="online-dot"></span>
+            SISTEMA ONLINE
+        </div>
+
+    </div>
+
+</div>
 
 </header>
 
 
-<div class="content">
+<main class="container">
 
 <!-- =====================================================
-     HIERARQUIA DOS DADOS
+     HIERARQUIA
 ===================================================== -->
 
-<div class="source-banner">
+<section class="hierarchy">
 
-  <div>
+    <div class="hierarchy-title">
+        HIERARQUIA DOS DADOS
+        <span>
+            Os dados da nossa estação são apresentados primeiro.
+        </span>
+    </div>
 
-    <strong>
-      HIERARQUIA DOS DADOS
-    </strong>
+    <p class="hierarchy-text">
+        As informações abaixo são organizadas de acordo com sua origem.
+        Os dados medidos pela Estação Constelación são independentes
+        das informações provenientes de fontes meteorológicas externas.
+    </p>
 
-    <span>
-      Os dados da nossa estação são apresentados primeiro
-      e não devem ser confundidos com informações externas.
-    </span>
+    <div class="legend">
 
-  </div>
+        <div class="legend-item legend-own">
+            ● NOSSA ESTAÇÃO
+        </div>
 
-  <div style="display:flex;gap:6px">
+        <div class="legend-item legend-external">
+            ● FONTES EXTERNAS
+        </div>
 
-    <span class="badge badge-own">
-      ● NOSSA ESTAÇÃO
-    </span>
+    </div>
 
-    <span class="badge badge-external">
-      ● FONTES EXTERNAS
-    </span>
+</section>
 
-  </div>
-
-</div>
-
-
-<section class="grid">
 
 <!-- =====================================================
      NOSSA ESTAÇÃO
 ===================================================== -->
 
-<article
-  class="card own"
-  id="nossa-estacao"
->
+<section class="section own-section">
 
-  <div class="card-head">
+    <div class="section-header">
 
-    <div>
+        <div>
 
-      <div class="own-tag">
-        ● Dados próprios
-      </div>
+            <div class="section-kicker">
+                ● DADOS PRÓPRIOS
+            </div>
 
-      <div
-        class="card-title"
-        style="font-size:14px"
-      >
-        NOSSOS DADOS
-        <span>— TEMPO REAL</span>
-      </div>
+            <div class="section-title">
+                NOSSA ESTAÇÃO
+                <span>— TEMPO REAL</span>
+            </div>
+
+        </div>
+
+        <div class="source-badge">
+            Estação Constelación
+        </div>
 
     </div>
 
-    <div class="card-source">
-      Estação Constelación
+
+    <div class="metrics-grid">
+
+        <div class="metric temperature">
+
+            <div class="metric-icon">♨</div>
+
+            <div class="metric-label">
+                Temperatura
+            </div>
+
+            <div class="metric-value" id="temperatura">
+                --
+            </div>
+
+            <div class="metric-description">
+                Temperatura do ar
+            </div>
+
+        </div>
+
+
+        <div class="metric humidity">
+
+            <div class="metric-icon">♢</div>
+
+            <div class="metric-label">
+                Umidade
+            </div>
+
+            <div class="metric-value" id="umidade">
+                --
+            </div>
+
+            <div class="metric-description">
+                Umidade relativa do ar
+            </div>
+
+        </div>
+
+
+        <div class="metric pressure">
+
+            <div class="metric-icon">◉</div>
+
+            <div class="metric-label">
+                Pressão
+            </div>
+
+            <div class="metric-value" id="pressao">
+                --
+            </div>
+
+            <div class="metric-description">
+                Pressão atmosférica
+            </div>
+
+        </div>
+
+
+        <div class="metric wind">
+
+            <div class="metric-icon">≋</div>
+
+            <div class="metric-label">
+                Vento
+            </div>
+
+            <div class="metric-value" id="vento">
+                --
+            </div>
+
+            <div class="metric-description">
+                Velocidade do vento
+            </div>
+
+        </div>
+
+
+        <div class="metric rain">
+
+            <div class="metric-icon">♧</div>
+
+            <div class="metric-label">
+                Chuva
+            </div>
+
+            <div class="metric-value" id="chuva">
+                --
+            </div>
+
+            <div class="metric-description">
+                Acumulado da estação
+            </div>
+
+        </div>
+
+
+        <div class="metric direction">
+
+            <div class="metric-icon">⌁</div>
+
+            <div class="metric-label">
+                Direção
+            </div>
+
+            <div class="metric-value" id="direcao">
+                --
+            </div>
+
+            <div class="metric-description">
+                Direção do vento
+            </div>
+
+        </div>
+
     </div>
 
-  </div>
+    <div class="source">
+        <strong>Fonte:</strong> sensores da Estação Meteorológica Constelación.
+    </div>
+
+</section>
 
 
-  <div class="card-body">
+<!-- =====================================================
+     HISTÓRICO
+===================================================== -->
 
-    <div class="metrics">
+<div class="two-columns">
 
-      <!-- TEMPERATURA -->
+    <div class="chart-card">
 
-      <div class="metric temp">
-
-        <div class="metric-icon">
-          ♨
+        <div class="chart-title">
+            TEMPERATURA — ÚLTIMAS LEITURAS
         </div>
 
-        <div class="metric-name">
-          Temperatura
+        <div class="chart-subtitle">
+            Dados próprios da Estação Constelación
         </div>
 
-        <div
-          class="metric-value"
-          id="temp"
-        >
-          -- <span class="metric-unit">°C</span>
+        <div class="canvas-wrap">
+            <canvas id="graficoTemperatura"></canvas>
         </div>
 
-        <div
-          class="metric-note"
-          id="tempNote"
-        >
-          Aguardando dados
+    </div>
+
+
+    <div class="chart-card">
+
+        <div class="chart-title">
+            UMIDADE — ÚLTIMAS LEITURAS
         </div>
 
-        <canvas
-          class="metric-line"
-          id="miniTemp"
-        ></canvas>
-
-      </div>
-
-
-      <!-- UMIDADE -->
-
-      <div class="metric hum">
-
-        <div class="metric-icon">
-          ♢
+        <div class="chart-subtitle">
+            Dados próprios da Estação Constelación
         </div>
 
-        <div class="metric-name">
-          Umidade
-        </div>
-
-        <div
-          class="metric-value"
-          id="hum"
-        >
-          -- <span class="metric-unit">%</span>
-        </div>
-
-        <div class="metric-note">
-          Umidade relativa do ar
-        </div>
-
-        <canvas
-          class="metric-line"
-          id="miniHum"
-        ></canvas>
-
-      </div>
-
-
-      <!-- PRESSÃO -->
-
-      <div class="metric press">
-
-        <div class="metric-icon">
-          ◉
-        </div>
-
-        <div class="metric-name">
-          Pressão
-        </div>
-
-        <div
-          class="metric-value"
-          id="press"
-        >
-          -- <span class="metric-unit">hPa</span>
-        </div>
-
-        <div class="metric-note">
-          Pressão atmosférica
-        </div>
-
-        <canvas
-          class="metric-line"
-          id="miniPress"
-        ></canvas>
-
-      </div>
-
-
-      <!-- VENTO -->
-
-      <div class="metric wind">
-
-        <div class="metric-icon">
-          ≋
-        </div>
-
-        <div class="metric-name">
-          Vento
-        </div>
-
-        <div
-          class="metric-value"
-          id="wind"
-        >
-          -- <span class="metric-unit">km/h</span>
-        </div>
-
-        <div class="metric-note">
-          Velocidade do vento
-        </div>
-
-        <canvas
-          class="metric-line"
-          id="miniWind"
-        ></canvas>
-
-      </div>
-
-
-      <!-- CHUVA -->
-
-      <div class="metric rain">
-
-        <div class="metric-icon">
-          ♧
-        </div>
-
-        <div class="metric-name">
-          Chuva
-        </div>
-
-        <div
-          class="metric-value"
-          id="rain"
-        >
-          -- <span class="metric-unit">mm</span>
-        </div>
-
-        <div class="metric-note">
-          Acumulado da estação
-        </div>
-
-        <canvas
-          class="metric-line"
-          id="miniRain"
-        ></canvas>
-
-      </div>
-
-
-      <!-- DIREÇÃO -->
-
-      <div class="metric dir">
-
-        <div class="metric-icon">
-          ⌁
-        </div>
-
-        <div class="metric-name">
-          Direção
-        </div>
-
-        <div
-          class="metric-value"
-          id="direction"
-        >
-          --
-        </div>
-
-        <div
-          class="metric-note"
-          id="directionNote"
-        >
-          Direção do vento
-      
+        <div class="canvas-wrap">
+         
