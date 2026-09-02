@@ -3,1339 +3,1340 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Constelación | Dashboard Meteorológico</title>
+<title>Estação Meteorológica Constelación</title>
 
 <style>
-
-/* =========================================================
-   CONSTELACIÓN DASHBOARD 3.0
-   ========================================================= */
-
-:root {
-    --bg: #f4f7fb;
-    --card: #ffffff;
-    --text: #172033;
-    --muted: #718096;
-
-    --blue: #2563eb;
-    --cyan: #06b6d4;
-    --orange: #f97316;
-    --yellow: #facc15;
-    --green: #16a34a;
-    --purple: #8b5cf6;
-    --red: #ef4444;
-
-    --border: #e7edf5;
-    --shadow: 0 8px 25px rgba(30, 60, 90, 0.08);
-    --radius: 18px;
+:root{
+  --navy:#10233f;
+  --blue:#1478f2;
+  --cyan:#09a9d8;
+  --green:#43b947;
+  --orange:#ff7a00;
+  --purple:#8d4de8;
+  --yellow:#e9b900;
+  --red:#e84d4d;
+  --ink:#132238;
+  --muted:#65748a;
+  --line:#e5ebf2;
+  --soft:#f7faff;
+  --white:#ffffff;
+  --shadow:0 8px 24px rgba(22,48,82,.08);
 }
 
-* {
-    box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#f7f9fc;
+  color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--bg);
-    color: var(--text);
+button,a{
+  font:inherit;
 }
 
-.container {
-    width: min(1180px, calc(100% - 30px));
-    margin: auto;
+/* =========================
+   ESTRUTURA
+========================= */
+
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:82px 1fr;
 }
 
-/* =========================================================
-   HEADER
-   ========================================================= */
+/* =========================
+   MENU LATERAL
+========================= */
 
-header {
-    background: linear-gradient(135deg, #2563eb, #06b6d4);
-    color: white;
-    padding: 28px 0;
-    box-shadow: 0 5px 20px rgba(37,99,235,.20);
+.sidebar{
+  position:sticky;
+  top:0;
+  height:100vh;
+  background:#fff;
+  border-right:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:18px 8px;
+  z-index:10;
 }
 
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
+.brand-mini{
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:#eef6ff;
+  display:grid;
+  place-items:center;
+  color:var(--blue);
+  font-size:25px;
+  margin-bottom:22px;
 }
 
-.logo h1 {
-    margin: 0;
-    font-size: 28px;
-    letter-spacing: .5px;
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  width:100%;
 }
 
-.logo p {
-    margin: 6px 0 0;
-    opacity: .9;
+.nav button{
+  border:0;
+  background:transparent;
+  color:#506079;
+  border-radius:14px;
+  padding:11px 3px;
+  cursor:pointer;
+  font-size:11px;
 }
 
-.status-online {
-    background: rgba(255,255,255,.18);
-    border: 1px solid rgba(255,255,255,.3);
-    padding: 10px 15px;
-    border-radius: 30px;
-    font-weight: bold;
-    white-space: nowrap;
+.nav button span{
+  display:block;
+  font-size:21px;
+  margin-bottom:4px;
 }
 
-/* =========================================================
-   SECTION
-   ========================================================= */
-
-.section {
-    margin-top: 24px;
+.nav button.active{
+  background:#eaf4ff;
+  color:var(--blue);
+  font-weight:700;
 }
 
-.section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
+.sidebar-bottom{
+  margin-top:auto;
+  color:#8190a4;
+  font-size:12px;
 }
 
-.section-title h2 {
-    margin: 0;
-    font-size: 20px;
+/* =========================
+   CABEÇALHO
+========================= */
+
+main{
+  min-width:0;
 }
 
-.section-title span {
-    color: var(--muted);
-    font-size: 13px;
+.topbar{
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  min-height:82px;
+  padding:14px 28px;
+  display:grid;
+  grid-template-columns:minmax(260px,1fr) auto auto;
+  gap:30px;
+  align-items:center;
 }
 
-/* =========================================================
-   CARDS DA NOSSA ESTAÇÃO
-   ========================================================= */
-
-.station-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+.logo-wrap{
+  display:flex;
+  align-items:center;
+  gap:14px;
 }
 
-.metric {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
+.logo-mark{
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  color:var(--navy);
+  font-size:38px;
 }
 
-.metric::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 5px;
-    height: 100%;
+.brand-title small{
+  display:block;
+  font-size:12px;
+  letter-spacing:.08em;
+  font-weight:700;
 }
 
-.metric.temperature::before {
-    background: var(--orange);
+.brand-title strong{
+  display:block;
+  font-size:25px;
+  letter-spacing:.03em;
 }
 
-.metric.humidity::before {
-    background: var(--cyan);
+.location{
+  font-size:12px;
+  color:#4e5f75;
+  line-height:1.5;
 }
 
-.metric.pressure::before {
-    background: var(--purple);
+.location b{
+  color:var(--ink);
+  font-size:13px;
 }
 
-.metric.rain::before {
-    background: var(--blue);
+.online{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid #dcefe0;
+  color:#168b2a;
+  background:#f6fff7;
+  padding:9px 14px;
+  border-radius:12px;
+  font-size:12px;
+  font-weight:700;
 }
 
-.metric.wind::before {
-    background: var(--green);
+.dot{
+  width:8px;
+  height:8px;
+  background:#19a83a;
+  border-radius:50%;
 }
 
-.metric.direction::before {
-    background: var(--yellow);
+.updated{
+  text-align:right;
+  font-size:11px;
+  color:var(--muted);
 }
 
-.metric-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.updated b{
+  display:block;
+  color:var(--ink);
+  font-size:12px;
+  margin-top:3px;
 }
 
-.metric-label {
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: bold;
-    text-transform: uppercase;
+.refresh{
+  border:0;
+  background:#fff;
+  color:var(--navy);
+  font-size:22px;
+  cursor:pointer;
 }
 
-.metric-icon {
-    font-size: 25px;
+/* =========================
+   CONTEÚDO
+========================= */
+
+.content{
+  padding:18px 22px 30px;
+  max-width:1700px;
+  margin:auto;
 }
 
-.metric-value {
-    font-size: 29px;
-    font-weight: bold;
-    margin-top: 10px;
+.source-banner{
+  background:#fff;
+  border:1px solid var(--line);
+  border-left:5px solid var(--blue);
+  border-radius:14px;
+  padding:10px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:16px;
+  box-shadow:0 4px 14px rgba(22,48,82,.04);
 }
 
-.metric-sub {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 5px;
+.source-banner strong{
+  font-size:12px;
 }
 
-/* =========================================================
-   PAINÉIS
-   ========================================================= */
-
-.panel {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
+.source-banner span{
+  font-size:11px;
+  color:var(--muted);
 }
 
-.panel-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 15px;
+.badge{
+  padding:5px 9px;
+  border-radius:8px;
+  font-size:10px;
+  font-weight:800;
+  white-space:nowrap;
 }
 
-canvas {
-    width: 100%;
-    height: 280px;
-    display: block;
+.badge-own{
+  background:#eaf4ff;
+  color:#126fe5;
 }
 
-/* =========================================================
+.badge-external{
+  background:#f3f5f8;
+  color:#536278;
+}
+
+/* =========================
+   GRID PRINCIPAL
+========================= */
+
+.grid{
+  display:grid;
+  grid-template-columns:1.1fr 1fr 1.35fr;
+  gap:16px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:17px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.card-head{
+  padding:14px 17px 8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.card-title{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+
+.card-title span{
+  color:var(--muted);
+  font-weight:500;
+}
+
+.card-source{
+  font-size:9px;
+  color:#748198;
+  background:#f5f7fa;
+  border-radius:7px;
+  padding:4px 7px;
+}
+
+.card-body{
+  padding:10px 14px 15px;
+}
+
+/* =========================
+   NOSSA ESTAÇÃO
+========================= */
+
+.own{
+  grid-column:1;
+  grid-row:1 / span 2;
+  border-top:4px solid var(--blue);
+}
+
+.own .card-head{
+  padding-top:12px;
+}
+
+.own-tag{
+  color:var(--blue);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+}
+
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.metric{
+  min-height:125px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:13px;
+  position:relative;
+  background:linear-gradient(180deg,#fff,#fbfdff);
+}
+
+.metric-icon{
+  font-size:22px;
+  margin-bottom:7px;
+}
+
+.metric-name{
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  color:#526178;
+}
+
+.metric-value{
+  font-size:23px;
+  font-weight:800;
+  margin-top:7px;
+  white-space:nowrap;
+}
+
+.metric-unit{
+  font-size:13px;
+  font-weight:600;
+}
+
+.metric-note{
+  font-size:9px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.metric-line{
+  position:absolute;
+  left:13px;
+  right:13px;
+  bottom:10px;
+  height:22px;
+}
+
+.metric.temp .metric-icon,
+.metric.temp .metric-value{
+  color:var(--orange);
+}
+
+.metric.hum .metric-icon,
+.metric.hum .metric-value{
+  color:var(--blue);
+}
+
+.metric.press .metric-icon,
+.metric.press .metric-value{
+  color:var(--purple);
+}
+
+.metric.wind .metric-icon,
+.metric.wind .metric-value{
+  color:var(--green);
+}
+
+.metric.rain .metric-icon,
+.metric.rain .metric-value{
+  color:var(--cyan);
+}
+
+.metric.dir .metric-icon,
+.metric.dir .metric-value{
+  color:var(--yellow);
+}
+
+.simulated{
+  margin-top:11px;
+  background:#fff8e8;
+  border:1px solid #f6dfaa;
+  color:#8a6500;
+  padding:9px 11px;
+  border-radius:10px;
+  font-size:10px;
+  line-height:1.4;
+}
+
+/* =========================
+   GRÁFICOS
+========================= */
+
+.chart-card canvas{
+  width:100%;
+  height:210px;
+  display:block;
+}
+
+.chart-card.small canvas{
+  height:185px;
+}
+
+/* =========================
    PREVISÃO
-   ========================================================= */
+========================= */
 
-.forecast-panel {
-    background: linear-gradient(135deg, #ffffff, #f7fbff);
+.forecast{
+  grid-column:3;
+  grid-row:1 / span 2;
 }
 
-.forecast-info {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
+.forecast-main{
+  height:245px;
 }
 
-.legend {
-    padding: 7px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    background: #f1f5f9;
+.forecast-hours{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  border-top:1px solid var(--line);
+  margin-top:6px;
 }
 
-.legend.temperature {
-    color: var(--orange);
+.forecast-hour{
+  padding:10px 5px;
+  text-align:center;
+  border-right:1px solid var(--line);
 }
 
-.legend.rain {
-    color: var(--blue);
+.forecast-hour:last-child{
+  border-right:0;
 }
 
-.forecast-summary {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 8px;
+.forecast-hour b{
+  font-size:10px;
 }
 
-.hour {
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 10px 5px;
-    text-align: center;
+.forecast-icon{
+  font-size:24px;
+  margin:6px 0;
 }
 
-.hour-time {
-    font-size: 12px;
-    color: var(--muted);
+.forecast-temp{
+  font-weight:800;
+  font-size:15px;
 }
 
-.hour-temp {
-    font-size: 18px;
-    font-weight: bold;
-    margin-top: 5px;
+.forecast-rain{
+  font-size:9px;
+  color:var(--blue);
+  margin-top:4px;
 }
 
-.hour-rain {
-    color: var(--blue);
-    font-size: 11px;
-    margin-top: 4px;
-}
-
-/* =========================================================
+/* =========================
    ALERTA RIO
-   ========================================================= */
+========================= */
 
-.alert-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+.alert{
+  grid-column:1 / span 2;
 }
 
-.alert-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
+.alert-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  border:1px solid var(--line);
+  border-radius:13px;
+  overflow:hidden;
 }
 
-.alert-card h3 {
-    margin-top: 0;
+.alert-item{
+  padding:12px 9px;
+  text-align:center;
+  border-right:1px solid var(--line);
 }
 
-.alert-location {
-    color: var(--muted);
-    font-size: 13px;
+.alert-item:last-child{
+  border-right:0;
 }
 
-.alert-metrics {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 15px;
+.alert-icon{
+  font-size:19px;
 }
 
-.small-metric {
-    background: #f8fafc;
-    padding: 12px;
-    border-radius: 12px;
+.alert-value{
+  font-size:17px;
+  font-weight:800;
+  margin-top:4px;
 }
 
-.small-label {
-    font-size: 11px;
-    color: var(--muted);
+.alert-label{
+  font-size:9px;
+  color:var(--muted);
+  margin-top:3px;
 }
 
-.small-value {
-    font-size: 19px;
-    font-weight: bold;
-    margin-top: 4px;
+/* =========================
+   CHUVA IRAJÁ
+========================= */
+
+.rain{
+  grid-column:3;
 }
 
-/* =========================================================
-   IRAJÁ
-   ========================================================= */
-
-.rain-summary {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+.rain canvas{
+  height:190px;
 }
 
-.rain-box {
-    background: #f0f9ff;
-    border-radius: 12px;
-    padding: 12px;
-    text-align: center;
+/* =========================
+   ACUMULADOS
+========================= */
+
+.accum{
+  grid-column:3;
 }
 
-.rain-box strong {
-    display: block;
-    font-size: 20px;
-    color: var(--blue);
+.accum-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
 }
 
-.rain-box span {
-    font-size: 11px;
-    color: var(--muted);
+.accum-box{
+  border:1px solid #dce8f7;
+  border-radius:12px;
+  text-align:center;
+  padding:13px 5px;
 }
 
-/* =========================================================
+.accum-box strong{
+  display:block;
+  color:var(--blue);
+  font-size:18px;
+}
+
+.accum-box span{
+  font-size:9px;
+  color:var(--muted);
+}
+
+/* =========================
+   HISTÓRICO
+========================= */
+
+.history{
+  grid-column:1 / span 2;
+}
+
+.history-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.history-grid .mini{
+  border:1px solid var(--line);
+  border-radius:13px;
+  overflow:hidden;
+}
+
+.mini-title{
+  font-size:10px;
+  font-weight:800;
+  padding:9px 11px 0;
+}
+
+/* =========================
    DEFESA CIVIL
-   ========================================================= */
+========================= */
 
-.defesa {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 15px;
-    align-items: center;
+.defesa{
+  grid-column:1 / span 2;
 }
 
-.defesa-status {
-    background: #ecfdf3;
-    border: 1px solid #bbf7d0;
-    border-radius: 16px;
-    padding: 25px;
-    text-align: center;
+.defesa-grid{
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:12px;
 }
 
-.defesa-status .emoji {
-    font-size: 40px;
+.status-box,
+.channels{
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:15px;
 }
 
-.defesa-status strong {
-    display: block;
-    color: var(--green);
-    font-size: 20px;
-    margin-top: 8px;
+.status-row{
+  display:flex;
+  gap:13px;
+  align-items:center;
 }
 
-.defesa-info {
-    color: var(--muted);
-    line-height: 1.6;
+.shield{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#effbf1;
+  color:#20a536;
+  display:grid;
+  place-items:center;
+  font-size:25px;
 }
 
-/* =========================================================
+.status-box strong{
+  color:#168b2a;
+  font-size:13px;
+}
+
+.status-box p{
+  margin:5px 0 0;
+  font-size:10px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.levels{
+  display:flex;
+  gap:4px;
+  margin-top:15px;
+}
+
+.level{
+  height:7px;
+  flex:1;
+  border-radius:20px;
+  background:#dce3ec;
+}
+
+.level.active{
+  background:#6fcb38;
+}
+
+.level-labels{
+  display:flex;
+  justify-content:space-between;
+  font-size:7px;
+  color:#748198;
+  margin-top:4px;
+}
+
+.channels b{
+  font-size:10px;
+}
+
+.channels div{
+  font-size:10px;
+  color:#526178;
+  margin-top:8px;
+}
+
+/* =========================
    SATÉLITE
-   ========================================================= */
+========================= */
 
-.satellite {
-    background: #102a43;
-    color: white;
+.satellite{
+  grid-column:3;
 }
 
-.satellite-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.satellite-preview{
+  height:205px;
+  border-radius:13px;
+  overflow:hidden;
+  position:relative;
+  background:
+    radial-gradient(circle at 45% 45%,rgba(255,255,255,.75),transparent 17%),
+    linear-gradient(140deg,#263b53,#84929e 40%,#23384d);
 }
 
-.satellite-header h2 {
-    margin: 0;
+.satellite-preview:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(ellipse at 62% 60%,#547c5c 0 13%,transparent 14%),
+    radial-gradient(ellipse at 47% 45%,#657c62 0 10%,transparent 11%),
+    radial-gradient(ellipse at 75% 32%,rgba(255,255,255,.7) 0 9%,transparent 10%),
+    radial-gradient(ellipse at 25% 70%,rgba(255,255,255,.55) 0 12%,transparent 13%);
+  filter:blur(2px);
+  opacity:.9;
 }
 
-.satellite-source {
-    font-size: 12px;
-    opacity: .7;
+.sat-label{
+  position:absolute;
+  left:11px;
+  top:10px;
+  background:rgba(0,0,0,.55);
+  color:#fff;
+  padding:5px 8px;
+  border-radius:7px;
+  font-size:9px;
+  font-weight:700;
 }
 
-.satellite-box {
-    margin-top: 15px;
-    min-height: 300px;
-    border-radius: 15px;
-    background:
-        radial-gradient(circle at 60% 40%, rgba(59,130,246,.4), transparent 25%),
-        linear-gradient(135deg, #173b61, #0b2036);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+.sat-buttons{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+  margin-top:9px;
 }
 
-.satellite-placeholder {
-    max-width: 500px;
-    padding: 30px;
+.sat-buttons button{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:8px;
+  padding:7px 2px;
+  font-size:8px;
+  cursor:pointer;
 }
 
-.satellite-placeholder .icon {
-    font-size: 55px;
+.sat-buttons button.active{
+  background:var(--blue);
+  color:#fff;
+  border-color:var(--blue);
 }
 
-.satellite-placeholder h3 {
-    margin-bottom: 8px;
+.open-sat{
+  display:block;
+  text-align:center;
+  margin-top:9px;
+  background:var(--blue);
+  color:#fff;
+  text-decoration:none;
+  border-radius:9px;
+  padding:9px;
+  font-size:10px;
+  font-weight:800;
 }
 
-.satellite-placeholder p {
-    color: #b8c7d9;
-    font-size: 13px;
-    line-height: 1.6;
+/* =========================
+   FONTES
+========================= */
+
+.sources{
+  margin-top:16px;
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:17px;
+  box-shadow:var(--shadow);
 }
 
-.satellite-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 15px;
+.sources-head{
+  padding:13px 17px;
+  font-size:12px;
+  font-weight:800;
 }
 
-.satellite-buttons span {
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.15);
-    padding: 8px 12px;
-    border-radius: 20px;
-    font-size: 12px;
+.sources-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  border-top:1px solid var(--line);
 }
 
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.last-update {
-    text-align: center;
-    margin: 25px 0 10px;
-    color: var(--muted);
-    font-size: 12px;
+.source{
+  padding:14px;
+  border-right:1px solid var(--line);
 }
 
-footer {
-    text-align: center;
-    padding: 30px;
-    color: var(--muted);
-    font-size: 12px;
+.source:last-child{
+  border-right:0;
 }
 
-/* =========================================================
+.source b{
+  font-size:10px;
+}
+
+.source span{
+  display:block;
+  font-size:9px;
+  color:var(--muted);
+  margin-top:4px;
+  line-height:1.4;
+}
+
+.source-code{
+  display:inline-block;
+  margin-bottom:6px;
+  font-size:9px;
+  font-weight:800;
+  color:var(--blue);
+  background:#eef6ff;
+  padding:4px 6px;
+  border-radius:6px;
+}
+
+/* =========================
+   RODAPÉ
+========================= */
+
+footer{
+  padding:14px 4px 0;
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  color:#77859a;
+  font-size:9px;
+}
+
+/* =========================
    RESPONSIVO
-   ========================================================= */
+========================= */
 
-@media (max-width: 800px) {
+@media(max-width:1200px){
 
-    .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .grid{
+    grid-template-columns:1fr 1fr;
+  }
 
-    .panel-grid,
-    .alert-grid,
-    .defesa {
-        grid-template-columns: 1fr;
-    }
+  .own,
+  .forecast,
+  .alert,
+  .rain,
+  .accum,
+  .history,
+  .defesa,
+  .satellite{
+    grid-column:auto;
+    grid-row:auto;
+  }
 
-    .forecast-summary {
-        grid-template-columns: repeat(3, 1fr);
-    }
+  .forecast{
+    grid-column:1 / span 2;
+  }
 
+  .satellite{
+    grid-column:1 / span 2;
+  }
+
+  .sources-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .source:nth-child(2n){
+    border-right:0;
+  }
+
+  .source{
+    border-bottom:1px solid var(--line);
+  }
 }
 
-@media (max-width: 500px) {
+@media(max-width:760px){
 
-    .container {
-        width: min(100% - 20px, 1180px);
-    }
+  .app{
+    display:block;
+  }
 
-    .logo h1 {
-        font-size: 23px;
-    }
+  .sidebar{
+    display:none;
+  }
 
-    .station-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .topbar{
+    grid-template-columns:1fr auto;
+    padding:13px 15px;
+  }
 
-    .metric {
-        padding: 15px;
-    }
+  .location,
+  .updated{
+    display:none;
+  }
 
-    .metric-value {
-        font-size: 23px;
-    }
+  .content{
+    padding:12px;
+  }
 
-    .forecast-summary {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .grid{
+    display:block;
+  }
 
-    .rain-summary {
-        grid-template-columns: repeat(2, 1fr);
-    }
+  .card{
+    margin-bottom:12px;
+  }
 
+  .metrics{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .alert-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .alert-item:nth-child(2n){
+    border-right:0;
+  }
+
+  .alert-item{
+    border-bottom:1px solid var(--line);
+  }
+
+  .forecast-hours{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .forecast-hour:nth-child(3){
+    border-right:0;
+  }
+
+  .history-grid,
+  .defesa-grid{
+    grid-template-columns:1fr;
+  }
+
+  .sources-grid{
+    grid-template-columns:1fr;
+  }
+
+  .source{
+    border-right:0!important;
+  }
+
+  footer{
+    flex-direction:column;
+  }
+
+  .source-banner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .sat-buttons{
+    grid-template-columns:repeat(3,1fr);
+  }
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- ======================================================
+<div class="app">
+
+<!-- =====================================================
+     MENU LATERAL
+===================================================== -->
+
+<aside class="sidebar">
+
+  <div class="brand-mini">✣</div>
+
+  <nav class="nav">
+
+    <button class="active">
+      <span>▦</span>
+      Dashboard
+    </button>
+
+    <button onclick="scrollToId('nossa-estacao')">
+      <span>♨</span>
+      Estação
+    </button>
+
+    <button onclick="scrollToId('previsao-card')">
+      <span>☁</span>
+      Previsão
+    </button>
+
+    <button onclick="scrollToId('alerta-card')">
+      <span>♧</span>
+      Alerta Rio
+    </button>
+
+    <button onclick="scrollToId('defesa-card')">
+      <span>✓</span>
+      Defesa Civil
+    </button>
+
+    <button onclick="scrollToId('satellite-card')">
+      <span>◉</span>
+      Satélite
+    </button>
+
+    <button onclick="scrollToId('fontes')">
+      <span>◌</span>
+      Fontes
+    </button>
+
+  </nav>
+
+  <div class="sidebar-bottom">
+    v3.0
+  </div>
+
+</aside>
+
+
+<main>
+
+<!-- =====================================================
      CABEÇALHO
-====================================================== -->
+===================================================== -->
 
-<header>
+<header class="topbar">
 
-<div class="container header-content">
+  <div class="logo-wrap">
 
-<div class="logo">
+    <div class="logo-mark">
+      ✣
+    </div>
 
-<h1>🌦️ CONSTELACIÓN</h1>
+    <div class="brand-title">
+      <small>ESTAÇÃO METEOROLÓGICA</small>
+      <strong>CONSTELACIÓN</strong>
+    </div>
 
-<p>
-Estação Meteorológica • Colégio, Rio de Janeiro
-</p>
+  </div>
 
-</div>
 
-<div class="status-online" id="status">
-🟡 Conectando...
-</div>
+  <div class="location">
 
-</div>
+    📍 <b>Colégio – Rio de Janeiro</b><br>
+
+    <span>
+      -22.8456° S · -43.3385° W · 12 m
+    </span>
+
+  </div>
+
+
+  <div style="display:flex;align-items:center;gap:22px">
+
+    <div class="online">
+      <i class="dot"></i>
+      SISTEMA ONLINE
+    </div>
+
+    <div class="updated">
+
+      Última atualização
+
+      <b id="ultimaAtualizacao">
+        --/--/---- – --:--:--
+      </b>
+
+    </div>
+
+    <button
+      class="refresh"
+      onclick="atualizarTudo()"
+      title="Atualizar"
+    >
+      ↻
+    </button>
+
+  </div>
 
 </header>
 
 
-<main class="container">
+<div class="content">
+
+<!-- =====================================================
+     HIERARQUIA DOS DADOS
+===================================================== -->
+
+<div class="source-banner">
+
+  <div>
+
+    <strong>
+      HIERARQUIA DOS DADOS
+    </strong>
+
+    <span>
+      Os dados da nossa estação são apresentados primeiro
+      e não devem ser confundidos com informações externas.
+    </span>
+
+  </div>
+
+  <div style="display:flex;gap:6px">
+
+    <span class="badge badge-own">
+      ● NOSSA ESTAÇÃO
+    </span>
+
+    <span class="badge badge-external">
+      ● FONTES EXTERNAS
+    </span>
+
+  </div>
+
+</div>
 
 
-<!-- ======================================================
+<section class="grid">
+
+<!-- =====================================================
      NOSSA ESTAÇÃO
-====================================================== -->
+===================================================== -->
 
-<section class="section">
+<article
+  class="card own"
+  id="nossa-estacao"
+>
 
-<div class="section-title">
+  <div class="card-head">
 
-<h2>🌡️ Nossa Estação</h2>
+    <div>
 
-<span id="ultimaAtualizacao">
-Última atualização: --
-</span>
+      <div class="own-tag">
+        ● Dados próprios
+      </div>
 
-</div>
+      <div
+        class="card-title"
+        style="font-size:14px"
+      >
+        NOSSOS DADOS
+        <span>— TEMPO REAL</span>
+      </div>
 
+    </div>
 
-<div class="station-grid">
+    <div class="card-source">
+      Estação Constelación
+    </div>
 
+  </div>
 
-<div class="metric temperature">
 
-<div class="metric-top">
+  <div class="card-body">
 
-<div class="metric-label">
-Temperatura
-</div>
+    <div class="metrics">
 
-<div class="metric-icon">
-🌡️
-</div>
+      <!-- TEMPERATURA -->
 
-</div>
+      <div class="metric temp">
 
-<div class="metric-value" id="temperatura">
--- °C
-</div>
+        <div class="metric-icon">
+          ♨
+        </div>
 
-<div class="metric-sub">
-Temperatura atual
-</div>
+        <div class="metric-name">
+          Temperatura
+        </div>
 
-</div>
+        <div
+          class="metric-value"
+          id="temp"
+        >
+          -- <span class="metric-unit">°C</span>
+        </div>
 
+        <div
+          class="metric-note"
+          id="tempNote"
+        >
+          Aguardando dados
+        </div>
 
-<div class="metric humidity">
+        <canvas
+          class="metric-line"
+          id="miniTemp"
+        ></canvas>
 
-<div class="metric-top">
+      </div>
 
-<div class="metric-label">
-Umidade
-</div>
 
-<div class="metric-icon">
-💧
-</div>
+      <!-- UMIDADE -->
 
-</div>
+      <div class="metric hum">
 
-<div class="metric-value" id="umidade">
--- %
-</div>
+        <div class="metric-icon">
+          ♢
+        </div>
 
-<div class="metric-sub">
-Umidade relativa
-</div>
+        <div class="metric-name">
+          Umidade
+        </div>
 
-</div>
+        <div
+          class="metric-value"
+          id="hum"
+        >
+          -- <span class="metric-unit">%</span>
+        </div>
 
+        <div class="metric-note">
+          Umidade relativa do ar
+        </div>
 
-<div class="metric pressure">
+        <canvas
+          class="metric-line"
+          id="miniHum"
+        ></canvas>
 
-<div class="metric-top">
+      </div>
 
-<div class="metric-label">
-Pressão
-</div>
 
-<div class="metric-icon">
-⬇️
-</div>
+      <!-- PRESSÃO -->
 
-</div>
+      <div class="metric press">
 
-<div class="metric-value" id="pressao">
--- hPa
-</div>
+        <div class="metric-icon">
+          ◉
+        </div>
 
-<div class="metric-sub">
-Pressão atmosférica
-</div>
+        <div class="metric-name">
+          Pressão
+        </div>
 
-</div>
+        <div
+          class="metric-value"
+          id="press"
+        >
+          -- <span class="metric-unit">hPa</span>
+        </div>
 
+        <div class="metric-note">
+          Pressão atmosférica
+        </div>
 
-<div class="metric rain">
+        <canvas
+          class="metric-line"
+          id="miniPress"
+        ></canvas>
 
-<div class="metric-top">
+      </div>
 
-<div class="metric-label">
-Chuva
-</div>
 
-<div class="metric-icon">
-🌧️
-</div>
+      <!-- VENTO -->
 
-</div>
+      <div class="metric wind">
 
-<div class="metric-value" id="chuva">
--- mm
-</div>
+        <div class="metric-icon">
+          ≋
+        </div>
 
-<div class="metric-sub">
-Precipitação registrada
-</div>
+        <div class="metric-name">
+          Vento
+        </div>
 
-</div>
+        <div
+          class="metric-value"
+          id="wind"
+        >
+          -- <span class="metric-unit">km/h</span>
+        </div>
 
+        <div class="metric-note">
+          Velocidade do vento
+        </div>
 
-<div class="metric wind">
+        <canvas
+          class="metric-line"
+          id="miniWind"
+        ></canvas>
 
-<div class="metric-top">
+      </div>
 
-<div class="metric-label">
-Vento
-</div>
 
-<div class="metric-icon">
-💨
-</div>
+      <!-- CHUVA -->
 
-</div>
+      <div class="metric rain">
 
-<div class="metric-value" id="vento">
--- km/h
-</div>
+        <div class="metric-icon">
+          ♧
+        </div>
 
-<div class="metric-sub">
-Velocidade
-</div>
+        <div class="metric-name">
+          Chuva
+        </div>
 
-</div>
+        <div
+          class="metric-value"
+          id="rain"
+        >
+          -- <span class="metric-unit">mm</span>
+        </div>
 
+        <div class="metric-note">
+          Acumulado da estação
+        </div>
 
-<div class="metric direction">
+        <canvas
+          class="metric-line"
+          id="miniRain"
+        ></canvas>
 
-<div class="metric-top">
+      </div>
 
-<div class="metric-label">
-Direção
-</div>
 
-<div class="metric-icon">
-🧭
-</div>
+      <!-- DIREÇÃO -->
 
-</div>
+      <div class="metric dir">
 
-<div class="metric-value" id="direcao">
---
-</div>
+        <div class="metric-icon">
+          ⌁
+        </div>
 
-<div class="metric-sub">
-Direção do vento
-</div>
+        <div class="metric-name">
+          Direção
+        </div>
 
-</div>
+        <div
+          class="metric-value"
+          id="direction"
+        >
+          --
+        </div>
 
-
-</div>
-
-</section>
-
-
-<!-- ======================================================
-     HISTÓRICO
-====================================================== -->
-
-<section class="section">
-
-<div class="section-title">
-
-<h2>📈 Histórico da nossa estação</h2>
-
-<span>Últimas 20 leituras</span>
-
-</div>
-
-
-<div class="panel-grid">
-
-<div class="panel">
-
-<h3>🌡️ Temperatura</h3>
-
-<canvas id="graficoTemperatura"></canvas>
-
-</div>
-
-
-<div class="panel">
-
-<h3>💧 Umidade</h3>
-
-<canvas id="graficoUmidade"></canvas>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ======================================================
-     PREVISÃO
-====================================================== -->
-
-<section class="section">
-
-<div class="section-title">
-
-<h2>🌤️ Previsão Meteorológica</h2>
-
-<span>Próximas 24 horas</span>
-
-</div>
-
-
-<div class="panel forecast-panel">
-
-<div class="forecast-info">
-
-<div class="legend temperature">
-● Temperatura
-</div>
-
-<div class="legend rain">
-● Probabilidade de chuva
-</div>
-
-</div>
-
-
-<canvas id="graficoPrevisao"></canvas>
-
-
-<div class="forecast-summary" id="resumoPrevisao">
-
-<div class="hour">
-Carregando...
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ======================================================
-     ALERTA RIO
-====================================================== -->
-
-<section class="section">
-
-<div class="section-title">
-
-<h2>🏙️ Alerta Rio</h2>
-
-<span>Prefeitura do Rio de Janeiro</span>
-
-</div>
-
-
-<div class="alert-grid">
-
-
-<!-- SÃO CRISTÓVÃO -->
-
-<div class="alert-card">
-
-<h3>🏙️ São Cristóvão</h3>
-
-<div class="alert-location">
-Estação meteorológica • Alerta Rio
-</div>
-
-
-<div class="alert-metrics">
-
-<div class="small-metric">
-
-<div class="small-label">
-Temperatura
-</div>
-
-<div class="small-value" id="rioTemperatura">
---
-</div>
-
-</div>
-
-
-<div class="small-metric">
-
-<div class="small-label">
-Umidade
-</div>
-
-<div class="small-value" id="rioUmidade">
---
-</div>
-
-</div>
-
-
-<div class="small-metric">
-
-<div class="small-label">
-Pressão
-</div>
-
-<div class="small-value" id="rioPressao">
---
-</div>
-
-</div>
-
-
-<div class="small-metric">
-
-<div class="small-label">
-Vento
-</div>
-
-<div class="small-value" id="rioVento">
---
-</div>
-
-</div>
-
-
-<div class="small-metric">
-
-<div class="small-label">
-Direção
-</div>
-
-<div class="small-value" id="rioDirecao">
---
-</div>
-
-</div>
-
-
-<div class="small-metric">
-
-<div class="small-label">
-Horário
-</div>
-
-<div class="small-value" id="rioHorario">
---
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- IRAJÁ -->
-
-<div class="alert-card">
-
-<h3>🌧️ Irajá</h3>
-
-<div class="alert-location">
-Precipitação • Estação pluviométrica
-</div>
-
-
-<canvas id="graficoChuva"></canvas>
-
-
-<div class="rain-summary">
-
-
-<div class="rain-box">
-
-<strong id="chuva5min">
---
-</strong>
-
-<span>5 minutos</span>
-
-</div>
-
-
-<div class="rain-box">
-
-<strong id="chuva1h">
---
-</strong>
-
-<span>1 hora</span>
-
-</div>
-
-
-<div class="rain-box">
-
-<strong id="chuva6h">
---
-</strong>
-
-<span>6 horas</span>
-
-</div>
-
-
-<div class="rain-box">
-
-<strong id="chuva24h">
---
-</strong>
-
-<span>24 horas</span>
-
-</div>
-
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ======================================================
-     DEFESA CIVIL
-====================================================== -->
-
-<section class="section">
-
-<div class="section-title">
-
-<h2>🚨 Defesa Civil / COR-Rio</h2>
-
-<span>Informações oficiais</span>
-
-</div>
-
-
-<div class="panel defesa">
-
-
-<div class="defesa-status">
-
-<div class="emoji">
-🟢
-</div>
-
-<strong>
-Situação normal
-</strong>
-
-<div>
-Estágio operacional
-</div>
-
-</div>
-
-
-<div class="defesa-info">
-
-<strong>
-Monitoramento municipal
-</strong>
-
-<p>
-Acompanhe os alertas e comunicados oficiais
-da Prefeitura do Rio de Janeiro e da Defesa Civil.
-</p>
-
-<p>
-📱 Receba alertas gratuitamente:
-envie seu CEP por SMS para <strong>40199</strong>.
-</p>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ======================================================
-     SATÉLITE
-====================================================== -->
-
-<section class="section">
-
-<div class="panel satellite">
-
-<div class="satellite-header">
-
-<h2>
-🛰️ Monitoramento via Satélite
-</h2>
-
-<div class="satellite-source">
-GOES-19 • CPTEC/INPE
-</div>
-
-</div>
-
-
-<div class="satellite-box">
-
-<div class="satellite-placeholder">
-
-<div class="icon">
-🛰️
-</div>
-
-<h3>
-Monitoramento atmosférico
-</h3>
-
-<p>
-Este módulo está preparado para receber
-as imagens meteorológicas do GOES-19
-e apresentar a situação atmosférica
-sobre o Rio de Janeiro.
-</p>
-
-<div class="satellite-buttons">
-
-<span>VISÍVEL</span>
-
-<span>INFRAVERMELHO</span>
-
-<span>REALÇADA</span>
-
-<span>VIS + IR</span>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div style="
-text-align:center;
-font-size:11px;
-color:#aabbd0;
-margin-top:10px;
-">
-
-Fonte: CPTEC/INPE • GOES-19
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ======================================================
-     RODAPÉ
-====================================================== -->
-
-<div class="last-update" id="mensagemSistema">
-Sistema meteorológico Constelación
-</div>
-
-
-</main>
-
-
-<footer>
-
-<strong>🌦️ Estação Meteorológica Constelación</strong>
-
-<br><br>
-
-Dados da estação • Open-Meteo • Alerta Rio • Defesa Civil
-
-<br><br>
-
-<span>
-Projeto experimental de monitoramento meteorológico
-</span>
-
-</footer>
-
-
-<script>
-
-/* =========================================================
-   VARIÁVEIS
-========================================================= */
-
-let dadosHistoricos = [];
-
-
-/* =========================================================
-   NOSSA ESTAÇÃO
-========================================================= */
-
-async function atualizarDados() {
-
-    try {
-
-        const resposta =
-            await fetch('/api/leituras');
-
-        const dados =
-            await resposta.json();
-
-        if (
-            !dados.sucesso ||
-            !dados.leituras ||
-            dados.leituras.length === 0
-        ) {
-
-            throw new Error(
-                'Nenhuma leitura disponível'
-            );
-
-        }
-
-
-        dadosHistoricos =
-            dados.leituras;
-
-
-        const atual =
-            dadosHistoricos[0];
-
-
-        document.getElementById(
-            'temperatura'
-        ).textContent =
-            atual.temperatura !== null
-                ? `${atual.temperatura} °C`
-                : '-- °C';
-
-
-        document.getElementById(
-            'umidade'
-        ).textContent =
-            atual.umidade !== null
-                ? `${atual.umidade} %`
-                : '-- %';
-
-
-        document.getElementById(
-            'pressao'
-        ).textContent =
-            atual.pressao !== null
-                ? `${atual.pressao} hPa`
-                : '-- hPa';
-
-
-        document.getElementById(
-            'chuva'
-        ).textContent =
-            atual.chuva !== null
-                ? `${atual.chuva} mm`
-                : '-- mm';
-
-
-        document.getElementById(
-            'vento'
-        ).textContent =
-            atual.vento !== null
-                ? `${atual.vento} km/h`
-                : '-- km/h';
-
-
-        document.getElementById(
-            'direcao'
-        ).textContent =
-            atual.direcao_vento || '--';
-
-
-        document.getElementById(
-            'status'
-        ).innerHTML =
-            '🟢 Sistema online';
-
-
-        const data =
-            new Date(atual.data_hora);
-
-
-        document.getElementById(
-            'ultimaAtualizacao'
-        ).textContent =
-            'Atualizado: ' +
-            data.toLocaleString(
-                'pt-BR'
-            );
-
-
-        desenharLinha(
-            'graficoTemperatura',
-            dadosHistoricos,
-            'temperatura',
-            '°C'
-        );
-
-
-        desenharLinha(
-            'graficoUmidade',
-            dadosHistoricos,
-            'umidade',
-            '%'
-        );
-
-
-    } catch (erro) {
-
-        console.error(erro);
-
-        document.getElementById(
-            'status'
-        ).innerHTML =
-            '🔴 Sistema indisponível';
-
-    }
-
-}
-
-
-/* =========================================================
-   GRÁFICO DE LINHA
-========================================================= */
-
-function desenharLinha(
-    id,
-    leituras,
-    campo,
-    unidade
-) {
-
-    const canvas =
-        document.getElementById(id);
-
-    const ctx =
-        canvas.getContext('2d');
-
-
-    const largura =
-        canvas.clientWidth;
-
-    const altura =
-        canvas.clientHeight;
-
-
-    const dpr =
-    
+        <div
+          class="metric-note"
+          id="directionNote"
+        >
+          Direção do vento
+      
