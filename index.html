@@ -6,41 +6,58 @@
 
 <title>Estação Meteorológica Constelación</title>
 
+<meta name="theme-color" content="#f5f8fc">
+<meta name="description" content="Estação Meteorológica Constelación">
+
 <style>
 
+/* =========================================================
+   CONSTELACIÓN — DASHBOARD V3.0
+   Fundo claro / Dados próprios em destaque
+========================================================= */
+
 :root{
-    --blue:#1877e8;
-    --blue-dark:#135fbb;
-    --blue-light:#eaf4ff;
-
-    --orange:#ff8618;
-    --orange-light:#fff2e4;
-
-    --green:#4caf50;
-    --green-light:#edf9ee;
-
-    --purple:#9b51e0;
-    --purple-light:#f6edff;
-
-    --cyan:#17a8c7;
-    --cyan-light:#e8f9fc;
-
-    --yellow:#e3b900;
-    --yellow-light:#fffbea;
-
-    --red:#e74c3c;
-
-    --text:#172235;
-    --text2:#596779;
-    --muted:#7c8997;
 
     --bg:#f5f8fc;
-    --card:#ffffff;
-    --border:#e2e8f0;
+    --surface:#ffffff;
+    --surface-soft:#f8fafc;
 
-    --shadow:0 8px 25px rgba(29,55,85,.07);
+    --text:#172033;
+    --text-2:#526071;
+    --text-3:#7b8796;
+
+    --blue:#1976d2;
+    --blue-dark:#145ca8;
+    --blue-soft:#eaf4ff;
+
+    --orange:#f28c28;
+    --orange-soft:#fff3e5;
+
+    --cyan:#159bc1;
+    --cyan-soft:#e8f8fc;
+
+    --green:#4caf60;
+    --green-soft:#eaf8ed;
+
+    --purple:#9655d6;
+    --purple-soft:#f4ecfc;
+
+    --yellow:#e4b900;
+    --yellow-soft:#fff9df;
+
+    --red:#e95b5b;
+
+    --border:#e3e8ee;
+
+    --shadow:0 8px 28px rgba(35,52,75,.07);
+
     --radius:20px;
+
 }
+
+/* =========================================================
+   RESET
+========================================================= */
 
 *{
     box-sizing:border-box;
@@ -51,322 +68,492 @@ html{
 }
 
 body{
+
     margin:0;
+
     background:var(--bg);
+
     color:var(--text);
+
     font-family:
         Inter,
-        system-ui,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
+        Roboto,
+        Arial,
         sans-serif;
+
 }
 
-/* =====================================================
+button,
+a{
+    font-family:inherit;
+}
+
+/* =========================================================
    HEADER
-===================================================== */
+========================================================= */
 
 .header{
-    background:white;
+
+    background:#ffffff;
+
     border-bottom:1px solid var(--border);
-    padding:18px 24px;
+
     position:sticky;
+
     top:0;
-    z-index:20;
+
+    z-index:50;
+
 }
 
 .header-inner{
-    max-width:1400px;
+
+    max-width:1500px;
+
     margin:auto;
 
+    padding:18px 28px;
+
     display:flex;
+
     align-items:center;
+
     justify-content:space-between;
+
     gap:20px;
+
 }
 
 .brand{
+
     display:flex;
+
     align-items:center;
-    gap:15px;
+
+    gap:16px;
+
 }
 
-.brand-symbol{
-    width:54px;
-    height:54px;
-    border-radius:16px;
+.brand-icon{
+
+    width:62px;
+    height:62px;
+
+    border-radius:18px;
+
+    background:var(--blue-soft);
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
-    background:var(--blue-light);
     color:var(--blue);
 
-    font-size:30px;
-    font-weight:700;
+    font-size:34px;
+
 }
 
-.brand-small{
+.brand-text small{
+
+    display:block;
+
     font-size:12px;
+
     font-weight:700;
+
     letter-spacing:1.4px;
-    color:#526174;
+
+    color:var(--text-2);
+
+    margin-bottom:3px;
+
 }
 
-.brand-title{
-    margin:1px 0 0;
-    font-size:27px;
-    font-weight:800;
+.brand-text strong{
+
+    display:block;
+
+    font-size:30px;
+
     letter-spacing:.5px;
+
+    line-height:1;
+
 }
 
 .header-right{
+
     display:flex;
+
     align-items:center;
+
     gap:18px;
+
 }
 
 .location{
-    font-size:13px;
-    color:var(--text2);
-}
 
-.location strong{
-    color:var(--text);
+    color:var(--text-2);
+
+    font-size:13px;
+
+    font-weight:600;
+
 }
 
 .online{
-    display:flex;
-    align-items:center;
-    gap:7px;
 
-    padding:11px 16px;
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    padding:12px 18px;
 
     border-radius:30px;
 
-    background:var(--green-light);
-    border:1px solid #d7efd9;
+    background:#effaf1;
 
-    color:#24862a;
+    border:1px solid #d6efd9;
+
+    color:#278a3c;
 
     font-size:13px;
+
     font-weight:800;
+
 }
 
 .online-dot{
-    width:9px;
-    height:9px;
+
+    width:12px;
+    height:12px;
+
+    background:#36aa4f;
+
     border-radius:50%;
-    background:#28a745;
-    box-shadow:0 0 0 4px rgba(40,167,69,.10);
+
+    box-shadow:0 0 0 5px rgba(54,170,79,.10);
+
 }
 
-/* =====================================================
+/* =========================================================
    CONTAINER
-===================================================== */
+========================================================= */
 
 .container{
-    max-width:1400px;
+
+    max-width:1500px;
+
     margin:auto;
-    padding:24px;
+
+    padding:28px;
+
 }
 
-/* =====================================================
-   HIERARCHY
-===================================================== */
+/* =========================================================
+   HIERARQUIA
+========================================================= */
 
 .hierarchy{
-    background:white;
+
+    background:var(--surface);
+
     border:1px solid var(--border);
-    border-left:6px solid var(--blue);
+
+    border-left:7px solid var(--blue);
 
     border-radius:var(--radius);
 
-    padding:20px 24px;
+    padding:25px 28px;
 
     box-shadow:var(--shadow);
 
-    margin-bottom:22px;
+    margin-bottom:26px;
+
 }
 
 .hierarchy-title{
-    font-size:18px;
-    font-weight:800;
-    margin-bottom:7px;
+
+    font-size:20px;
+
+    font-weight:900;
+
+    margin-bottom:8px;
+
 }
 
 .hierarchy-title span{
-    color:var(--text2);
+
     font-weight:500;
+
+    color:var(--text-2);
+
 }
 
-.hierarchy-text{
-    margin:0 0 15px;
-    color:var(--text2);
-    line-height:1.6;
+.hierarchy p{
+
+    margin:0 0 18px;
+
+    color:var(--text-2);
+
+    line-height:1.7;
+
 }
 
-.legend{
+.hierarchy-tags{
+
     display:flex;
+
     gap:10px;
+
     flex-wrap:wrap;
+
 }
 
-.legend-item{
-    padding:8px 13px;
-    border-radius:12px;
+.tag{
 
-    font-size:12px;
+    padding:11px 18px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
     font-weight:800;
+
 }
 
-.legend-own{
-    background:#eaf4ff;
-    color:#2373c8;
+.tag-own{
+
+    background:var(--blue-soft);
+
+    color:#2773b8;
+
 }
 
-.legend-external{
-    background:#f1f3f7;
-    color:#697587;
+.tag-external{
+
+    background:#f2f4f7;
+
+    color:#687586;
+
 }
 
-/* =====================================================
+/* =========================================================
    SECTION
-===================================================== */
+========================================================= */
 
 .section{
-    background:white;
 
-    border:1px solid var(--border);
+    margin-bottom:28px;
 
-    border-radius:var(--radius);
-
-    padding:22px;
-
-    box-shadow:var(--shadow);
-
-    margin-bottom:22px;
-}
-
-.section.own-section{
-    border-top:5px solid var(--blue);
 }
 
 .section-header{
+
     display:flex;
+
     justify-content:space-between;
-    align-items:flex-start;
-    gap:15px;
 
-    margin-bottom:18px;
-}
+    align-items:flex-end;
 
-.section-kicker{
-    color:var(--blue);
-    font-size:12px;
-    font-weight:900;
-    letter-spacing:.5px;
-    text-transform:uppercase;
+    gap:20px;
+
+    margin-bottom:15px;
+
 }
 
 .section-title{
-    margin:3px 0 0;
-    font-size:22px;
-    font-weight:800;
+
+    font-size:24px;
+
+    font-weight:900;
+
+    margin:0;
+
 }
 
-.section-title span{
-    color:var(--text2);
+.section-title .blue{
+
+    color:var(--blue);
+
+}
+
+.section-title .muted{
+
+    color:var(--text-2);
+
     font-weight:500;
+
+}
+
+.section-subtitle{
+
+    margin:5px 0 0;
+
+    color:var(--text-3);
+
+    font-size:14px;
+
 }
 
 .source-badge{
-    background:#f4f6f9;
-    color:#697687;
 
-    padding:9px 13px;
+    padding:9px 14px;
 
-    border-radius:12px;
+    border-radius:10px;
+
+    background:#f3f6fa;
+
+    color:#687586;
 
     font-size:12px;
+
     font-weight:700;
 
     white-space:nowrap;
+
 }
 
-/* =====================================================
-   OUR DATA CARDS
-===================================================== */
+/* =========================================================
+   NOSSA ESTAÇÃO
+========================================================= */
+
+.own-section{
+
+    background:#ffffff;
+
+    border:1px solid var(--border);
+
+    border-top:7px solid var(--blue);
+
+    border-radius:var(--radius);
+
+    padding:25px;
+
+    box-shadow:var(--shadow);
+
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
 
 .metrics-grid{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(6, minmax(0,1fr));
+
     gap:14px;
+
 }
 
 .metric{
-    min-height:140px;
+
+    min-height:150px;
+
+    background:#ffffff;
 
     border:1px solid var(--border);
+
     border-radius:18px;
 
-    padding:18px;
-
-    background:linear-gradient(
-        145deg,
-        #ffffff,
-        #fbfdff
-    );
+    padding:20px;
 
     position:relative;
+
     overflow:hidden;
+
+    transition:.2s ease;
+
+}
+
+.metric:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 22px rgba(35,52,75,.08);
+
 }
 
 .metric::after{
+
     content:"";
 
     position:absolute;
 
-    width:90px;
-    height:90px;
+    width:95px;
+    height:95px;
 
-    right:-35px;
-    bottom:-40px;
+    right:-28px;
+    bottom:-35px;
 
     border-radius:50%;
 
-    background:rgba(24,119,232,.035);
+    background:#f3f7fc;
+
 }
 
 .metric-icon{
-    font-size:25px;
+
+    font-size:26px;
+
     margin-bottom:14px;
+
+    position:relative;
+
+    z-index:1;
+
 }
 
 .metric-label{
-    font-size:13px;
-    font-weight:800;
-    color:#596779;
 
-    text-transform:uppercase;
+    color:#596577;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    position:relative;
+
+    z-index:1;
+
 }
 
 .metric-value{
-    margin-top:5px;
 
-    font-size:27px;
-    font-weight:850;
+    margin-top:8px;
 
-    letter-spacing:-.5px;
+    font-size:25px;
+
+    font-weight:900;
+
+    position:relative;
+
+    z-index:1;
+
 }
 
 .metric-description{
+
     margin-top:6px;
 
+    color:#84909d;
+
     font-size:12px;
-    color:var(--muted);
+
+    position:relative;
+
+    z-index:1;
+
 }
 
 .temperature .metric-icon,
@@ -376,7 +563,7 @@ body{
 
 .humidity .metric-icon,
 .humidity .metric-value{
-    color:#2583df;
+    color:#287dcc;
 }
 
 .pressure .metric-icon,
@@ -399,590 +586,1043 @@ body{
     color:var(--yellow);
 }
 
-/* =====================================================
-   GRIDS
-===================================================== */
+/* =========================================================
+   OWN DATA STATUS
+========================================================= */
 
-.two-columns{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:22px;
+.data-status{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:18px;
+
+    padding:11px 14px;
+
+    background:#f7faff;
+
+    border:1px solid #e4edf8;
+
+    border-radius:12px;
+
+    color:#657386;
+
+    font-size:12px;
+
 }
 
-.three-columns{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:22px;
+.status-dot{
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:var(--blue);
+
 }
 
-/* =====================================================
-   CHART CARD
-===================================================== */
+/* =========================================================
+   CHART GRID
+========================================================= */
+
+.charts-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:18px;
+
+    margin-top:20px;
+
+}
 
 .chart-card{
-    background:white;
+
+    background:#ffffff;
+
+    border:1px solid var(--border);
+
+    border-radius:18px;
+
+    padding:18px;
+
+    min-width:0;
+
+}
+
+.chart-card.large{
+
+    grid-column:span 2;
+
+}
+
+.chart-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:15px;
+
+    margin-bottom:12px;
+
+}
+
+.chart-title{
+
+    font-size:14px;
+
+    font-weight:900;
+
+}
+
+.chart-description{
+
+    font-size:11px;
+
+    color:#87919f;
+
+    margin-top:4px;
+
+}
+
+.chart-legend{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+
+    justify-content:flex-end;
+
+}
+
+.legend{
+
+    font-size:11px;
+
+    color:#667383;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+}
+
+.legend-line{
+
+    width:18px;
+    height:3px;
+
+    border-radius:3px;
+
+    background:var(--blue);
+
+}
+
+canvas{
+
+    width:100% !important;
+
+    height:240px !important;
+
+    display:block;
+
+}
+
+/* =========================================================
+   EXTERNAL SOURCES DIVIDER
+========================================================= */
+
+.external-divider{
+
+    margin:36px 0 24px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+.external-divider::before,
+.external-divider::after{
+
+    content:"";
+
+    height:1px;
+
+    background:#dce2e9;
+
+    flex:1;
+
+}
+
+.external-label{
+
+    padding:11px 18px;
+
+    background:#eef1f5;
+
+    color:#647182;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:900;
+
+    letter-spacing:.4px;
+
+}
+
+/* =========================================================
+   EXTERNAL SECTIONS
+========================================================= */
+
+.external-section{
+
+    background:#ffffff;
 
     border:1px solid var(--border);
 
     border-radius:var(--radius);
 
-    padding:20px;
+    padding:24px;
 
     box-shadow:var(--shadow);
+
+    margin-bottom:24px;
+
 }
 
-.chart-title{
-    font-size:16px;
-    font-weight:800;
+.external-section.forecast{
+
+    border-top:6px solid #6b8fd7;
+
 }
 
-.chart-subtitle{
-    margin-top:4px;
+.external-section.alert{
 
-    font-size:12px;
-    color:var(--muted);
+    border-top:6px solid #f0a43b;
+
 }
 
-.canvas-wrap{
-    width:100%;
-    height:250px;
+.external-section.defense{
 
-    margin-top:15px;
+    border-top:6px solid #55a76a;
+
 }
 
-canvas{
-    width:100%;
-    height:100%;
-    display:block;
+.external-section.satellite{
+
+    border-top:6px solid #7774d9;
+
 }
 
-/* =====================================================
+/* =========================================================
    FORECAST
-===================================================== */
+========================================================= */
 
-.forecast-chart{
-    height:330px;
+.forecast-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,2fr)
+        minmax(280px,1fr);
+
+    gap:18px;
+
 }
 
 .forecast-info{
+
+    background:#f8fafc;
+
+    border:1px solid var(--border);
+
+    border-radius:16px;
+
+    padding:18px;
+
+}
+
+.forecast-info h3{
+
+    margin:0 0 15px;
+
+    font-size:15px;
+
+}
+
+.forecast-list{
+
     display:grid;
 
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
 
     gap:10px;
 
-    margin-top:16px;
-}
-
-.forecast-item{
-    border:1px solid var(--border);
-    border-radius:14px;
-
-    padding:12px;
-
-    background:#fbfcfe;
 }
 
 .forecast-hour{
-    font-size:11px;
-    color:var(--muted);
-    font-weight:700;
+
+    background:#ffffff;
+
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    padding:13px 8px;
+
+    text-align:center;
+
 }
 
-.forecast-temp{
-    font-size:19px;
+.forecast-hour-time{
+
+    font-size:11px;
+
     font-weight:800;
-    margin-top:5px;
+
+    color:#6d7888;
+
 }
 
-.forecast-rain{
+.forecast-hour-temp{
+
+    font-size:20px;
+
+    font-weight:900;
+
+    margin:8px 0;
+
+    color:#d97b1e;
+
+}
+
+.forecast-hour-rain{
+
     font-size:11px;
-    color:#2583df;
-    margin-top:3px;
+
+    color:#277fc0;
+
 }
 
-/* =====================================================
-   EXTERNAL DATA
-===================================================== */
-
-.external-section{
-    border-top:5px solid #aeb7c4;
-}
-
-.external-section .section-kicker{
-    color:#697687;
-}
-
-/* =====================================================
+/* =========================================================
    ALERTA RIO
-===================================================== */
+========================================================= */
 
 .alert-grid{
+
     display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:12px;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr);
+
+    gap:18px;
+
+}
+
+.external-source{
+
+    font-size:11px;
+
+    color:#7a8593;
+
+    margin-top:8px;
+
+}
+
+.alert-data{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(5,minmax(0,1fr));
+
+    border:1px solid var(--border);
+
+    border-radius:16px;
+
+    overflow:hidden;
+
 }
 
 .alert-metric{
+
+    padding:18px 12px;
+
+    text-align:center;
+
+    border-right:1px solid var(--border);
+
+}
+
+.alert-metric:last-child{
+
+    border-right:0;
+
+}
+
+.alert-icon{
+
+    font-size:22px;
+
+    margin-bottom:8px;
+
+}
+
+.alert-label{
+
+    font-size:10px;
+
+    color:#778291;
+
+    font-weight:700;
+
+}
+
+.alert-value{
+
+    font-size:17px;
+
+    font-weight:900;
+
+    margin-top:5px;
+
+}
+
+.rain-bars{
+
+    background:#fbfcfe;
+
     border:1px solid var(--border);
 
     border-radius:16px;
 
     padding:16px;
 
-    text-align:center;
-
-    background:#fcfdff;
 }
 
-.alert-icon{
-    font-size:24px;
-}
-
-.alert-label{
-    margin-top:7px;
-
-    font-size:11px;
-    font-weight:800;
-    color:var(--muted);
-
-    text-transform:uppercase;
-}
-
-.alert-value{
-    margin-top:4px;
-
-    font-size:20px;
-    font-weight:800;
-}
-
-/* =====================================================
+/* =========================================================
    DEFESA CIVIL
-===================================================== */
+========================================================= */
 
-.defesa{
-    border-top:5px solid #4caf50;
+.defense-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr);
+
+    gap:18px;
+
 }
 
-.defesa-content{
+.defense-status{
+
     display:flex;
+
     align-items:center;
-    gap:20px;
+
+    gap:18px;
+
+    padding:22px;
+
+    border-radius:17px;
+
+    background:#f1faf3;
+
+    border:1px solid #d7efd9;
+
 }
 
-.defesa-icon{
-    width:65px;
-    height:65px;
+.defense-shield{
+
+    width:58px;
+    height:58px;
+
+    border-radius:16px;
+
+    background:#ffffff;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
-    border-radius:18px;
+    font-size:30px;
 
-    background:var(--green-light);
-
-    font-size:35px;
 }
 
-.defesa-status{
-    font-size:20px;
-    font-weight:850;
-    color:#26872d;
+.defense-status strong{
+
+    color:#268b3d;
+
+    font-size:18px;
+
 }
 
-.defesa-text{
-    margin-top:4px;
+.defense-status p{
 
-    font-size:13px;
-    color:var(--text2);
+    margin:4px 0 0;
+
+    color:#647466;
+
+    font-size:12px;
+
 }
 
-/* =====================================================
-   LEVEL BAR
-===================================================== */
+.risk-scale{
 
-.level-bar{
-    margin-top:18px;
+    padding:22px;
+
+    border:1px solid var(--border);
+
+    border-radius:17px;
+
 }
 
-.level-line{
-    height:9px;
+.risk-bar{
+
+    height:10px;
 
     border-radius:10px;
 
-    background:linear-gradient(
-        90deg,
-        #55b957 0%,
-        #a9d72c 25%,
-        #ffd028 50%,
-        #ff8144 70%,
-        #e94b68 85%,
-        #8d53d9 100%
-    );
+    background:
+        linear-gradient(
+            90deg,
+            #58b957 0%,
+            #d7d53c 25%,
+            #f3a631 50%,
+            #ed6a43 75%,
+            #a85bd5 100%
+        );
+
+    margin:18px 0 8px;
+
 }
 
-.level-labels{
+.risk-labels{
+
     display:flex;
+
     justify-content:space-between;
 
-    font-size:10px;
-    color:#6d7886;
+    color:#788391;
 
-    margin-top:6px;
+    font-size:9px;
+
 }
 
-/* =====================================================
+/* =========================================================
    SATELLITE
-===================================================== */
+========================================================= */
 
-.satellite{
-    border-top:5px solid #3b75d6;
-}
+.satellite-grid{
 
-.satellite-box{
     display:grid;
-    grid-template-columns:1.4fr 1fr;
 
-    gap:20px;
+    grid-template-columns:
+        minmax(0,1.6fr)
+        minmax(300px,1fr);
+
+    gap:18px;
+
 }
 
-.satellite-preview{
-    min-height:240px;
+.satellite-visual{
+
+    min-height:270px;
 
     border-radius:18px;
 
     background:
-        radial-gradient(
-            circle at 35% 35%,
-            rgba(255,255,255,.9) 0 3%,
-            transparent 4%
-        ),
-        linear-gradient(
-            145deg,
-            #102d54,
-            #1e5e99,
-            #72a7d5
-        );
+        radial-gradient(circle at 30% 35%, #dfe8f7 0 4%, transparent 5%),
+        radial-gradient(circle at 70% 60%, #e9edf5 0 5%, transparent 6%),
+        #f0f4f9;
+
+    border:1px solid var(--border);
 
     display:flex;
-    align-items:center;
+
+    flex-direction:column;
+
     justify-content:center;
 
-    color:white;
-
-    position:relative;
-    overflow:hidden;
-}
-
-.satellite-preview::before{
-    content:"";
-
-    position:absolute;
-
-    width:180px;
-    height:180px;
-
-    border-radius:50%;
-
-    background:rgba(255,255,255,.12);
-
-    left:25%;
-    top:18%;
-}
-
-.satellite-preview-content{
-    position:relative;
-    z-index:2;
+    align-items:center;
 
     text-align:center;
+
+    padding:30px;
+
 }
 
 .satellite-icon{
-    font-size:50px;
+
+    font-size:65px;
+
+    margin-bottom:15px;
+
 }
 
-.satellite-title{
-    font-size:22px;
-    font-weight:850;
-    margin-top:8px;
+.satellite-visual h3{
+
+    margin:0;
+
+    font-size:20px;
+
 }
 
-.satellite-text{
-    font-size:12px;
-    opacity:.85;
-    margin-top:5px;
+.satellite-visual p{
+
+    color:#6c7887;
+
+    font-size:13px;
+
+    max-width:480px;
+
+    line-height:1.6;
+
 }
 
 .satellite-info{
+
     border:1px solid var(--border);
+
     border-radius:18px;
 
-    padding:20px;
+    padding:22px;
+
 }
 
-.info-title{
-    font-weight:800;
-    font-size:16px;
+.satellite-info h3{
+
+    margin:0 0 15px;
+
 }
 
-.info-text{
-    color:var(--text2);
+.satellite-item{
+
+    padding:12px 0;
+
+    border-bottom:1px solid #edf0f4;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:15px;
+
     font-size:13px;
-    line-height:1.65;
 
-    margin-top:10px;
+}
+
+.satellite-item:last-child{
+
+    border-bottom:0;
+
+}
+
+.satellite-item span:first-child{
+
+    color:#778291;
+
+}
+
+.satellite-item strong{
+
+    text-align:right;
+
 }
 
 .satellite-button{
-    display:inline-block;
 
-    margin-top:16px;
+    display:inline-flex;
 
-    padding:11px 17px;
+    align-items:center;
 
-    background:var(--blue);
+    justify-content:center;
 
-    color:white;
+    gap:8px;
+
+    margin-top:18px;
+
+    padding:13px 18px;
+
+    background:#6866c9;
+
+    color:#ffffff;
 
     text-decoration:none;
 
     border-radius:12px;
 
     font-size:13px;
+
     font-weight:800;
+
 }
 
-/* =====================================================
-   SOURCE
-===================================================== */
-
-.source{
-    margin-top:14px;
-
-    font-size:11px;
-    color:#7c8794;
-}
-
-.source strong{
-    color:#5d6877;
-}
-
-/* =====================================================
+/* =========================================================
    FOOTER
-===================================================== */
+========================================================= */
 
 .footer{
-    max-width:1400px;
+
+    max-width:1500px;
+
     margin:auto;
 
-    padding:20px 24px 35px;
+    padding:10px 28px 30px;
 
-    display:flex;
-    justify-content:space-between;
-    gap:20px;
+    color:#7a8592;
 
     font-size:11px;
-    color:#7c8794;
+
 }
 
-.footer strong{
-    color:#5d6877;
+.footer-line{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    border-top:1px solid var(--border);
+
+    padding-top:18px;
+
 }
 
-/* =====================================================
+.sources{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+}
+
+/* =========================================================
    LOADING
-===================================================== */
+========================================================= */
 
 .loading{
-    color:#8894a3;
+
+    color:#8994a1;
+
 }
 
-/* =====================================================
+/* =========================================================
    RESPONSIVE
-===================================================== */
+========================================================= */
 
-@media(max-width:1000px){
+@media(max-width:1200px){
 
     .metrics-grid{
-        grid-template-columns:repeat(2,1fr);
+
+        grid-template-columns:
+            repeat(3,1fr);
+
     }
 
-    .three-columns{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .alert-grid{
-        grid-template-columns:repeat(3,1fr);
-    }
-
-    .satellite-box{
-        grid-template-columns:1fr;
-    }
 }
 
-@media(max-width:700px){
-
-    .header{
-        padding:13px 15px;
-    }
+@media(max-width:900px){
 
     .header-inner{
-        align-items:center;
+
+        padding:14px 18px;
+
     }
 
-    .brand-symbol{
-        width:43px;
-        height:43px;
-        font-size:24px;
-        border-radius:13px;
+    .brand-icon{
+
+        width:50px;
+        height:50px;
+
+        font-size:28px;
+
     }
 
-    .brand-small{
-        font-size:9px;
-        letter-spacing:1px;
-    }
+    .brand-text strong{
 
-    .brand-title{
-        font-size:21px;
+        font-size:23px;
+
     }
 
     .location{
-        display:none;
-    }
 
-    .online{
-        padding:8px 10px;
-        font-size:10px;
+        display:none;
+
     }
 
     .container{
-        padding:15px;
-    }
 
-    .hierarchy{
         padding:18px;
-    }
 
-    .hierarchy-title{
-        font-size:16px;
     }
-
-    .hierarchy-text{
-        font-size:13px;
-    }
-
-    .section{
-        padding:17px;
-        border-radius:18px;
-    }
-
-    .section-header{
-        flex-direction:column;
-    }
-
-    .section-title{
-        font-size:19px;
-    }
-
-    .source-badge{
-        font-size:10px;
-    }
-
-    /*
-       IMPORTANTE:
-       No celular continuam 2 cartões por linha,
-       conforme o modelo que você aprovou.
-    */
 
     .metrics-grid{
-        grid-template-columns:1fr 1fr;
-        gap:10px;
+
+        grid-template-columns:
+            repeat(2,1fr);
+
     }
 
-    .metric{
-        min-height:145px;
-        padding:15px;
-    }
+    .charts-grid{
 
-    .metric-icon{
-        font-size:23px;
-    }
-
-    .metric-label{
-        font-size:11px;
-    }
-
-    .metric-value{
-        font-size:22px;
-    }
-
-    .metric-description{
-        font-size:10px;
-    }
-
-    .two-columns,
-    .three-columns{
         grid-template-columns:1fr;
-        gap:15px;
+
     }
 
-    .alert-grid{
-        grid-template-columns:repeat(2,1fr);
+    .chart-card.large{
+
+        grid-column:span 1;
+
     }
 
-    .forecast-info{
-        grid-template-columns:repeat(2,1fr);
+    .forecast-grid,
+    .alert-grid,
+    .defense-grid,
+    .satellite-grid{
+
+        grid-template-columns:1fr;
+
     }
 
-    .canvas-wrap{
-        height:220px;
+    .alert-data{
+
+        grid-template-columns:
+            repeat(5,1fr);
+
     }
 
-    .forecast-chart{
-        height:270px;
-    }
-
-    .defesa-content{
-        align-items:flex-start;
-    }
-
-    .footer{
-        padding:15px;
-
-        flex-direction:column;
-
-        text-align:center;
-    }
 }
 
-@media(max-width:390px){
+@media(max-width:600px){
 
-    .brand-title{
-        font-size:18px;
+    .header-inner{
+
+        gap:10px;
+
+    }
+
+    .brand{
+
+        gap:10px;
+
+    }
+
+    .brand-icon{
+
+        width:44px;
+        height:44px;
+
+        border-radius:13px;
+
+        font-size:24px;
+
+    }
+
+    .brand-text small{
+
+        font-size:9px;
+
+        letter-spacing:1px;
+
+    }
+
+    .brand-text strong{
+
+        font-size:19px;
+
     }
 
     .online{
-        font-size:9px;
+
+        padding:9px 12px;
+
+        font-size:10px;
+
+    }
+
+    .online-dot{
+
+        width:9px;
+        height:9px;
+
+    }
+
+    .hierarchy{
+
+        padding:20px;
+
+    }
+
+    .hierarchy-title{
+
+        font-size:18px;
+
+    }
+
+    .section-title{
+
+        font-size:20px;
+
+    }
+
+    .own-section,
+    .external-section{
+
+        padding:18px;
+
+    }
+
+    .metrics-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap:12px;
+
     }
 
     .metric{
-        padding:12px;
+
+        min-height:155px;
+
+        padding:17px;
+
     }
 
     .metric-value{
-        font-size:20px;
+
+        font-size:23px;
+
     }
+
+    .metric-description{
+
+        font-size:11px;
+
+    }
+
+    canvas{
+
+        height:210px !important;
+
+    }
+
+    .forecast-list{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+    .alert-data{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+    .alert-metric{
+
+        border-bottom:1px solid var(--border);
+
+    }
+
+    .alert-metric:nth-child(odd){
+
+        border-right:1px solid var(--border);
+
+    }
+
+    .alert-metric:nth-child(even){
+
+        border-right:0;
+
+    }
+
+    .footer-line{
+
+        flex-direction:column;
+
+    }
+
+}
+
+/* =========================================================
+   VERY SMALL SCREENS
+========================================================= */
+
+@media(max-width:390px){
+
+    .metrics-grid{
+
+        gap:9px;
+
+    }
+
+    .metric{
+
+        padding:14px;
+
+    }
+
+    .metric-icon{
+
+        font-size:22px;
+
+    }
+
+    .metric-label{
+
+        font-size:11px;
+
+    }
+
+    .metric-value{
+
+        font-size:20px;
+
+    }
+
 }
 
 </style>
 </head>
 
+
 <body>
 
-<!-- =====================================================
+
+<!-- =======================================================
      HEADER
-===================================================== -->
+======================================================== -->
 
 <header class="header">
 
@@ -990,31 +1630,35 @@ canvas{
 
     <div class="brand">
 
-        <div class="brand-symbol">
+        <div class="brand-icon">
             ✣
         </div>
 
-        <div>
-            <div class="brand-small">
-                ESTAÇÃO METEOROLÓGICA
-            </div>
+        <div class="brand-text">
 
-            <div class="brand-title">
-                CONSTELACIÓN
-            </div>
+            <small>ESTAÇÃO METEOROLÓGICA</small>
+
+            <strong>CONSTELACIÓN</strong>
+
         </div>
 
     </div>
 
+
     <div class="header-right">
 
         <div class="location">
-            📍 <strong>Colégio — Rio de Janeiro</strong>
+            📍 Colégio — Rio de Janeiro
         </div>
 
         <div class="online">
+
             <span class="online-dot"></span>
-            SISTEMA ONLINE
+
+            <span id="systemStatus">
+                SISTEMA ONLINE
+            </span>
+
         </div>
 
     </div>
@@ -1024,226 +1668,35 @@ canvas{
 </header>
 
 
+
 <main class="container">
 
-<!-- =====================================================
+
+<!-- =======================================================
      HIERARQUIA
-===================================================== -->
+======================================================== -->
 
 <section class="hierarchy">
 
     <div class="hierarchy-title">
+
         HIERARQUIA DOS DADOS
+
         <span>
             Os dados da nossa estação são apresentados primeiro.
         </span>
+
     </div>
 
-    <p class="hierarchy-text">
+    <p>
+
         As informações abaixo são organizadas de acordo com sua origem.
         Os dados medidos pela Estação Constelación são independentes
         das informações provenientes de fontes meteorológicas externas.
+
     </p>
 
-    <div class="legend">
+    <div class="hierarchy-tags">
 
-        <div class="legend-item legend-own">
-            ● NOSSA ESTAÇÃO
-        </div>
-
-        <div class="legend-item legend-external">
-            ● FONTES EXTERNAS
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     NOSSA ESTAÇÃO
-===================================================== -->
-
-<section class="section own-section">
-
-    <div class="section-header">
-
-        <div>
-
-            <div class="section-kicker">
-                ● DADOS PRÓPRIOS
-            </div>
-
-            <div class="section-title">
-                NOSSA ESTAÇÃO
-                <span>— TEMPO REAL</span>
-            </div>
-
-        </div>
-
-        <div class="source-badge">
-            Estação Constelación
-        </div>
-
-    </div>
-
-
-    <div class="metrics-grid">
-
-        <div class="metric temperature">
-
-            <div class="metric-icon">♨</div>
-
-            <div class="metric-label">
-                Temperatura
-            </div>
-
-            <div class="metric-value" id="temperatura">
-                --
-            </div>
-
-            <div class="metric-description">
-                Temperatura do ar
-            </div>
-
-        </div>
-
-
-        <div class="metric humidity">
-
-            <div class="metric-icon">♢</div>
-
-            <div class="metric-label">
-                Umidade
-            </div>
-
-            <div class="metric-value" id="umidade">
-                --
-            </div>
-
-            <div class="metric-description">
-                Umidade relativa do ar
-            </div>
-
-        </div>
-
-
-        <div class="metric pressure">
-
-            <div class="metric-icon">◉</div>
-
-            <div class="metric-label">
-                Pressão
-            </div>
-
-            <div class="metric-value" id="pressao">
-                --
-            </div>
-
-            <div class="metric-description">
-                Pressão atmosférica
-            </div>
-
-        </div>
-
-
-        <div class="metric wind">
-
-            <div class="metric-icon">≋</div>
-
-            <div class="metric-label">
-                Vento
-            </div>
-
-            <div class="metric-value" id="vento">
-                --
-            </div>
-
-            <div class="metric-description">
-                Velocidade do vento
-            </div>
-
-        </div>
-
-
-        <div class="metric rain">
-
-            <div class="metric-icon">♧</div>
-
-            <div class="metric-label">
-                Chuva
-            </div>
-
-            <div class="metric-value" id="chuva">
-                --
-            </div>
-
-            <div class="metric-description">
-                Acumulado da estação
-            </div>
-
-        </div>
-
-
-        <div class="metric direction">
-
-            <div class="metric-icon">⌁</div>
-
-            <div class="metric-label">
-                Direção
-            </div>
-
-            <div class="metric-value" id="direcao">
-                --
-            </div>
-
-            <div class="metric-description">
-                Direção do vento
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="source">
-        <strong>Fonte:</strong> sensores da Estação Meteorológica Constelación.
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     HISTÓRICO
-===================================================== -->
-
-<div class="two-columns">
-
-    <div class="chart-card">
-
-        <div class="chart-title">
-            TEMPERATURA — ÚLTIMAS LEITURAS
-        </div>
-
-        <div class="chart-subtitle">
-            Dados próprios da Estação Constelación
-        </div>
-
-        <div class="canvas-wrap">
-            <canvas id="graficoTemperatura"></canvas>
-        </div>
-
-    </div>
-
-
-    <div class="chart-card">
-
-        <div class="chart-title">
-            UMIDADE — ÚLTIMAS LEITURAS
-        </div>
-
-        <div class="chart-subtitle">
-            Dados próprios da Estação Constelación
-        </div>
-
-        <div class="canvas-wrap">
-         
+        <div class="tag tag-own">
+            ●
