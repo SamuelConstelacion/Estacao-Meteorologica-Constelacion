@@ -5,9 +5,20 @@ export default {
     const url = new URL(request.url);
 
 
-    // ==========================================
-    // API - ÚLTIMAS LEITURAS DA ESTAÇÃO
-    // ==========================================
+    // =====================================================
+    // CONFIGURAÇÕES
+    // =====================================================
+
+    const ESTACAO =
+      "Estação Meteorológica Constelación";
+
+    const LOCAL =
+      "Estrada do Barro Vermelho, Colégio - Rio de Janeiro";
+
+
+    // =====================================================
+    // API - ÚLTIMAS LEITURAS
+    // =====================================================
 
     if (
       url.pathname === "/api/leituras" &&
@@ -16,17 +27,20 @@ export default {
 
       try {
 
-        const resultado = await env.DB.prepare(`
-          SELECT *
-          FROM leituras
-          ORDER BY id DESC
-          LIMIT 20
-        `).all();
+        const resultado =
+          await env.DB.prepare(`
+            SELECT *
+            FROM leituras
+            ORDER BY id DESC
+            LIMIT 20
+          `).all();
 
 
         return Response.json({
 
           sucesso: true,
+
+          estacao: ESTACAO,
 
           quantidade:
             resultado.results.length,
@@ -36,6 +50,7 @@ export default {
 
         });
 
+
       } catch (erro) {
 
         console.error(
@@ -43,12 +58,20 @@ export default {
           erro
         );
 
+
         return Response.json(
           {
+
             sucesso: false,
-            erro: "Não foi possível consultar as leituras"
+
+            erro:
+              "Não foi possível consultar as leituras"
+
           },
-          { status: 500 }
+
+          {
+            status: 500
+          }
         );
 
       }
@@ -56,9 +79,411 @@ export default {
     }
 
 
-    // ==========================================
+    // =====================================================
+    // API - RECEBER DADOS DO ESP32
+    // =====================================================
+
+    if (
+      url.pathname === "/api/leituras" &&
+      request.method === "POST"
+    ) {
+
+      try {
+
+        // -------------------------------------------------
+        // PROTEÇÃO DO ENDPOINT
+        // -------------------------------------------------
+
+        const token =
+          request.headers.get(
+            "Authorization"
+          );
+
+
+        /*
+         * O token será configurado futuramente
+         * como variável secreta no Cloudflare:
+         *
+         * STATION_TOKEN
+         *
+         * Enquanto não configurarmos o token,
+         * o endpoint permanece bloqueado.
+         */
+
+
+        if (
+          !env.STATION_TOKEN
+        ) {
+
+          return Response.json(
+            {
+
+              sucesso: false,
+
+              erro:
+                "STATION_TOKEN não configurado"
+
+            },
+
+            {
+              status: 503
+            }
+          );
+
+        }
+
+
+        if (
+          token !==
+          `Bearer ${env.STATION_TOKEN}`
+        ) {
+
+          return Response.json(
+            {
+
+              sucesso: false,
+
+              erro:
+                "Não autorizado"
+
+            },
+
+            {
+              status: 401
+            }
+          );
+
+        }
+
+
+        // -------------------------------------------------
+        // RECEBER JSON
+        // -------------------------------------------------
+
+        const dados =
+          await request.json();
+
+
+        // -------------------------------------------------
+        // VALIDAR DADOS
+        // -------------------------------------------------
+
+        const temperatura =
+          Number(
+            dados.temperatura
+          );
+
+
+        const umidade =
+          Number(
+            dados.umidade
+          );
+
+
+        const pressao =
+          Number(
+            dados.pressao
+          );
+
+
+        const chuva =
+          Number(
+            dados.chuva
+          );
+
+
+        const vento =
+          Number(
+            dados.vento
+          );
+
+
+        const direcao =
+          String(
+            dados.direcao_vento || ""
+          );
+
+
+        // -------------------------------------------------
+        // VERIFICAÇÃO DOS VALORES
+        // -------------------------------------------------
+
+        if (
+          !Number.isFinite(temperatura) ||
+          temperatura < -20 ||
+          temperatura > 60
+        ) {
+
+          return Response.json(
+            {
+
+              sucesso: false,
+
+              erro:
+                "Temperatura inválida"
+
+            },
+
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        if (
+          !Number.isFinite(umidade) ||
+          umidade < 0 ||
+          umidade > 100
+        ) {
+
+          return Response.json(
+            {
+
+              sucesso: false,
+
+              erro:
+                "Umidade inválida"
+
+            },
+
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        if (
+          !Number.isFinite(pressao) ||
+          pressao < 800 ||
+          pressao > 1100
+        ) {
+
+          return Response.json(
+            {
+
+              sucesso: false,
+
+              erro:
+                "Pressão atmosférica inválida"
+
+            },
+
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        if (
+          !Number.isFinite(chuva) ||
+          chuva < 0 ||
+          chuva > 1000
+        ) {
+
+          return Response.json(
+            {
+
+              sucesso: false,
+
+              erro:
+                "Valor de chuva inválido"
+
+            },
+
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        if (
+          !Number.isFinite(vento) ||
+          vento < 0 ||
+          vento > 300
+        ) {
+
+          return Response.json(
+            {
+
+              sucesso: false,
+
+              erro:
+                "Velocidade do vento inválida"
+
+            },
+
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        // -------------------------------------------------
+        // DIREÇÃO DO VENTO
+        // -------------------------------------------------
+
+        const direcoesValidas = [
+
+          "N",
+          "NE",
+          "E",
+          "SE",
+          "S",
+          "SO",
+          "O",
+          "NO"
+
+        ];
+
+
+        if (
+          !direcoesValidas.includes(
+            direcao
+          )
+        ) {
+
+          return Response.json(
+            {
+
+              sucesso: false,
+
+              erro:
+                "Direção do vento inválida"
+
+            },
+
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        // -------------------------------------------------
+        // DATA/HORA
+        // -------------------------------------------------
+
+        const agora =
+          new Date();
+
+
+        // -------------------------------------------------
+        // GRAVAR NO D1
+        // -------------------------------------------------
+
+        await env.DB.prepare(`
+
+          INSERT INTO leituras
+          (
+            data_hora,
+            temperatura,
+            umidade,
+            pressao,
+            chuva,
+            vento,
+            direcao_vento,
+            origem,
+            dispositivo
+          )
+
+          VALUES
+          (?, ?, ?, ?, ?, ?, ?, ?, ?)
+
+        `)
+
+          .bind(
+
+            agora.toISOString(),
+
+            temperatura,
+
+            umidade,
+
+            pressao,
+
+            chuva,
+
+            vento,
+
+            direcao,
+
+            "REAL",
+
+            "ESP32"
+
+          )
+
+          .run();
+
+
+        // -------------------------------------------------
+        // RESPOSTA
+        // -------------------------------------------------
+
+        return Response.json({
+
+          sucesso: true,
+
+          mensagem:
+            "Leitura recebida com sucesso",
+
+          estacao:
+            ESTACAO,
+
+          origem:
+            "REAL",
+
+          dispositivo:
+            "ESP32",
+
+          data_hora:
+            agora.toISOString()
+
+        });
+
+
+      } catch (erro) {
+
+        console.error(
+          "Erro ao receber dados do ESP32:",
+          erro
+        );
+
+
+        return Response.json(
+          {
+
+            sucesso: false,
+
+            erro:
+              "Não foi possível processar a leitura"
+
+          },
+
+          {
+            status: 400
+          }
+        );
+
+      }
+
+    }
+
+
+    // =====================================================
     // API - PREVISÃO METEOROLÓGICA
-    // ==========================================
+    // =====================================================
 
     if (
       url.pathname === "/api/previsao" &&
@@ -67,8 +492,11 @@ export default {
 
       try {
 
-        const latitude = -22.84563;
-        const longitude = -43.33847;
+        const latitude =
+          -22.84563;
+
+        const longitude =
+          -43.33847;
 
 
         const apiUrl =
@@ -87,15 +515,23 @@ export default {
           await fetch(apiUrl);
 
 
-        if (!resposta.ok) {
+        if (
+          !resposta.ok
+        ) {
 
           return Response.json(
             {
+
               sucesso: false,
+
               erro:
                 "Não foi possível obter a previsão meteorológica"
+
             },
-            { status: 502 }
+
+            {
+              status: 502
+            }
           );
 
         }
@@ -109,6 +545,9 @@ export default {
 
           sucesso: true,
 
+          fonte:
+            "Open-Meteo",
+
           local: {
 
             latitude:
@@ -118,7 +557,7 @@ export default {
               longitude,
 
             descricao:
-              "Estrada do Barro Vermelho, Colégio - Rio de Janeiro"
+              LOCAL
 
           },
 
@@ -127,6 +566,7 @@ export default {
 
         });
 
+
       } catch (erro) {
 
         console.error(
@@ -134,13 +574,20 @@ export default {
           erro
         );
 
+
         return Response.json(
           {
+
             sucesso: false,
+
             erro:
               "Erro ao consultar previsão meteorológica"
+
           },
-          { status: 502 }
+
+          {
+            status: 502
+          }
         );
 
       }
@@ -148,9 +595,9 @@ export default {
     }
 
 
-    // ==========================================
+    // =====================================================
     // API - ALERTA RIO
-    // ==========================================
+    // =====================================================
 
     if (
       url.pathname === "/api/alertario" &&
@@ -165,7 +612,9 @@ export default {
           );
 
 
-        if (!resposta.ok) {
+        if (
+          !resposta.ok
+        ) {
 
           throw new Error(
             "Erro ao acessar o Alerta Rio"
@@ -178,9 +627,9 @@ export default {
           await resposta.text();
 
 
-        // ------------------------------------------
-        // Localiza todas as linhas da tabela
-        // ------------------------------------------
+        // -------------------------------------------------
+        // LOCALIZAR LINHAS
+        // -------------------------------------------------
 
         const linhas =
           html.match(
@@ -188,18 +637,22 @@ export default {
           ) || [];
 
 
-        // ==========================================
+        // =================================================
         // SÃO CRISTÓVÃO
-        // ==========================================
+        // =================================================
 
         let dadosMeteorologicos =
           null;
 
 
-        for (const linha of linhas) {
+        for (
+          const linha of linhas
+        ) {
 
           if (
-            linha.includes("São Cristóvão")
+            linha.includes(
+              "São Cristóvão"
+            )
           ) {
 
             const celulas =
@@ -222,21 +675,6 @@ export default {
                     )
                     .trim()
               );
-
-
-            /*
-             * São Cristóvão:
-             *
-             * 0 = número
-             * 1 = estação
-             * 2 = hora
-             * 3 = temperatura
-             * 4 = umidade
-             * 5 = pressão
-             * 6 = ponto de orvalho
-             * 7 = vento
-             * 8 = direção
-             */
 
 
             if (
@@ -253,18 +691,22 @@ export default {
         }
 
 
-        // ==========================================
-        // IRAJÁ - CHUVA
-        // ==========================================
+        // =================================================
+        // IRAJÁ
+        // =================================================
 
         let dadosChuva =
           null;
 
 
-        for (const linha of linhas) {
+        for (
+          const linha of linhas
+        ) {
 
           if (
-            linha.includes("Irajá")
+            linha.includes(
+              "Irajá"
+            )
           ) {
 
             const celulas =
@@ -289,30 +731,6 @@ export default {
               );
 
 
-            /*
-             * Irajá:
-             *
-             * 0 = número
-             * 1 = estação
-             * 2 = localização
-             * 3 = hora
-             * 4 = 5 min
-             * 5 = 10 min
-             * 6 = 15 min
-             * 7 = 30 min
-             * 8 = 1 hora
-             * 9 = 2 horas
-             * 10 = 3 horas
-             * 11 = 4 horas
-             * 12 = 6 horas
-             * 13 = 12 horas
-             * 14 = 24 horas
-             * 15 = 96 horas
-             * 16 = mês
-             * 17 = TX-15
-             */
-
-
             if (
               valores.length >= 16
             ) {
@@ -327,28 +745,24 @@ export default {
         }
 
 
-        // ==========================================
-        // SITUAÇÃO ATUAL DO ALERTA RIO
-        // ==========================================
+        // =================================================
+        // SITUAÇÃO DO ALERTA RIO
+        // =================================================
 
         const situacoes =
           {};
 
 
-        /*
-         * Procura as regiões e seus estágios.
-         *
-         * Exemplo:
-         *
-         * Baía de Guanabara | Estágio 1
-         * Baía de Sepetiba   | Estágio 1
-         */
-
         const regioes = [
+
           "Baía de Guanabara",
+
           "Baía de Sepetiba",
+
           "Barra/Jacarepaguá",
+
           "Zona Sul"
+
         ];
 
 
@@ -379,7 +793,9 @@ export default {
               );
 
 
-            if (match) {
+            if (
+              match
+            ) {
 
               situacoes[regiao] =
                 `Estágio ${match[1]}`;
@@ -391,9 +807,9 @@ export default {
         }
 
 
-        // ==========================================
+        // -------------------------------------------------
         // VERIFICAÇÃO
-        // ==========================================
+        // -------------------------------------------------
 
         if (
           !dadosMeteorologicos
@@ -401,12 +817,17 @@ export default {
 
           return Response.json(
             {
+
               sucesso: false,
 
               erro:
                 "Não foi possível localizar São Cristóvão no Alerta Rio"
+
             },
-            { status: 502 }
+
+            {
+              status: 502
+            }
           );
 
         }
@@ -418,41 +839,38 @@ export default {
 
           return Response.json(
             {
+
               sucesso: false,
 
               erro:
                 "Não foi possível localizar Irajá no Alerta Rio"
+
             },
-            { status: 502 }
+
+            {
+              status: 502
+            }
           );
 
         }
 
 
-        // ==========================================
+        // =================================================
         // RESPOSTA FINAL
-        // ==========================================
+        // =================================================
 
         return Response.json({
 
           sucesso: true,
 
-
           fonte:
             "Sistema Alerta Rio - Prefeitura do Rio de Janeiro",
-
-
-          // ----------------------------------------
-          // ESTAÇÃO METEOROLÓGICA
-          // ----------------------------------------
 
           estacao:
             "São Cristóvão",
 
-
           numero_estacao:
             32,
-
 
           dados: {
 
@@ -478,11 +896,6 @@ export default {
               dadosMeteorologicos[8]
 
           },
-
-
-          // ----------------------------------------
-          // CHUVA - IRAJÁ
-          // ----------------------------------------
 
           chuva: {
 
@@ -536,11 +949,6 @@ export default {
 
           },
 
-
-          // ----------------------------------------
-          // SITUAÇÃO DO ALERTA RIO
-          // ----------------------------------------
-
           situacao:
             situacoes
 
@@ -557,12 +965,17 @@ export default {
 
         return Response.json(
           {
+
             sucesso: false,
 
             erro:
               "Não foi possível consultar o Alerta Rio"
+
           },
-          { status: 502 }
+
+          {
+            status: 502
+          }
         );
 
       }
@@ -570,9 +983,9 @@ export default {
     }
 
 
-    // ==========================================
+    // =====================================================
     // SITE
-    // ==========================================
+    // =====================================================
 
     if (
       url.pathname === "/"
@@ -585,25 +998,31 @@ export default {
     }
 
 
-    // ==========================================
+    // =====================================================
     // ROTA NÃO ENCONTRADA
-    // ==========================================
+    // =====================================================
 
     return Response.json(
       {
+
         sucesso: false,
+
         erro:
           "Rota não encontrada"
+
       },
-      { status: 404 }
+
+      {
+        status: 404
+      }
     );
 
   },
 
 
-  // ==========================================
+  // =====================================================
   // SIMULADOR METEOROLÓGICO
-  // ==========================================
+  // =====================================================
 
   async scheduled(
     event,
@@ -684,6 +1103,10 @@ export default {
       ];
 
 
+    // -----------------------------------------------------
+    // GRAVAR DADOS SIMULADOS
+    // -----------------------------------------------------
+
     await env.DB.prepare(`
 
       INSERT INTO leituras
@@ -694,11 +1117,13 @@ export default {
         pressao,
         chuva,
         vento,
-        direcao_vento
+        direcao_vento,
+        origem,
+        dispositivo
       )
 
       VALUES
-      (?, ?, ?, ?, ?, ?, ?)
+      (?, ?, ?, ?, ?, ?, ?, ?, ?)
 
     `)
 
@@ -716,7 +1141,11 @@ export default {
 
         vento,
 
-        direcao
+        direcao,
+
+        "SIMULADO",
+
+        "simulador"
 
       )
 
