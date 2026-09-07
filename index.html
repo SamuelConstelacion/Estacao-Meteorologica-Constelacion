@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 <html lang="pt-BR">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
 <title>Estação Meteorológica Constelación</title>
 
 <style>
+
 :root{
     --bg:#f4f7fb;
     --card:#ffffff;
@@ -49,6 +51,7 @@ body{
     color:var(--text);
     font-family:Arial,Helvetica,sans-serif;
 }
+
 
 /* =========================
    HEADER
@@ -151,6 +154,7 @@ header{
     background:var(--blue-light);
 }
 
+
 /* =========================
    LAYOUT
 ========================= */
@@ -220,6 +224,7 @@ section{
     padding:20px 22px;
 }
 
+
 /* =========================
    HIERARQUIA
 ========================= */
@@ -276,6 +281,7 @@ section{
     background:#f1f3f6;
 }
 
+
 /* =========================
    NOSSA ESTAÇÃO
 ========================= */
@@ -298,15 +304,6 @@ section{
 .own-status strong{
     font-size:12px;
     color:var(--blue-dark);
-}
-
-.simulated{
-    font-size:10px;
-    font-weight:800;
-    color:#a66a00;
-    background:var(--orange-light);
-    padding:6px 9px;
-    border-radius:8px;
 }
 
 .metrics{
@@ -373,6 +370,7 @@ section{
     margin-top:9px;
 }
 
+
 /* =========================
    STATUS DA CHUVA
 ========================= */
@@ -383,6 +381,7 @@ section{
     margin-top:6px;
     color:var(--muted);
 }
+
 
 /* =========================
    GRÁFICOS
@@ -425,6 +424,7 @@ canvas{
     height:100%;
     display:block;
 }
+
 
 /* =========================
    PREVISÃO
@@ -481,6 +481,7 @@ canvas{
     color:var(--blue);
     margin-top:5px;
 }
+
 
 /* =========================
    ALERTA RIO
@@ -540,6 +541,7 @@ canvas{
     font-size:10px;
     color:var(--muted);
 }
+
 
 /* =========================
    DEFESA CIVIL
@@ -614,6 +616,7 @@ canvas{
     color:#455164;
 }
 
+
 /* =========================
    SATÉLITE
 ========================= */
@@ -680,6 +683,7 @@ canvas{
     margin-top:4px;
 }
 
+
 /* =========================
    FOOTER
 ========================= */
@@ -704,6 +708,7 @@ footer{
     color:#4f5b6d;
     margin-bottom:5px;
 }
+
 
 /* =========================
    RESPONSIVO
@@ -876,6 +881,7 @@ footer{
         font-size:21px;
     }
 }
+
 </style>
 
 </head>
@@ -896,14 +902,23 @@ footer{
     <div class="logo">🌦️</div>
 
     <div>
-        <div class="brand-small">ESTAÇÃO METEOROLÓGICA</div>
-        <div class="brand-title">CONSTELAÇÃO</div>
+
+        <div class="brand-small">
+            ESTAÇÃO METEOROLÓGICA
+        </div>
+
+        <div class="brand-title">
+            CONSTELAÇÃO
+        </div>
+
         <div class="brand-location">
             Colégio — Rio de Janeiro
         </div>
+
     </div>
 
 </div>
+
 
 <div class="header-right">
 
@@ -912,9 +927,11 @@ footer{
         ONLINE
     </div>
 
-    <button class="refresh"
-            onclick="atualizarTudo()"
-            title="Atualizar dados">
+    <button
+        class="refresh"
+        onclick="atualizarTudo()"
+        title="Atualizar dados"
+    >
         ↻
     </button>
 
@@ -1003,7 +1020,7 @@ footer{
     <div class="own-status">
 
         <strong>
-            DADOS DA NOSSA ESTAÇÃO
+            DADOS REAIS DA NOSSA ESTAÇÃO
         </strong>
 
         <span class="source-badge">
@@ -1017,6 +1034,9 @@ footer{
 
     <div class="metrics">
 
+
+        <!-- TEMPERATURA -->
+
         <div class="metric">
 
             <div class="metric-top">
@@ -1025,7 +1045,9 @@ footer{
                     TEMPERATURA
                 </span>
 
-                <div class="metric-icon">🌡️</div>
+                <div class="metric-icon">
+                    🌡️
+                </div>
 
             </div>
 
@@ -1035,13 +1057,18 @@ footer{
             </div>
 
             <div class="metric-extra">
-                Temperatura local
+                Temperatura local · DHT11
             </div>
 
-            <canvas id="sparkTemp" class="spark"></canvas>
+            <canvas
+                id="sparkTemp"
+                class="spark"
+            ></canvas>
 
         </div>
 
+
+        <!-- UMIDADE -->
 
         <div class="metric">
 
@@ -1051,7 +1078,9 @@ footer{
                     UMIDADE
                 </span>
 
-                <div class="metric-icon">💧</div>
+                <div class="metric-icon">
+                    💧
+                </div>
 
             </div>
 
@@ -1061,13 +1090,18 @@ footer{
             </div>
 
             <div class="metric-extra">
-                Umidade relativa
+                Umidade relativa · DHT11
             </div>
 
-            <canvas id="sparkHum" class="spark"></canvas>
+            <canvas
+                id="sparkHum"
+                class="spark"
+            ></canvas>
 
         </div>
 
+
+        <!-- PRESSÃO -->
 
         <div class="metric">
 
@@ -1077,7 +1111,9 @@ footer{
                     PRESSÃO
                 </span>
 
-                <div class="metric-icon">◉</div>
+                <div class="metric-icon">
+                    ◉
+                </div>
 
             </div>
 
@@ -1087,13 +1123,18 @@ footer{
             </div>
 
             <div class="metric-extra">
-                Pressão atmosférica
+                Valor provisório · sensor não instalado
             </div>
 
-            <canvas id="sparkPress" class="spark"></canvas>
+            <canvas
+                id="sparkPress"
+                class="spark"
+            ></canvas>
 
         </div>
 
+
+        <!-- VENTO -->
 
         <div class="metric">
 
@@ -1103,7 +1144,9 @@ footer{
                     VENTO
                 </span>
 
-                <div class="metric-icon">💨</div>
+                <div class="metric-icon">
+                    💨
+                </div>
 
             </div>
 
@@ -1113,13 +1156,18 @@ footer{
             </div>
 
             <div class="metric-extra">
-                Velocidade do vento
+                Valor provisório · sensor não instalado
             </div>
 
-            <canvas id="sparkWind" class="spark"></canvas>
+            <canvas
+                id="sparkWind"
+                class="spark"
+            ></canvas>
 
         </div>
 
+
+        <!-- CHUVA -->
 
         <div class="metric">
 
@@ -1129,7 +1177,9 @@ footer{
                     CHUVA
                 </span>
 
-                <div class="metric-icon">🌧️</div>
+                <div class="metric-icon">
+                    🌧️
+                </div>
 
             </div>
 
@@ -1149,10 +1199,15 @@ footer{
                 Aguardando leitura...
             </div>
 
-            <canvas id="sparkRain" class="spark"></canvas>
+            <canvas
+                id="sparkRain"
+                class="spark"
+            ></canvas>
 
         </div>
 
+
+        <!-- DIREÇÃO -->
 
         <div class="metric">
 
@@ -1162,7 +1217,9 @@ footer{
                     DIREÇÃO DO VENTO
                 </span>
 
-                <div class="metric-icon">🧭</div>
+                <div class="metric-icon">
+                    🧭
+                </div>
 
             </div>
 
@@ -1171,7 +1228,7 @@ footer{
             </div>
 
             <div class="metric-extra">
-                Direção predominante
+                Valor provisório · sensor não instalado
             </div>
 
         </div>
@@ -1194,7 +1251,11 @@ footer{
             </div>
 
             <div class="chart-wrap">
-                <canvas id="graficoTemperatura"></canvas>
+
+                <canvas
+                    id="graficoTemperatura"
+                ></canvas>
+
             </div>
 
         </div>
@@ -1211,7 +1272,11 @@ footer{
             </div>
 
             <div class="chart-wrap">
-                <canvas id="graficoUmidade"></canvas>
+
+                <canvas
+                    id="graficoUmidade"
+                ></canvas>
+
             </div>
 
         </div>
@@ -1262,9 +1327,12 @@ footer{
 <div class="content">
 
     <div class="forecast-note">
-        ℹ️ Estes dados são <strong>previsão meteorológica</strong>
+
+        ℹ️ Estes dados são
+        <strong>previsão meteorológica</strong>
         e não representam uma medição realizada pelos sensores
         da nossa estação.
+
     </div>
 
 
@@ -1279,19 +1347,39 @@ footer{
         </div>
 
         <div class="chart-wrap forecast-chart">
-            <canvas id="graficoPrevisao"></canvas>
+
+            <canvas
+                id="graficoPrevisao"
+            ></canvas>
+
         </div>
 
     </div>
 
 
-    <div class="forecast-hours" id="forecastHours">
+    <div
+        class="forecast-hours"
+        id="forecastHours"
+    >
 
         <div class="forecast-hour">
-            <div class="forecast-time">Carregando</div>
-            <div class="forecast-icon">🌤️</div>
-            <div class="forecast-temp">-- °C</div>
-            <div class="forecast-rain">--% chuva</div>
+
+            <div class="forecast-time">
+                Carregando
+            </div>
+
+            <div class="forecast-icon">
+                🌤️
+            </div>
+
+            <div class="forecast-temp">
+                -- °C
+            </div>
+
+            <div class="forecast-rain">
+                --% chuva
+            </div>
+
         </div>
 
     </div>
@@ -1338,6 +1426,7 @@ footer{
 
 
 <div class="content">
+
 
     <!-- SÃO CRISTÓVÃO -->
 
@@ -1453,7 +1542,11 @@ footer{
             </div>
 
             <div class="chart-wrap rain-chart">
-                <canvas id="graficoIraja"></canvas>
+
+                <canvas
+                    id="graficoIraja"
+                ></canvas>
+
             </div>
 
         </div>
@@ -1462,9 +1555,11 @@ footer{
 
 
     <div class="source-note">
+
         Fonte oficial: Sistema Alerta Rio — Prefeitura da Cidade
         do Rio de Janeiro / COR-Rio. Os dados apresentados nesta
         seção não são dados da Estação Constelación.
+
     </div>
 
 </div>
@@ -1517,10 +1612,12 @@ footer{
         </div>
 
         <div class="defesa-text">
+
             O município do Rio de Janeiro trabalha com
             estágios operacionais para representar a situação
             da cidade. Consulte sempre os canais oficiais para
             saber o estágio vigente.
+
         </div>
 
 
@@ -1555,10 +1652,12 @@ footer{
 
 
         <div class="defesa-text">
+
             ⚠️ O dashboard não inventa um estágio operacional:
             enquanto não houver uma fonte oficial integrada,
             o status deve ser consultado diretamente nos canais
             da Defesa Civil.
+
         </div>
 
 
@@ -1646,11 +1745,14 @@ footer{
             </h3>
 
             <p>
+
                 As imagens de satélite ajudam a observar o
                 deslocamento de sistemas meteorológicos,
                 nebulosidade e desenvolvimento de áreas de
                 chuva sobre o Brasil.
+
             </p>
+
 
             <div class="satellite-items">
 
@@ -1684,9 +1786,11 @@ footer{
                 rel="noopener"
             >
                 🛰️ Abrir DSAT — CPTEC/INPE
+
                 <span>
                     Visualização interativa de imagens de satélite
                 </span>
+
             </a>
 
 
@@ -1697,9 +1801,11 @@ footer{
                 rel="noopener"
             >
                 🌎 Abrir SIGMA
+
                 <span>
                     Imagens GOES-19 e produtos meteorológicos
                 </span>
+
             </a>
 
 
@@ -1710,9 +1816,11 @@ footer{
                 rel="noopener"
             >
                 📡 Dados GOES — INPE
+
                 <span>
                     Catálogo oficial de dados
                 </span>
+
             </a>
 
         </div>
@@ -1756,30 +1864,36 @@ footer{
 </div>
 
 <div style="margin-top:8px;">
-    <strong>Nossa estação:</strong> dados locais reais
-    provenientes do banco D1
+    <strong>Nossa estação:</strong>
+    dados locais reais provenientes do banco D1
 </div>
 
 <div>
-    <strong>Previsão:</strong> Open-Meteo
+    <strong>Previsão:</strong>
+    Open-Meteo
 </div>
 
 <div>
-    <strong>Alerta Rio:</strong> Prefeitura do Rio / COR-Rio
+    <strong>Alerta Rio:</strong>
+    Prefeitura do Rio / COR-Rio
 </div>
 
 <div>
-    <strong>Defesa Civil:</strong> Prefeitura do Rio / COR-Rio
+    <strong>Defesa Civil:</strong>
+    Prefeitura do Rio / COR-Rio
 </div>
 
 <div>
-    <strong>Satélite:</strong> CPTEC/INPE — GOES-19
+    <strong>Satélite:</strong>
+    CPTEC/INPE — GOES-19
 </div>
 
 <div style="margin-top:9px;">
+
     Os dados apresentados em “Nossa Estação” são obtidos
     diretamente da API da Estação Meteorológica Constelación,
     através do Cloudflare Worker conectado ao banco D1.
+
 </div>
 ```
 
@@ -1788,6 +1902,7 @@ footer{
 </footer>
 
 <script>
+
 
 /* =========================================================
    CONFIGURAÇÃO
@@ -1808,81 +1923,133 @@ let alertaRio = null;
 
 function numero(valor){
 
-    if(valor === null || valor === undefined || valor === "")
+    if(
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+    ){
         return null;
+    }
 
-    if(typeof valor === "number")
-        return Number.isFinite(valor) ? valor : null;
+
+    if(typeof valor === "number"){
+
+        return Number.isFinite(valor)
+            ? valor
+            : null;
+
+    }
+
 
     const n = parseFloat(
         String(valor)
-        .replace(",", ".")
-        .replace(/[^\d.-]/g,"")
+            .replace(",", ".")
+            .replace(/[^\d.-]/g,"")
     );
 
-    return Number.isFinite(n) ? n : null;
+
+    return Number.isFinite(n)
+        ? n
+        : null;
+
 }
 
 
 function primeiro(obj, nomes){
 
-    if(!obj || typeof obj !== "object")
+    if(
+        !obj ||
+        typeof obj !== "object"
+    ){
         return null;
+    }
+
 
     for(const nome of nomes){
 
-        if(obj[nome] !== undefined &&
-           obj[nome] !== null &&
-           obj[nome] !== ""){
+        if(
+            obj[nome] !== undefined &&
+            obj[nome] !== null &&
+            obj[nome] !== ""
+        ){
 
             return obj[nome];
+
         }
 
     }
 
+
     return null;
+
 }
 
 
 function valorLeitura(obj, nomes){
 
-    return numero(primeiro(obj,nomes));
+    return numero(
+        primeiro(obj, nomes)
+    );
+
 }
 
 
 function formatar(valor, casas=1){
 
-    if(valor === null || valor === undefined ||
-       !Number.isFinite(Number(valor))){
+    if(
+        valor === null ||
+        valor === undefined ||
+        !Number.isFinite(Number(valor))
+    ){
 
         return "--";
+
     }
 
+
     return Number(valor).toFixed(casas);
+
 }
 
 
 function timestamp(obj){
 
-    const valor = primeiro(obj,[
-        "timestamp",
-        "data",
-        "datetime",
-        "date",
-        "hora",
-        "created_at",
-        "createdAt"
-    ]);
+    const valor =
+        primeiro(
+            obj,
+            [
+                "timestamp",
+                "data",
+                "datetime",
+                "date",
+                "hora",
+                "created_at",
+                "createdAt"
+            ]
+        );
+
 
     if(!valor)
         return null;
 
-    const d = new Date(valor);
 
-    if(Number.isNaN(d.getTime()))
+    const d =
+        new Date(valor);
+
+
+    if(
+        Number.isNaN(
+            d.getTime()
+        )
+    ){
+
         return null;
 
+    }
+
+
     return d;
+
 }
 
 
@@ -1891,6 +2058,7 @@ function hora(d){
     if(!d)
         return "--";
 
+
     return d.toLocaleTimeString(
         "pt-BR",
         {
@@ -1898,6 +2066,7 @@ function hora(d){
             minute:"2-digit"
         }
     );
+
 }
 
 
@@ -1907,10 +2076,15 @@ function hora(d){
 
 function interpretarChuva(valor){
 
-    const leitura = numero(valor);
+    const leitura =
+        numero(valor);
+
 
     const elemento =
-        document.getElementById("txt-chuva-status");
+        document.getElementById(
+            "txt-chuva-status"
+        );
+
 
     if(!elemento)
         return;
@@ -1922,6 +2096,7 @@ function interpretarChuva(valor){
             "Aguardando leitura...";
 
         return;
+
     }
 
 
@@ -1930,12 +2105,19 @@ function interpretarChuva(valor){
         elemento.textContent =
             "Chuva Forte! 🌧️";
 
-    }else if(leitura >= 500 && leitura <= 800){
+    }
+
+    else if(
+        leitura >= 500 &&
+        leitura <= 800
+    ){
 
         elemento.textContent =
             "Chuva Leve 🌦️";
 
-    }else{
+    }
+
+    else{
 
         elemento.textContent =
             "Tempo Seco ☀️";
@@ -1953,13 +2135,18 @@ async function carregarLeituras(){
 
     try{
 
-        const resposta = await fetch(API_LEITURAS,{
-            method:"GET",
-            cache:"no-store",
-            headers:{
-                "Accept":"application/json"
-            }
-        });
+        const resposta =
+            await fetch(
+                API_LEITURAS,
+                {
+                    method:"GET",
+                    cache:"no-store",
+                    headers:{
+                        "Accept":
+                            "application/json"
+                    }
+                }
+            );
 
 
         if(!resposta.ok){
@@ -1972,55 +2159,73 @@ async function carregarLeituras(){
         }
 
 
-        const dados = await resposta.json();
+        const dados =
+            await resposta.json();
 
 
         /*
-         * A API /api/leituras retorna as leituras
-         * do banco D1 em ordem DESC:
+         * A API /api/leituras retorna:
          *
          * [0] = leitura mais recente
          * [1] = leitura anterior
          * [2] = leitura anterior...
          *
-         * Portanto NÃO devemos ordenar este array.
+         * NÃO ordenar este array.
          */
-
 
         if(Array.isArray(dados)){
 
-            leituras = dados;
+            leituras =
+                dados;
 
-        }else if(Array.isArray(dados.leituras)){
+        }
 
-            leituras = dados.leituras;
+        else if(
+            Array.isArray(
+                dados.leituras
+            )
+        ){
 
-        }else if(Array.isArray(dados.results)){
+            leituras =
+                dados.leituras;
 
-            leituras = dados.results;
+        }
 
-        }else if(Array.isArray(dados.data)){
+        else if(
+            Array.isArray(
+                dados.results
+            )
+        ){
 
-            leituras = dados.data;
+            leituras =
+                dados.results;
 
-        }else{
+        }
+
+        else if(
+            Array.isArray(
+                dados.data
+            )
+        ){
+
+            leituras =
+                dados.data;
+
+        }
+
+        else{
 
             leituras = [];
 
         }
 
 
-        /*
-         * Atualização da interface.
-         *
-         * A função atualizarEstacao() utiliza
-         * explicitamente leituras[0] como leitura atual.
-         */
-
         atualizarEstacao();
 
 
-    }catch(erro){
+    }
+
+    catch(erro){
 
         console.error(
             "Leituras da Estação Constelación:",
@@ -2043,101 +2248,139 @@ function atualizarEstacao(){
 
 
     /*
-     * LEITURA ATUAL
+     * A API entrega DESC.
      *
-     * A API D1 entrega DESC.
-     * O primeiro registro [0] é o mais novo.
+     * [0] = leitura atual.
      */
 
-    const atual = leituras[0];
+    const atual =
+        leituras[0];
 
 
     /* =====================================================
-       LEITURA DOS CAMPOS REAIS DO BANCO D1
+       CAMPOS REAIS
     ===================================================== */
 
-    const temp = valorLeitura(atual,[
-        "temperatura",
-        "temperature",
-        "temp"
-    ]);
+    const temp =
+        valorLeitura(
+            atual,
+            [
+                "temperatura",
+                "temperature",
+                "temp"
+            ]
+        );
 
 
-    const hum = valorLeitura(atual,[
-        "umidade",
-        "humidity",
-        "hum"
-    ]);
+    const hum =
+        valorLeitura(
+            atual,
+            [
+                "umidade",
+                "humidity",
+                "hum"
+            ]
+        );
 
 
-    const press = valorLeitura(atual,[
-        "pressao",
-        "pressure",
-        "press"
-    ]);
+    const press =
+        valorLeitura(
+            atual,
+            [
+                "pressao",
+                "pressure",
+                "press"
+            ]
+        );
 
 
-    const wind = valorLeitura(atual,[
-        "vento",
-        "wind",
-        "wind_speed",
-        "velocidade_vento"
-    ]);
+    const wind =
+        valorLeitura(
+            atual,
+            [
+                "vento",
+                "wind",
+                "wind_speed",
+                "velocidade_vento"
+            ]
+        );
 
 
     /*
-     * IMPORTANTE:
+     * CHUVA:
      *
-     * O campo chuva agora representa a leitura
-     * analógica bruta do sensor conectado ao A0.
+     * Valor bruto do A0.
      *
      * 1023 = seco
-     * valores menores = presença de água
+     * valores menores = água.
      */
 
-    const rain = valorLeitura(atual,[
-        "chuva",
-        "rain",
-        "sensor_chuva",
-        "rain_sensor",
-        "precipitacao",
-        "precipitation",
-        "chuva_raw",
-        "rain_raw",
-        "a0",
-        "A0"
-    ]);
+    const rain =
+        valorLeitura(
+            atual,
+            [
+                "chuva",
+                "rain",
+                "sensor_chuva",
+                "rain_sensor",
+                "chuva_raw",
+                "rain_raw",
+                "a0",
+                "A0"
+            ]
+        );
 
 
-    const dir = primeiro(atual,[
-        "direcao",
-        "direction",
-        "wind_direction",
-        "direcao_vento"
-    ]);
+    const dir =
+        primeiro(
+            atual,
+            [
+                "direcao",
+                "direction",
+                "wind_direction",
+                "direcao_vento"
+            ]
+        );
 
 
     /* =====================================================
-       ATUALIZAR CARDS
+       CARDS
     ===================================================== */
 
     const elementoTemperatura =
-        document.getElementById("temperatura");
+        document.getElementById(
+            "temperatura"
+        );
+
 
     const elementoUmidade =
-        document.getElementById("umidade");
+        document.getElementById(
+            "umidade"
+        );
+
 
     const elementoPressao =
-        document.getElementById("pressao");
+        document.getElementById(
+            "pressao"
+        );
+
 
     const elementoVento =
-        document.getElementById("vento");
+        document.getElementById(
+            "vento"
+        );
+
 
     const elementoChuva =
-        document.getElementById("chuva");
+        document.getElementById(
+            "chuva"
+        );
+
 
     const elementoDirecao =
-        document.getElementById("direcao");
+        document.getElementById(
+            "direcao"
+        );
 
 
     if(elementoTemperatura){
@@ -2188,33 +2431,21 @@ function atualizarEstacao(){
     }
 
 
-    /*
-     * Interpretar a leitura física do sensor de chuva.
-     */
-
     interpretarChuva(rain);
 
 
     /* =====================================================
-       CRONOLOGIA DOS GRÁFICOS
+       CRONOLOGIA
     ===================================================== */
 
     /*
-     * A API retorna:
+     * IMPORTANTE:
      *
-     * [0] mais novo
-     * [1] anterior
-     * [2] anterior
-     * ...
+     * Não alteramos "leituras".
      *
-     * Para os gráficos precisamos:
+     * Criamos uma cópia invertida:
      *
-     * mais antigo -> ... -> mais novo
-     *
-     * Por isso fazemos um CLONE invertido.
-     *
-     * O array original "leituras" permanece intacto,
-     * garantindo que leituras[0] continue sendo o atual.
+     * antigo -> ... -> atual
      */
 
     const leiturasOrdenadas =
@@ -2222,60 +2453,83 @@ function atualizarEstacao(){
 
 
     /* =====================================================
-       DADOS PARA OS SPARKLINES E GRÁFICOS
+       ARRAYS
     ===================================================== */
 
-    const temps = leiturasOrdenadas.map(x =>
-        valorLeitura(x,[
-            "temperatura",
-            "temperature",
-            "temp"
-        ])
-    );
+    const temps =
+        leiturasOrdenadas.map(
+            x =>
+                valorLeitura(
+                    x,
+                    [
+                        "temperatura",
+                        "temperature",
+                        "temp"
+                    ]
+                )
+        );
 
 
-    const hums = leiturasOrdenadas.map(x =>
-        valorLeitura(x,[
-            "umidade",
-            "humidity",
-            "hum"
-        ])
-    );
+    const hums =
+        leiturasOrdenadas.map(
+            x =>
+                valorLeitura(
+                    x,
+                    [
+                        "umidade",
+                        "humidity",
+                        "hum"
+                    ]
+                )
+        );
 
 
-    const presses = leiturasOrdenadas.map(x =>
-        valorLeitura(x,[
-            "pressao",
-            "pressure",
-            "press"
-        ])
-    );
+    const presses =
+        leiturasOrdenadas.map(
+            x =>
+                valorLeitura(
+                    x,
+                    [
+                        "pressao",
+                        "pressure",
+                        "press"
+                    ]
+                )
+        );
 
 
-    const winds = leiturasOrdenadas.map(x =>
-        valorLeitura(x,[
-            "vento",
-            "wind",
-            "wind_speed",
-            "velocidade_vento"
-        ])
-    );
+    const winds =
+        leiturasOrdenadas.map(
+            x =>
+                valorLeitura(
+                    x,
+                    [
+                        "vento",
+                        "wind",
+                        "wind_speed",
+                        "velocidade_vento"
+                    ]
+                )
+        );
 
 
-    const rains = leiturasOrdenadas.map(x =>
-        valorLeitura(x,[
-            "chuva",
-            "rain",
-            "sensor_chuva",
-            "rain_sensor",
-            "precipitacao",
-            "precipitation",
-            "chuva_raw",
-            "rain_raw",
-            "a0",
-            "A0"
-        ])
-    );
+    const rains =
+        leiturasOrdenadas.map(
+            x =>
+                valorLeitura(
+                    x,
+                    [
+                        "chuva",
+                        "rain",
+                        "sensor_chuva",
+                        "rain_sensor",
+                        "chuva_raw",
+                        "rain_raw",
+                        "a0",
+                        "A0"
+                    ]
+                )
+        );
 
 
     /* =====================================================
@@ -2313,17 +2567,20 @@ function atualizarEstacao(){
 
 
     /* =====================================================
-       EIXO TEMPORAL
+       LABELS
     ===================================================== */
 
     const labels =
-        leiturasOrdenadas.map(x =>
-            hora(timestamp(x))
+        leiturasOrdenadas.map(
+            x =>
+                hora(
+                    timestamp(x)
+                )
         );
 
 
     /* =====================================================
-       GRÁFICO DE TEMPERATURA
+       TEMPERATURA
     ===================================================== */
 
     drawLineChart(
@@ -2335,7 +2592,7 @@ function atualizarEstacao(){
 
 
     /* =====================================================
-       GRÁFICO DE UMIDADE
+       UMIDADE
     ===================================================== */
 
     drawLineChart(
@@ -2356,24 +2613,41 @@ async function carregarPrevisao(){
 
     try{
 
-        const resposta = await fetch(API_PREVISAO,{
-            cache:"no-store"
-        });
+        const resposta =
+            await fetch(
+                API_PREVISAO,
+                {
+                    cache:"no-store"
+                }
+            );
 
 
-        if(!resposta.ok)
-            throw new Error("Erro na previsão");
+        if(!resposta.ok){
+
+            throw new Error(
+                "Erro na previsão"
+            );
+
+        }
 
 
-        const dados = await resposta.json();
+        const dados =
+            await resposta.json();
 
 
-        let hourly =
-            dados.hourly || dados;
+        const hourly =
+            dados.hourly ||
+            dados;
 
 
-        if(!hourly || !hourly.time)
+        if(
+            !hourly ||
+            !hourly.time
+        ){
+
             return;
+
+        }
 
 
         const tempos =
@@ -2392,21 +2666,23 @@ async function carregarPrevisao(){
 
 
         previsao =
-            tempos.map((t,i)=>({
+            tempos.map(
+                (t,i)=>({
 
-                time:t,
+                    time:t,
 
-                temp:
-                    numero(
-                        temperaturas[i]
-                    ),
+                    temp:
+                        numero(
+                            temperaturas[i]
+                        ),
 
-                rain:
-                    numero(
-                        chuvas[i]
-                    )
+                    rain:
+                        numero(
+                            chuvas[i]
+                        )
 
-            }));
+                })
+            );
 
 
         const agora =
@@ -2414,28 +2690,44 @@ async function carregarPrevisao(){
 
 
         let futuras =
-            previsao.filter(x =>
-                new Date(x.time).getTime() >= agora
+            previsao.filter(
+                x =>
+                    new Date(
+                        x.time
+                    ).getTime() >= agora
             );
 
 
-        if(!futuras.length)
-            futuras = previsao;
+        if(!futuras.length){
+
+            futuras =
+                previsao;
+
+        }
 
 
         futuras =
-            futuras.slice(0,24);
+            futuras.slice(
+                0,
+                24
+            );
 
 
         const labels =
-            futuras.map(x =>
-                hora(new Date(x.time))
+            futuras.map(
+                x =>
+                    hora(
+                        new Date(
+                            x.time
+                        )
+                    )
             );
 
 
         const valores =
-            futuras.map(x =>
-                x.temp
+            futuras.map(
+                x =>
+                    x.temp
             );
 
 
@@ -2452,7 +2744,9 @@ async function carregarPrevisao(){
         );
 
 
-    }catch(erro){
+    }
+
+    catch(erro){
 
         console.error(
             "Previsão:",
@@ -2465,7 +2759,7 @@ async function carregarPrevisao(){
 
 
 /* =========================================================
-   CARDS DA PREVISÃO
+   ÍCONE DA PREVISÃO
 ========================================================= */
 
 function iconeTempo(temp){
@@ -2478,6 +2772,10 @@ function iconeTempo(temp){
 
 }
 
+
+/* =========================================================
+   CARDS DA PREVISÃO
+========================================================= */
 
 function montarCardsPrevisao(lista){
 
@@ -2494,52 +2792,58 @@ function montarCardsPrevisao(lista){
     area.innerHTML = "";
 
 
-    lista.slice(0,12).forEach(item=>{
+    lista
+        .slice(0,12)
+        .forEach(
+            item => {
 
-        const card =
-            document.createElement(
-                "div"
-            );
-
-
-        card.className =
-            "forecast-hour";
-
-
-        const d =
-            new Date(item.time);
+                const card =
+                    document.createElement(
+                        "div"
+                    );
 
 
-        card.innerHTML = `
-
-            <div class="forecast-time">
-                ${hora(d)}
-            </div>
-
-            <div class="forecast-icon">
-                ${iconeTempo(item.temp)}
-            </div>
-
-            <div class="forecast-temp">
-                ${formatar(item.temp,1)} °C
-            </div>
-
-            <div class="forecast-rain">
-                ${
-                    item.rain !== null
-                    ? formatar(item.rain,0) + "% chuva"
-                    : "-- chuva"
-                }
-            </div>
-
-        `;
+                card.className =
+                    "forecast-hour";
 
 
-        area.appendChild(
-            card
+                const d =
+                    new Date(
+                        item.time
+                    );
+
+
+                card.innerHTML = `
+
+                    <div class="forecast-time">
+                        ${hora(d)}
+                    </div>
+
+                    <div class="forecast-icon">
+                        ${iconeTempo(item.temp)}
+                    </div>
+
+                    <div class="forecast-temp">
+                        ${formatar(item.temp,1)} °C
+                    </div>
+
+                    <div class="forecast-rain">
+                        ${
+                            item.rain !== null
+                            ? formatar(item.rain,0) + "% chuva"
+                            : "-- chuva"
+                        }
+                    </div>
+
+                `;
+
+
+                area.appendChild(
+                    card
+                );
+
+            }
         );
-
-    });
 
 }
 
@@ -2552,13 +2856,22 @@ async function carregarAlertaRio(){
 
     try{
 
-        const resposta = await fetch(API_ALERTARIO,{
-            cache:"no-store"
-        });
+        const resposta =
+            await fetch(
+                API_ALERTARIO,
+                {
+                    cache:"no-store"
+                }
+            );
 
 
-        if(!resposta.ok)
-            throw new Error("Erro no Alerta Rio");
+        if(!resposta.ok){
+
+            throw new Error(
+                "Erro no Alerta Rio"
+            );
+
+        }
 
 
         alertaRio =
@@ -2570,7 +2883,9 @@ async function carregarAlertaRio(){
         );
 
 
-    }catch(erro){
+    }
+
+    catch(erro){
 
         console.error(
             "Alerta Rio:",
@@ -2586,7 +2901,10 @@ async function carregarAlertaRio(){
    BUSCA RECURSIVA POR ESTAÇÃO
 ========================================================= */
 
-function encontrarEstacao(obj, nomes){
+function encontrarEstacao(
+    obj,
+    nomes
+){
 
     if(!obj)
         return null;
@@ -2594,7 +2912,10 @@ function encontrarEstacao(obj, nomes){
 
     if(Array.isArray(obj)){
 
-        for(const item of obj){
+        for(
+            const item
+            of obj
+        ){
 
             const encontrado =
                 encontrarEstacao(
@@ -2622,7 +2943,10 @@ function encontrarEstacao(obj, nomes){
             ).toLowerCase();
 
 
-        for(const nome of nomes){
+        for(
+            const nome
+            of nomes
+        ){
 
             if(
                 texto.includes(
@@ -2663,7 +2987,7 @@ function encontrarEstacao(obj, nomes){
 
 
 /* =========================================================
-   CONVERTER DIREÇÃO
+   DIREÇÃO
 ========================================================= */
 
 function direcaoTexto(valor){
@@ -2671,8 +2995,11 @@ function direcaoTexto(valor){
     if(
         valor === null ||
         valor === undefined
-    )
+    ){
+
         return "--";
+
+    }
 
 
     const n =
@@ -2683,7 +3010,7 @@ function direcaoTexto(valor){
         return String(valor);
 
 
-    const direcoes=[
+    const direcoes = [
         "N",
         "NE",
         "E",
@@ -2778,9 +3105,14 @@ function processarAlertaRio(dados){
             );
 
 
-        if(numero(dir)!==null)
+        if(
+            numero(dir) !== null
+        ){
+
             dir =
                 direcaoTexto(dir);
+
+        }
 
 
         const arTemp =
@@ -2813,29 +3145,56 @@ function processarAlertaRio(dados){
             );
 
 
-        if(arTemp)
+        if(arTemp){
+
             arTemp.textContent =
-                formatar(temp,1);
+                formatar(
+                    temp,
+                    1
+                );
+
+        }
 
 
-        if(arHum)
+        if(arHum){
+
             arHum.textContent =
-                formatar(hum,0);
+                formatar(
+                    hum,
+                    0
+                );
+
+        }
 
 
-        if(arPress)
+        if(arPress){
+
             arPress.textContent =
-                formatar(press,1);
+                formatar(
+                    press,
+                    1
+                );
+
+        }
 
 
-        if(arWind)
+        if(arWind){
+
             arWind.textContent =
-                formatar(wind,1);
+                formatar(
+                    wind,
+                    1
+                );
+
+        }
 
 
-        if(arDir)
+        if(arDir){
+
             arDir.textContent =
                 dir ?? "--";
+
+        }
 
     }
 
@@ -2871,12 +3230,12 @@ function processarAlertaRio(dados){
 
 function processarIraja(obj){
 
-    let valores=[];
+    let valores = [];
 
 
     if(Array.isArray(obj)){
 
-        valores=[
+        valores = [
             numero(obj[4]),
             numero(obj[5]),
             numero(obj[6]),
@@ -2886,9 +3245,12 @@ function processarIraja(obj){
             numero(obj[14])
         ];
 
-    }else{
+    }
 
-        valores=[
+    else{
+
+        valores = [
+
             valorLeitura(
                 obj,
                 [
@@ -2951,6 +3313,7 @@ function processarIraja(obj){
                     "rain_24h"
                 ]
             )
+
         ];
 
     }
@@ -2978,7 +3341,10 @@ function processarIraja(obj){
    SPARKLINE
 ========================================================= */
 
-function drawSpark(id,data){
+function drawSpark(
+    id,
+    data
+){
 
     const canvas =
         document.getElementById(
@@ -2998,12 +3364,16 @@ function drawSpark(id,data){
 
     const valores =
         data.filter(
-            x => x !== null
+            x =>
+                x !== null
         );
 
 
-    if(valores.length < 2)
+    if(valores.length < 2){
+
         return;
+
+    }
 
 
     const w =
@@ -3015,51 +3385,87 @@ function drawSpark(id,data){
 
 
     let min =
-        Math.min(...valores);
+        Math.min(
+            ...valores
+        );
 
 
     let max =
-        Math.max(...valores);
+        Math.max(
+            ...valores
+        );
 
 
-    if(min===max){
+    if(min === max){
 
-        min-=1;
-        max+=1;
+        min -= 1;
+        max += 1;
 
     }
 
 
-    const margem=3;
+    const margem = 3;
 
 
     ctx.beginPath();
 
 
-    valores.forEach((v,i)=>{
+    valores.forEach(
+        (v,i)=>{
 
-        const x =
-            margem +
-            (i/(valores.length-1)) *
-            (w-margem*2);
-
-
-        const y =
-            h-margem-
-            ((v-min)/(max-min)) *
-            (h-margem*2);
-
-
-        if(i===0)
-            ctx.moveTo(x,y);
-        else
-            ctx.lineTo(x,y);
-
-    });
+            const x =
+                margem +
+                (
+                    i /
+                    (valores.length-1)
+                ) *
+                (
+                    w -
+                    margem*2
+                );
 
 
-    ctx.strokeStyle="#1677ff";
-    ctx.lineWidth=2;
+            const y =
+                h -
+                margem -
+                (
+                    (v-min) /
+                    (max-min)
+                ) *
+                (
+                    h -
+                    margem*2
+                );
+
+
+            if(i===0){
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            }
+
+            else{
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
+
+        }
+    );
+
+
+    ctx.strokeStyle =
+        "#1677ff";
+
+    ctx.lineWidth =
+        2;
+
     ctx.stroke();
 
 }
@@ -3076,7 +3482,8 @@ function prepararCanvas(canvas){
 
 
     const dpr =
-        window.devicePixelRatio || 1;
+        window.devicePixelRatio ||
+        1;
 
 
     canvas.width =
@@ -3103,11 +3510,6 @@ function prepararCanvas(canvas){
         dpr,
         dpr
     );
-
-
-    /*
-       O desenho trabalha em CSS pixels
-    */
 
 
     canvas._cssWidth =
@@ -3159,21 +3561,26 @@ function drawLineChart(
 
 
     const pontos =
-        data.map(
-            (v,i)=>({
-                v,
-                i
-            })
-        )
-        .filter(
-            x=>x.v!==null
-        );
+        data
+            .map(
+                (v,i)=>({
+                    v,
+                    i
+                })
+            )
+            .filter(
+                x =>
+                    x.v !== null
+            );
 
 
-    if(pontos.length<2){
+    if(pontos.length < 2){
 
-        ctx.fillStyle="#8a94a3";
-        ctx.font="12px Arial";
+        ctx.fillStyle =
+            "#8a94a3";
+
+        ctx.font =
+            "12px Arial";
 
 
         ctx.fillText(
@@ -3190,46 +3597,58 @@ function drawLineChart(
 
     const valores =
         pontos.map(
-            x=>x.v
+            x =>
+                x.v
         );
 
 
     let min =
-        Math.min(...valores);
+        Math.min(
+            ...valores
+        );
 
 
     let max =
-        Math.max(...valores);
+        Math.max(
+            ...valores
+        );
 
 
-    if(min===max){
+    if(min === max){
 
-        min-=1;
-        max+=1;
+        min -= 1;
+        max += 1;
 
     }
 
 
-    const esquerda=42;
-    const direita=12;
-    const topo=18;
-    const baixo=30;
+    const esquerda = 42;
+    const direita = 12;
+    const topo = 18;
+    const baixo = 30;
 
 
     const largura =
-        w-esquerda-direita;
+        w -
+        esquerda -
+        direita;
 
 
     const altura =
-        h-topo-baixo;
+        h -
+        topo -
+        baixo;
 
 
     /* =====================================================
        GRADE
     ===================================================== */
 
-    ctx.strokeStyle="#edf0f4";
-    ctx.lineWidth=1;
+    ctx.strokeStyle =
+        "#edf0f4";
+
+    ctx.lineWidth =
+        1;
 
 
     for(
@@ -3239,7 +3658,7 @@ function drawLineChart(
     ){
 
         const y =
-            topo+
+            topo +
             (i/4)*altura;
 
 
@@ -3274,28 +3693,52 @@ function drawLineChart(
         (p,index)=>{
 
             const x =
-                esquerda+
-                (p.i/(data.length-1))*
+                esquerda +
+                (
+                    p.i /
+                    (data.length-1)
+                ) *
                 largura;
 
 
             const y =
-                topo+
-                (1-(p.v-min)/(max-min))*
+                topo +
+                (
+                    1 -
+                    (p.v-min) /
+                    (max-min)
+                ) *
                 altura;
 
 
-            if(index===0)
-                ctx.moveTo(x,y);
-            else
-                ctx.lineTo(x,y);
+            if(index===0){
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            }
+
+            else{
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
 
         }
     );
 
 
-    ctx.strokeStyle="#1677ff";
-    ctx.lineWidth=2.5;
+    ctx.strokeStyle =
+        "#1677ff";
+
+    ctx.lineWidth =
+        2.5;
+
     ctx.stroke();
 
 
@@ -3307,14 +3750,21 @@ function drawLineChart(
         p=>{
 
             const x =
-                esquerda+
-                (p.i/(data.length-1))*
+                esquerda +
+                (
+                    p.i /
+                    (data.length-1)
+                ) *
                 largura;
 
 
             const y =
-                topo+
-                (1-(p.v-min)/(max-min))*
+                topo +
+                (
+                    1 -
+                    (p.v-min) /
+                    (max-min)
+                ) *
                 altura;
 
 
@@ -3330,7 +3780,8 @@ function drawLineChart(
             );
 
 
-            ctx.fillStyle="#1677ff";
+            ctx.fillStyle =
+                "#1677ff";
 
 
             ctx.fill();
@@ -3343,8 +3794,11 @@ function drawLineChart(
        LABELS
     ===================================================== */
 
-    ctx.fillStyle="#7a8595";
-    ctx.font="10px Arial";
+    ctx.fillStyle =
+        "#7a8595";
+
+    ctx.font =
+        "10px Arial";
 
 
     labels.forEach(
@@ -3357,18 +3811,26 @@ function drawLineChart(
             if(
                 i===0 ||
                 i===labels.length-1 ||
-                i%Math.ceil(labels.length/5)===0
+                i % Math.ceil(
+                    labels.length/5
+                ) === 0
             ){
 
                 const x =
-                    esquerda+
-                    (i/(labels.length-1))*
+                    esquerda +
+                    (
+                        i /
+                        (labels.length-1)
+                    ) *
                     largura;
 
 
                 ctx.fillText(
                     label,
-                    Math.max(0,x-14),
+                    Math.max(
+                        0,
+                        x-14
+                    ),
                     h-8
                 );
 
@@ -3418,7 +3880,7 @@ function drawBarChart(
     const valores =
         data.map(
             v =>
-                v===null
+                v === null
                 ? 0
                 : v
         );
@@ -3435,26 +3897,33 @@ function drawBarChart(
         );
 
 
-    const esquerda=38;
-    const direita=10;
-    const topo=15;
-    const baixo=38;
+    const esquerda = 38;
+    const direita = 10;
+    const topo = 15;
+    const baixo = 38;
 
 
     const largura =
-        w-esquerda-direita;
+        w -
+        esquerda -
+        direita;
 
 
     const altura =
-        h-topo-baixo;
+        h -
+        topo -
+        baixo;
 
 
     /* =====================================================
        GRADE
     ===================================================== */
 
-    ctx.strokeStyle="#edf0f4";
-    ctx.lineWidth=1;
+    ctx.strokeStyle =
+        "#edf0f4";
+
+    ctx.lineWidth =
+        1;
 
 
     for(
@@ -3464,7 +3933,7 @@ function drawBarChart(
     ){
 
         const y =
-            topo+
+            topo +
             (i/4)*altura;
 
 
@@ -3488,14 +3957,14 @@ function drawBarChart(
     }
 
 
-    const gap=8;
+    const gap = 8;
 
 
     const barraW =
         (
-            largura-
+            largura -
             gap*(valores.length-1)
-        )/
+        ) /
         valores.length;
 
 
@@ -3503,7 +3972,7 @@ function drawBarChart(
         (v,i)=>{
 
             const x =
-                esquerda+
+                esquerda +
                 i*(barraW+gap);
 
 
@@ -3512,10 +3981,13 @@ function drawBarChart(
 
 
             const y =
-                topo+altura-bh;
+                topo +
+                altura -
+                bh;
 
 
-            ctx.fillStyle="#1677ff";
+            ctx.fillStyle =
+                "#1677ff";
 
 
             ctx.beginPath();
@@ -3533,11 +4005,14 @@ function drawBarChart(
             ctx.fill();
 
 
-            ctx.fillStyle="#667085";
-            ctx.font="9px Arial";
+            ctx.fillStyle =
+                "#667085";
 
+            ctx.font =
+                "9px Arial";
 
-            ctx.textAlign="center";
+            ctx.textAlign =
+                "center";
 
 
             ctx.fillText(
@@ -3549,11 +4024,15 @@ function drawBarChart(
 
             if(v>0){
 
-                ctx.fillStyle="#4f5b6d";
+                ctx.fillStyle =
+                    "#4f5b6d";
 
 
                 ctx.fillText(
-                    formatar(v,1),
+                    formatar(
+                        v,
+                        1
+                    ),
                     x+barraW/2,
                     y-5
                 );
@@ -3564,7 +4043,8 @@ function drawBarChart(
     );
 
 
-    ctx.textAlign="left";
+    ctx.textAlign =
+        "left";
 
 }
 
@@ -3596,14 +4076,41 @@ window.addEventListener(
     "resize",
     ()=>{
 
-        if(leituras.length)
+        if(leituras.length){
+
             atualizarEstacao();
+
+        }
 
 
         if(previsao.length){
 
-            const futuras =
-                previsao.slice(0,24);
+            const agora =
+                Date.now();
+
+
+            let futuras =
+                previsao.filter(
+                    x =>
+                        new Date(
+                            x.time
+                        ).getTime() >= agora
+                );
+
+
+            if(!futuras.length){
+
+                futuras =
+                    previsao;
+
+            }
+
+
+            futuras =
+                futuras.slice(
+                    0,
+                    24
+                );
 
 
             drawLineChart(
@@ -3611,7 +4118,9 @@ window.addEventListener(
                 futuras.map(
                     x =>
                         hora(
-                            new Date(x.time)
+                            new Date(
+                                x.time
+                            )
                         )
                 ),
                 futuras.map(
@@ -3639,8 +4148,9 @@ document.addEventListener(
 
 
         /*
-           Atualização automática a cada 5 minutos.
-        */
+         * Atualização automática
+         * a cada 5 minutos.
+         */
 
         setInterval(
             atualizarTudo,
