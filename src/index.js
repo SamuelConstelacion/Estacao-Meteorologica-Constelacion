@@ -4,7 +4,6 @@ export default {
 
     const url = new URL(request.url);
 
-
     // =====================================================
     // CONFIGURAÇÕES
     // =====================================================
@@ -17,7 +16,7 @@ export default {
 
 
     // =====================================================
-    // API - ÚLTIMAS LEITURAS
+    // API - ÚLTIMAS LEITURAS DA ESTAÇÃO
     // =====================================================
 
     if (
@@ -35,12 +34,13 @@ export default {
             LIMIT 20
           `).all();
 
-
         return Response.json({
 
           sucesso: true,
 
           estacao: ESTACAO,
+
+          local: LOCAL,
 
           quantidade:
             resultado.results.length,
@@ -50,7 +50,6 @@ export default {
 
         });
 
-
       } catch (erro) {
 
         console.error(
@@ -58,17 +57,13 @@ export default {
           erro
         );
 
-
         return Response.json(
           {
-
             sucesso: false,
 
             erro:
               "Não foi possível consultar as leituras"
-
           },
-
           {
             status: 500
           }
@@ -80,7 +75,7 @@ export default {
 
 
     // =====================================================
-    // API - RECEBER DADOS DO ESP32
+    // API - RECEBER DADOS DO ARDUINO / ESP8266
     // =====================================================
 
     if (
@@ -91,40 +86,22 @@ export default {
       try {
 
         // -------------------------------------------------
-        // PROTEÇÃO DO ENDPOINT
+        // AUTENTICAÇÃO
         // -------------------------------------------------
 
         const token =
-          request.headers.get(
-            "Authorization"
-          );
+          request.headers.get("Authorization");
 
 
-        /*
-         * O token será configurado futuramente
-         * como variável secreta no Cloudflare:
-         *
-         * STATION_TOKEN
-         *
-         * Enquanto não configurarmos o token,
-         * o endpoint permanece bloqueado.
-         */
-
-
-        if (
-          !env.STATION_TOKEN
-        ) {
+        if (!env.STATION_TOKEN) {
 
           return Response.json(
             {
-
               sucesso: false,
 
               erro:
                 "STATION_TOKEN não configurado"
-
             },
-
             {
               status: 503
             }
@@ -140,14 +117,11 @@ export default {
 
           return Response.json(
             {
-
               sucesso: false,
 
               erro:
                 "Não autorizado"
-
             },
-
             {
               status: 401
             }
@@ -165,47 +139,32 @@ export default {
 
 
         // -------------------------------------------------
-        // VALIDAR DADOS
+        // CONVERTER VALORES
         // -------------------------------------------------
 
         const temperatura =
-          Number(
-            dados.temperatura
-          );
-
+          Number(dados.temperatura);
 
         const umidade =
-          Number(
-            dados.umidade
-          );
-
+          Number(dados.umidade);
 
         const pressao =
-          Number(
-            dados.pressao
-          );
-
+          Number(dados.pressao);
 
         const chuva =
-          Number(
-            dados.chuva
-          );
-
+          Number(dados.chuva);
 
         const vento =
-          Number(
-            dados.vento
-          );
-
+          Number(dados.vento);
 
         const direcao =
           String(
             dados.direcao_vento || ""
-          );
+          ).toUpperCase();
 
 
         // -------------------------------------------------
-        // VERIFICAÇÃO DOS VALORES
+        // VALIDAR TEMPERATURA
         // -------------------------------------------------
 
         if (
@@ -216,110 +175,10 @@ export default {
 
           return Response.json(
             {
-
               sucesso: false,
-
               erro:
                 "Temperatura inválida"
-
             },
-
-            {
-              status: 400
-            }
-          );
-
-        }
-
-
-        if (
-          !Number.isFinite(umidade) ||
-          umidade < 0 ||
-          umidade > 100
-        ) {
-
-          return Response.json(
-            {
-
-              sucesso: false,
-
-              erro:
-                "Umidade inválida"
-
-            },
-
-            {
-              status: 400
-            }
-          );
-
-        }
-
-
-        if (
-          !Number.isFinite(pressao) ||
-          pressao < 800 ||
-          pressao > 1100
-        ) {
-
-          return Response.json(
-            {
-
-              sucesso: false,
-
-              erro:
-                "Pressão atmosférica inválida"
-
-            },
-
-            {
-              status: 400
-            }
-          );
-
-        }
-
-
-        if (
-          !Number.isFinite(chuva) ||
-          chuva < 0 ||
-          chuva > 1000
-        ) {
-
-          return Response.json(
-            {
-
-              sucesso: false,
-
-              erro:
-                "Valor de chuva inválido"
-
-            },
-
-            {
-              status: 400
-            }
-          );
-
-        }
-
-
-        if (
-          !Number.isFinite(vento) ||
-          vento < 0 ||
-          vento > 300
-        ) {
-
-          return Response.json(
-            {
-
-              sucesso: false,
-
-              erro:
-                "Velocidade do vento inválida"
-
-            },
-
             {
               status: 400
             }
@@ -329,7 +188,103 @@ export default {
 
 
         // -------------------------------------------------
-        // DIREÇÃO DO VENTO
+        // VALIDAR UMIDADE
+        // -------------------------------------------------
+
+        if (
+          !Number.isFinite(umidade) ||
+          umidade < 0 ||
+          umidade > 100
+        ) {
+
+          return Response.json(
+            {
+              sucesso: false,
+              erro:
+                "Umidade inválida"
+            },
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        // -------------------------------------------------
+        // VALIDAR PRESSÃO
+        // -------------------------------------------------
+
+        if (
+          !Number.isFinite(pressao) ||
+          pressao < 800 ||
+          pressao > 1100
+        ) {
+
+          return Response.json(
+            {
+              sucesso: false,
+              erro:
+                "Pressão atmosférica inválida"
+            },
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        // -------------------------------------------------
+        // VALIDAR CHUVA
+        // -------------------------------------------------
+
+        if (
+          !Number.isFinite(chuva) ||
+          chuva < 0 ||
+          chuva > 1000
+        ) {
+
+          return Response.json(
+            {
+              sucesso: false,
+              erro:
+                "Valor de chuva inválido"
+            },
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        // -------------------------------------------------
+        // VALIDAR VENTO
+        // -------------------------------------------------
+
+        if (
+          !Number.isFinite(vento) ||
+          vento < 0 ||
+          vento > 300
+        ) {
+
+          return Response.json(
+            {
+              sucesso: false,
+              erro:
+                "Velocidade do vento inválida"
+            },
+            {
+              status: 400
+            }
+          );
+
+        }
+
+
+        // -------------------------------------------------
+        // VALIDAR DIREÇÃO
         // -------------------------------------------------
 
         const direcoesValidas = [
@@ -347,21 +302,15 @@ export default {
 
 
         if (
-          !direcoesValidas.includes(
-            direcao
-          )
+          !direcoesValidas.includes(direcao)
         ) {
 
           return Response.json(
             {
-
               sucesso: false,
-
               erro:
                 "Direção do vento inválida"
-
             },
-
             {
               status: 400
             }
@@ -371,7 +320,7 @@ export default {
 
 
         // -------------------------------------------------
-        // DATA/HORA
+        // DATA / HORA
         // -------------------------------------------------
 
         const agora =
@@ -379,7 +328,7 @@ export default {
 
 
         // -------------------------------------------------
-        // GRAVAR NO D1
+        // GRAVAR DADOS REAIS
         // -------------------------------------------------
 
         await env.DB.prepare(`
@@ -402,29 +351,29 @@ export default {
 
         `)
 
-          .bind(
+        .bind(
 
-            agora.toISOString(),
+          agora.toISOString(),
 
-            temperatura,
+          temperatura,
 
-            umidade,
+          umidade,
 
-            pressao,
+          pressao,
 
-            chuva,
+          chuva,
 
-            vento,
+          vento,
 
-            direcao,
+          direcao,
 
-            "REAL",
+          "REAL",
 
-            "ESP32"
+          "ARDUINO UNO + ESP8266"
 
-          )
+        )
 
-          .run();
+        .run();
 
 
         // -------------------------------------------------
@@ -441,11 +390,14 @@ export default {
           estacao:
             ESTACAO,
 
+          local:
+            LOCAL,
+
           origem:
             "REAL",
 
           dispositivo:
-            "ESP32",
+            "ARDUINO UNO + ESP8266",
 
           data_hora:
             agora.toISOString()
@@ -456,21 +408,17 @@ export default {
       } catch (erro) {
 
         console.error(
-          "Erro ao receber dados do ESP32:",
+          "Erro ao receber dados:",
           erro
         );
 
-
         return Response.json(
           {
-
             sucesso: false,
 
             erro:
               "Não foi possível processar a leitura"
-
           },
-
           {
             status: 400
           }
@@ -501,13 +449,28 @@ export default {
 
         const apiUrl =
           "https://api.open-meteo.com/v1/forecast" +
+
           `?latitude=${latitude}` +
+
           `&longitude=${longitude}` +
-          "&hourly=temperature_2m,relative_humidity_2m,precipitation_probability,precipitation,pressure_msl,wind_speed_10m,wind_direction_10m" +
+
+          "&hourly=" +
+          "temperature_2m," +
+          "relative_humidity_2m," +
+          "precipitation_probability," +
+          "precipitation," +
+          "pressure_msl," +
+          "wind_speed_10m," +
+          "wind_direction_10m" +
+
           "&forecast_days=2" +
+
           "&timezone=America%2FSao_Paulo" +
+
           "&temperature_unit=celsius" +
+
           "&wind_speed_unit=kmh" +
+
           "&precipitation_unit=mm";
 
 
@@ -515,20 +478,15 @@ export default {
           await fetch(apiUrl);
 
 
-        if (
-          !resposta.ok
-        ) {
+        if (!resposta.ok) {
 
           return Response.json(
             {
-
               sucesso: false,
 
               erro:
                 "Não foi possível obter a previsão meteorológica"
-
             },
-
             {
               status: 502
             }
@@ -574,17 +532,13 @@ export default {
           erro
         );
 
-
         return Response.json(
           {
-
             sucesso: false,
 
             erro:
               "Erro ao consultar previsão meteorológica"
-
           },
-
           {
             status: 502
           }
@@ -612,9 +566,7 @@ export default {
           );
 
 
-        if (
-          !resposta.ok
-        ) {
+        if (!resposta.ok) {
 
           throw new Error(
             "Erro ao acessar o Alerta Rio"
@@ -628,7 +580,7 @@ export default {
 
 
         // -------------------------------------------------
-        // LOCALIZAR LINHAS
+        // LOCALIZAR LINHAS DA TABELA
         // -------------------------------------------------
 
         const linhas =
@@ -645,14 +597,10 @@ export default {
           null;
 
 
-        for (
-          const linha of linhas
-        ) {
+        for (const linha of linhas) {
 
           if (
-            linha.includes(
-              "São Cristóvão"
-            )
+            linha.includes("São Cristóvão")
           ) {
 
             const celulas =
@@ -665,14 +613,8 @@ export default {
               celulas.map(
                 celula =>
                   celula
-                    .replace(
-                      /<[^>]*>/g,
-                      ""
-                    )
-                    .replace(
-                      /&nbsp;/g,
-                      " "
-                    )
+                    .replace(/<[^>]*>/g, "")
+                    .replace(/&nbsp;/g, " ")
                     .trim()
               );
 
@@ -699,14 +641,10 @@ export default {
           null;
 
 
-        for (
-          const linha of linhas
-        ) {
+        for (const linha of linhas) {
 
           if (
-            linha.includes(
-              "Irajá"
-            )
+            linha.includes("Irajá")
           ) {
 
             const celulas =
@@ -719,14 +657,8 @@ export default {
               celulas.map(
                 celula =>
                   celula
-                    .replace(
-                      /<[^>]*>/g,
-                      ""
-                    )
-                    .replace(
-                      /&nbsp;/g,
-                      " "
-                    )
+                    .replace(/<[^>]*>/g, "")
+                    .replace(/&nbsp;/g, " ")
                     .trim()
               );
 
@@ -771,9 +703,7 @@ export default {
         ) {
 
           const indice =
-            html.indexOf(
-              regiao
-            );
+            html.indexOf(regiao);
 
 
           if (
@@ -783,7 +713,7 @@ export default {
             const trecho =
               html.substring(
                 indice,
-                indice + 150
+                indice + 300
               );
 
 
@@ -793,9 +723,7 @@ export default {
               );
 
 
-            if (
-              match
-            ) {
+            if (match) {
 
               situacoes[regiao] =
                 `Estágio ${match[1]}`;
@@ -811,20 +739,18 @@ export default {
         // VERIFICAÇÃO
         // -------------------------------------------------
 
-        if (
-          !dadosMeteorologicos
-        ) {
+        if (!dadosMeteorologicos) {
 
           return Response.json(
             {
-
               sucesso: false,
 
+              fonte:
+                "Sistema Alerta Rio - Prefeitura do Rio de Janeiro",
+
               erro:
-                "Não foi possível localizar São Cristóvão no Alerta Rio"
-
+                "Não foi possível localizar São Cristóvão"
             },
-
             {
               status: 502
             }
@@ -833,20 +759,18 @@ export default {
         }
 
 
-        if (
-          !dadosChuva
-        ) {
+        if (!dadosChuva) {
 
           return Response.json(
             {
-
               sucesso: false,
 
+              fonte:
+                "Sistema Alerta Rio - Prefeitura do Rio de Janeiro",
+
               erro:
-                "Não foi possível localizar Irajá no Alerta Rio"
-
+                "Não foi possível localizar Irajá"
             },
-
             {
               status: 502
             }
@@ -865,6 +789,9 @@ export default {
 
           fonte:
             "Sistema Alerta Rio - Prefeitura do Rio de Janeiro",
+
+          atualizado:
+            new Date().toISOString(),
 
           estacao:
             "São Cristóvão",
@@ -965,20 +892,111 @@ export default {
 
         return Response.json(
           {
-
             sucesso: false,
 
             erro:
               "Não foi possível consultar o Alerta Rio"
-
           },
-
           {
             status: 502
           }
         );
 
       }
+
+    }
+
+
+    // =====================================================
+    // API - FONTES OFICIAIS
+    // =====================================================
+
+    if (
+      url.pathname === "/api/fontes" &&
+      request.method === "GET"
+    ) {
+
+      return Response.json({
+
+        sucesso: true,
+
+        estacao:
+          ESTACAO,
+
+        fontes: {
+
+          nossa_estacao: {
+
+            nome:
+              "Estação Meteorológica Constelación",
+
+            origem:
+              "Sensores locais",
+
+            status:
+              "SIMULADOS ATÉ A INSTALAÇÃO DOS SENSORES"
+
+          },
+
+          alerta_rio: {
+
+            nome:
+              "Sistema Alerta Rio",
+
+            origem:
+              "Prefeitura do Rio de Janeiro / COR-Rio",
+
+            url:
+              "https://websempre.rio.rj.gov.br/estacoes/"
+
+          },
+
+          previsao: {
+
+            nome:
+              "Open-Meteo",
+
+            url:
+              "https://open-meteo.com/"
+
+          },
+
+          defesa_civil: {
+
+            nome:
+              "Defesa Civil Rio",
+
+            url:
+              "https://defesacivil.prefeitura.rio/"
+
+          },
+
+          prefeitura: {
+
+            nome:
+              "Prefeitura do Rio de Janeiro",
+
+            url:
+              "https://www.rio.rj.gov.br/"
+
+          },
+
+          satelite: {
+
+            nome:
+              "CPTEC / INPE",
+
+            produto:
+              "GOES-19",
+
+            url:
+              "https://www.cptec.inpe.br/dsat/"
+
+          }
+
+        }
+
+      });
 
     }
 
@@ -1004,14 +1022,11 @@ export default {
 
     return Response.json(
       {
-
         sucesso: false,
 
         erro:
           "Rota não encontrada"
-
       },
-
       {
         status: 404
       }
@@ -1022,6 +1037,13 @@ export default {
 
   // =====================================================
   // SIMULADOR METEOROLÓGICO
+  // =====================================================
+  //
+  // ESTES DADOS SÃO TEMPORÁRIOS.
+  //
+  // Quando o Arduino UNO + ESP8266 começar a enviar
+  // dados reais, poderemos desativar este simulador.
+  //
   // =====================================================
 
   async scheduled(
@@ -1034,6 +1056,10 @@ export default {
       new Date();
 
 
+    // -----------------------------------------------------
+    // TEMPERATURA SIMULADA
+    // -----------------------------------------------------
+
     const temperatura =
       Number(
         (
@@ -1042,6 +1068,10 @@ export default {
         ).toFixed(1)
       );
 
+
+    // -----------------------------------------------------
+    // UMIDADE SIMULADA
+    // -----------------------------------------------------
 
     const umidade =
       Number(
@@ -1052,6 +1082,10 @@ export default {
       );
 
 
+    // -----------------------------------------------------
+    // PRESSÃO SIMULADA
+    // -----------------------------------------------------
+
     const pressao =
       Number(
         (
@@ -1061,15 +1095,25 @@ export default {
       );
 
 
+    // -----------------------------------------------------
+    // CHUVA SIMULADA
+    // -----------------------------------------------------
+
     const chuva =
       Math.random() < 0.15
+
         ? Number(
             (
               Math.random() * 3
             ).toFixed(1)
           )
+
         : 0;
 
+
+    // -----------------------------------------------------
+    // VENTO SIMULADO
+    // -----------------------------------------------------
 
     const vento =
       Number(
@@ -1079,6 +1123,10 @@ export default {
         ).toFixed(1)
       );
 
+
+    // -----------------------------------------------------
+    // DIREÇÃO SIMULADA
+    // -----------------------------------------------------
 
     const direcoes = [
 
@@ -1104,7 +1152,7 @@ export default {
 
 
     // -----------------------------------------------------
-    // GRAVAR DADOS SIMULADOS
+    // GRAVAR COMO SIMULADO
     // -----------------------------------------------------
 
     await env.DB.prepare(`
@@ -1127,29 +1175,29 @@ export default {
 
     `)
 
-      .bind(
+    .bind(
 
-        agora.toISOString(),
+      agora.toISOString(),
 
-        temperatura,
+      temperatura,
 
-        umidade,
+      umidade,
 
-        pressao,
+      pressao,
 
-        chuva,
+      chuva,
 
-        vento,
+      vento,
 
-        direcao,
+      direcao,
 
-        "SIMULADO",
+      "SIMULADO",
 
-        "simulador"
+      "simulador"
 
-      )
+    )
 
-      .run();
+    .run();
 
   }
 
