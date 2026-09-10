@@ -29,6 +29,9 @@
 
     --purple:#7655e8;
     --purple-light:#f1edff;
+    --station:#0b5ed7;
+    --station-dark:#084298;
+    --station-light:#e8f1ff;
 
     --shadow:0 7px 25px rgba(31,55,90,.07);
     --radius:18px;
@@ -264,7 +267,8 @@ section{
 }
 
 .own-section{
-    border-top:4px solid var(--blue);
+    border-top:5px solid var(--station);
+    box-shadow:0 8px 28px rgba(11,94,215,.12);
 }
 
 .own-status{
@@ -273,14 +277,14 @@ section{
     justify-content:space-between;
     gap:10px;
     padding:10px 14px;
-    background:var(--blue-light);
+    background:var(--station-light);
     border-radius:12px;
     margin-bottom:18px;
 }
 
 .own-status strong{
     font-size:12px;
-    color:var(--blue-dark);
+    color:var(--station-dark);
 }
 
 .simulated{
@@ -317,6 +321,20 @@ section{
     font-size:11px;
     color:var(--muted);
     font-weight:700;
+}
+
+.own-section .metric{
+    border-color:#cfe0fb;
+    background:#fbfdff;
+}
+
+.own-section .metric-icon{
+    background:var(--station-light);
+    color:var(--station);
+}
+
+.own-section .metric-value{
+    color:var(--station-dark);
 }
 
 .metric-icon{
@@ -488,9 +506,37 @@ canvas{
     color:#5f6b7a;
 }
 
-.rain-chart{
-    height:260px;
+.simulation-warning{
+    margin-top:12px;
+    padding:12px 14px;
+    border:1px solid #f2c66d;
+    border-radius:12px;
+    background:#fff8e7;
+    color:#7a5200;
+    font-size:11px;
+    line-height:1.5;
 }
+
+.rain-panel{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:12px;}
+.rain-group{border:1px solid var(--border);border-radius:13px;padding:13px;background:#fafbfd;}
+.rain-group-title{font-size:10px;font-weight:800;letter-spacing:.7px;color:#5f6b7a;margin-bottom:9px;}
+.rain-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #edf0f4;font-size:11px;}
+.rain-item:last-child{border-bottom:0;}
+.rain-value{font-weight:800;color:#1769aa;}
+.rain-highlight{margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rain-total{border-radius:13px;padding:14px;background:#eaf6ff;border:1px solid #cde8fa;}
+.rain-total strong{display:block;font-size:20px;color:#075985;margin-top:4px;}
+.rain-total span{font-size:9px;color:#5f6b7a;font-weight:700;text-transform:uppercase;}
+.rain-explain{margin-top:12px;padding:11px 13px;border-radius:11px;background:#f5f7fa;color:var(--muted);font-size:10px;line-height:1.5;}
+.defesa-current{display:grid;grid-template-columns:auto 1fr;gap:15px;align-items:center;padding:15px;border-radius:14px;background:#f5f7fa;border:1px solid var(--border);margin-top:14px;}
+.defesa-stage-number{width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:900;background:#e9edf2;color:#687386;}
+.defesa-current-label{font-size:9px;letter-spacing:1px;font-weight:800;color:#697586;}
+.defesa-current-name{font-size:20px;font-weight:900;margin-top:3px;}
+.defesa-current-time{font-size:10px;color:var(--muted);margin-top:4px;}
+.stage.active{background:#dce9fb;color:#075acb;outline:2px solid #9bc3fa;}
+.defesa-status-note{margin-top:12px;padding:10px 12px;border-radius:10px;background:#eef7f2;color:#176b49;font-size:10px;line-height:1.5;}
+
+.rain-chart{height:260px;}
 
 .source-note{
     margin-top:12px;
@@ -683,6 +729,8 @@ footer{
     .satellite-box{
         grid-template-columns:1fr;
     }
+
+    .rain-panel{grid-template-columns:1fr;}
 }
 
 @media(max-width:600px){
@@ -805,6 +853,9 @@ footer{
     .satellite-items{
         grid-template-columns:1fr 1fr;
     }
+
+    .defesa-current{grid-template-columns:1fr;text-align:center;}
+    .defesa-stage-number{margin:auto;}
 }
 
 @media(max-width:390px){
@@ -844,10 +895,9 @@ footer{
 
         <div>
             <div class="brand-small">ESTAÇÃO METEOROLÓGICA</div>
-            <div class="brand-title">CONSTELAÇÃO</div>
-            <div class="brand-location">
-                Colégio — Rio de Janeiro
-            </div>
+            <div class="brand-title">CONSTELACIÓN</div>
+            <div class="brand-location"><strong>Condomínio — Colégio</strong></div>
+            <div class="brand-location">Colégio — Rio de Janeiro</div>
         </div>
 
     </div>
@@ -915,15 +965,15 @@ footer{
         <div class="section-title-wrap">
 
             <div class="eyebrow">
-                DADOS PRÓPRIOS · ESTAÇÃO CONSTELAÇÃO
+                DADOS PRÓPRIOS · ESTAÇÃO CONSTELACIÓN
             </div>
 
             <h2 class="section-title">
-                Nossa Estação — Tempo Real
+                Nossa Estação — Dados Locais
             </h2>
 
             <div class="section-subtitle">
-                Estrada do Barro Vermelho · Colégio · Rio de Janeiro
+                <strong>Condomínio — Colégio</strong> · Rio de Janeiro
             </div>
 
         </div>
@@ -939,13 +989,19 @@ footer{
         <div class="own-status">
 
             <strong>
-                DADOS DA NOSSA ESTAÇÃO
+                DADOS DA NOSSA ESTAÇÃO · AINDA SIMULADOS
             </strong>
 
             <span class="simulated" id="stationStatus">
                 SIMULADOS
             </span>
 
+        </div>
+
+        <div class="simulation-warning">
+            ⚠️ <strong>ESTAÇÃO AINDA NÃO ESTÁ EM FUNCIONAMENTO.</strong><br>
+            Os valores desta seção são <strong>dados simulados</strong>, usados somente para testar o dashboard.
+            Eles não representam medições reais feitas pelos sensores físicos da Estação Constelación.
         </div>
 
         <div class="metrics">
@@ -1266,20 +1322,17 @@ footer{
             </div>
 
             <div class="chart-card">
-
-                <div class="chart-title">
-                    Precipitação por intervalo
+                <div class="chart-title">Chuva registrada — leitura por períodos</div>
+                <div class="chart-subtitle">Acumulados registrados pela estação pluviométrica de Irajá</div>
+                <div id="rainDashboard">
+                    <div class="rain-panel">
+                        <div class="rain-group"><div class="rain-group-title">CURTO PRAZO</div><div class="rain-item"><span>5 min</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>10 min</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>15 min</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>30 min</span><span class="rain-value">-- mm</span></div></div>
+                        <div class="rain-group"><div class="rain-group-title">ACUMULADOS</div><div class="rain-item"><span>1 hora</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>2 horas</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>3 horas</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>4 horas</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>6 horas</span><span class="rain-value">-- mm</span></div></div>
+                        <div class="rain-group"><div class="rain-group-title">PERÍODOS PROLONGADOS</div><div class="rain-item"><span>12 horas</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>24 horas</span><span class="rain-value">-- mm</span></div><div class="rain-item"><span>96 horas</span><span class="rain-value">-- mm</span></div></div>
+                    </div>
+                    <div class="rain-highlight"><div class="rain-total"><span>Acumulado em 24 horas</span><strong id="rain24">-- mm</strong></div><div class="rain-total"><span>Acumulado em 96 horas</span><strong id="rain96">-- mm</strong></div></div>
+                    <div class="rain-explain">💡 <strong>Como interpretar:</strong> cada valor representa a chuva acumulada dentro daquela janela de tempo. As janelas são diferentes períodos de observação e não devem ser somadas entre si.</div>
                 </div>
-
-                <div class="chart-subtitle">
-                    Dados registrados pela estação pluviométrica
-                    de Irajá
-                </div>
-
-                <div class="chart-wrap rain-chart">
-                    <canvas id="graficoIraja"></canvas>
-                </div>
-
             </div>
 
         </div>
@@ -1339,6 +1392,11 @@ footer{
                 saber o estágio vigente.
             </div>
 
+            <div class="defesa-current" id="defesaAtual">
+                <div class="defesa-stage-number" id="defesaNumero">--</div>
+                <div><div class="defesa-current-label">ESTÁGIO OPERACIONAL VIGENTE</div><div class="defesa-current-name" id="defesaNome">Carregando...</div><div class="defesa-current-time" id="defesaAtualizacao">Consultando fonte oficial...</div></div>
+            </div>
+
             <div class="stages">
 
                 <div class="stage">
@@ -1368,12 +1426,7 @@ footer{
 
             </div>
 
-            <div class="defesa-text">
-                ⚠️ O dashboard não inventa um estágio operacional:
-                enquanto não houver uma fonte oficial integrada,
-                o status deve ser consultado diretamente nos canais
-                da Defesa Civil.
-            </div>
+            <div class="defesa-status-note" id="defesaStatusNota">ℹ️ O estágio será atualizado automaticamente a partir da fonte oficial integrada ao Worker.</div>
 
             <div class="defesa-links">
 
@@ -1544,11 +1597,11 @@ footer{
 <div class="footer-inner">
 
     <div class="footer-title">
-        ESTAÇÃO METEOROLÓGICA CONSTELAÇÃO
+        ESTAÇÃO METEOROLÓGICA CONSTELACIÓN
     </div>
 
     <div>
-        Colégio — Rio de Janeiro · Estrada do Barro Vermelho
+        <strong>Condomínio — Colégio</strong> · Rio de Janeiro
     </div>
 
     <div style="margin-top:8px;">
@@ -1592,6 +1645,7 @@ footer{
 const API_LEITURAS = "/api/leituras";
 const API_PREVISAO = "/api/previsao";
 const API_ALERTARIO = "/api/alertario";
+const API_DEFESA = "/api/defesacivil";
 
 let leituras = [];
 let previsao = [];
@@ -2021,162 +2075,18 @@ function drawLineChart(
 }
 
 
-function drawBarChart(
-    id,
-    labels,
-    valores,
-    unidade=""
-){
-
-    const info = prepararCanvas(id);
-
-    if(!info){
-        return;
-    }
-
-    const {
-        ctx,
-        width,
-        height
-    } = info;
-
-    ctx.clearRect(0,0,width,height);
-
-    const dados = valores
-        .map((valor,i)=>({
-            valor,
-            label:labels[i]
-        }))
-        .filter(x => Number.isFinite(x.valor));
-
-    if(!dados.length){
-
-        ctx.fillStyle="#8a94a3";
-        ctx.font="12px Arial";
-        ctx.fillText(
-            "Aguardando dados...",
-            15,
-            25
-        );
-
-        return;
-    }
-
-    const margemEsq=38;
-    const margemDir=12;
-    const margemTopo=18;
-    const margemBase=42;
-
-    const graficoW =
-        width-margemEsq-margemDir;
-
-    const graficoH =
-        height-margemTopo-margemBase;
-
-    const max =
-        Math.max(...dados.map(x=>x.valor),1);
-
-    const espacamento =
-        graficoW/dados.length;
-
-    const larguraBarra =
-        Math.max(12,espacamento*0.58);
-
-    ctx.strokeStyle="#e7ebf1";
-    ctx.lineWidth=1;
-
-    for(let i=0;i<4;i++){
-
-        const y =
-            margemTopo+
-            (graficoH/3)*i;
-
-        ctx.beginPath();
-        ctx.moveTo(margemEsq,y);
-        ctx.lineTo(width-margemDir,y);
-        ctx.stroke();
-    }
-
-    ctx.fillStyle="#7a8493";
-    ctx.font="10px Arial";
-
-    for(let i=0;i<4;i++){
-
-        const valor =
-            max-(max/3)*i;
-
-        const y =
-            margemTopo+
-            (graficoH/3)*i+3;
-
-        ctx.fillText(
-            formatar(valor,1),
-            4,
-            y
-        );
-    }
-
-    dados.forEach((item,i)=>{
-
-        const xCentro =
-            margemEsq+
-            espacamento*i+
-            espacamento/2;
-
-        const altura =
-            (item.valor/max)*graficoH;
-
-        const x =
-            xCentro-larguraBarra/2;
-
-        const y =
-            margemTopo+
-            graficoH-
-            altura;
-
-        ctx.fillStyle="#1677ff";
-
-        ctx.fillRect(
-            x,
-            y,
-            larguraBarra,
-            altura
-        );
-
-        ctx.fillStyle="#667085";
-        ctx.font="9px Arial";
-
-        const label =
-            item.label || "";
-
-        const largura =
-            ctx.measureText(label).width;
-
-        ctx.fillText(
-            label,
-            xCentro-largura/2,
-            height-10
-        );
+function renderRainDashboard(chuva){
+    const mapa=[["cinco_minutos"],["dez_minutos"],["quinze_minutos"],["trinta_minutos"],["uma_hora"],["duas_horas"],["tres_horas"],["quatro_horas"],["seis_horas"],["doze_horas"],["vinte_quatro_horas"],["noventa_e_seis_horas"]];
+    const itens=document.querySelectorAll("#rainDashboard .rain-item");
+    mapa.forEach((item,i)=>{
+        if(itens[i]){const v=numero(chuva[item[0]]);const el=itens[i].querySelector(".rain-value");if(el)el.textContent=v===null?"-- mm":formatar(v,1)+" mm";}
     });
-
-    if(unidade){
-
-        ctx.fillStyle="#7a8493";
-        ctx.font="10px Arial";
-
-        ctx.fillText(
-            unidade,
-            width-28,
-            12
-        );
-    }
+    const r24=numero(chuva.vinte_quatro_horas),r96=numero(chuva.noventa_e_seis_horas);
+    const e24=document.getElementById("rain24"),e96=document.getElementById("rain96");
+    if(e24)e24.textContent=r24===null?"-- mm":formatar(r24,1)+" mm";
+    if(e96)e96.textContent=r96===null?"-- mm":formatar(r96,1)+" mm";
 }
 
-
-/* =========================================================
-   NOSSA ESTAÇÃO
-   MANTIDA COMO SIMULADA
-========================================================= */
 
 async function carregarLeituras(){
 
@@ -2845,44 +2755,7 @@ async function carregarAlertaRio(){
         const chuva =
             dados.chuva || {};
 
-        const labels=[
-            "5 min",
-            "10 min",
-            "15 min",
-            "30 min",
-            "1 h",
-            "2 h",
-            "3 h",
-            "4 h",
-            "6 h",
-            "12 h",
-            "24 h",
-            "96 h"
-        ];
-
-        const valores=[
-
-            numero(chuva.cinco_minutos),
-            numero(chuva.dez_minutos),
-            numero(chuva.quinze_minutos),
-            numero(chuva.trinta_minutos),
-            numero(chuva.uma_hora),
-            numero(chuva.duas_horas),
-            numero(chuva.tres_horas),
-            numero(chuva.quatro_horas),
-            numero(chuva.seis_horas),
-            numero(chuva.doze_horas),
-            numero(chuva.vinte_quatro_horas),
-            numero(chuva.noventa_e_seis_horas)
-
-        ];
-
-        drawBarChart(
-            "graficoIraja",
-            labels,
-            valores,
-            "mm"
-        );
+        renderRainDashboard(chuva);
 
     }catch(erro){
 
@@ -2911,33 +2784,37 @@ async function carregarAlertaRio(){
             "arDir"
         ).textContent="--";
 
-        const canvas =
-            document.getElementById(
-                "graficoIraja"
-            );
-
-        if(canvas){
-
-            const info =
-                prepararCanvas(
-                    "graficoIraja"
-                );
-
-            if(info){
-
-                info.ctx.fillStyle=
-                    "#8a94a3";
-
-                info.ctx.font=
-                    "12px Arial";
-
-                info.ctx.fillText(
-                    "Dados do Alerta Rio indisponíveis",
-                    15,
-                    25
-                );
-            }
+        const area=document.getElementById("rainDashboard");
+        if(area){
+            area.innerHTML='<div class="source-note">Dados pluviométricos do Alerta Rio temporariamente indisponíveis.</div>';
         }
+    }
+}
+
+
+async function carregarDefesaCivil(){
+    try{
+        const resposta=await fetch(API_DEFESA,{cache:"no-store"});
+        if(!resposta.ok)throw new Error("Fonte oficial indisponível");
+        const dados=await resposta.json();
+        if(!dados.sucesso)throw new Error(dados.erro||"Dados indisponíveis");
+        const fonte=dados.dados||dados;
+        const n=Number(fonte.estagio??fonte.stage??fonte.numero??fonte.nivel);
+        const nomes={1:"Normalidade",2:"Mobilização",3:"Atenção",4:"Alerta",5:"Crise"};
+        const nome=fonte.nome||fonte.nome_estagio||fonte.status||nomes[n]||"Estágio não informado";
+        const elN=document.getElementById("defesaNumero"),elNome=document.getElementById("defesaNome"),elT=document.getElementById("defesaAtualizacao"),nota=document.getElementById("defesaStatusNota");
+        if(elN)elN.textContent=Number.isFinite(n)?n:"--";
+        if(elNome)elNome.textContent=nome;
+        const at=fonte.atualizado_em||fonte.atualizado||fonte.data_hora||dados.atualizado_em;
+        if(elT)elT.textContent=at?"Atualização oficial: "+String(at):"Atualização recebida da fonte oficial";
+        document.querySelectorAll(".stage").forEach((el,i)=>el.classList.toggle("active",Number.isFinite(n)&&i+1===n));
+        if(nota)nota.textContent="✓ Estágio operacional recebido da fonte oficial integrada. Não é uma estimativa da Estação Constelación.";
+    }catch(erro){
+        console.error("Defesa Civil:",erro);
+        const elNome=document.getElementById("defesaNome"),elT=document.getElementById("defesaAtualizacao"),nota=document.getElementById("defesaStatusNota");
+        if(elNome)elNome.textContent="Indisponível";
+        if(elT)elT.textContent="Não foi possível consultar a fonte oficial agora.";
+        if(nota)nota.textContent="⚠️ O estágio não foi estimado nem inventado. Aguardando resposta da fonte oficial da Defesa Civil/COR-Rio.";
     }
 }
 
@@ -2981,7 +2858,9 @@ async function atualizarTudo(){
 
         carregarPrevisao(),
 
-        carregarAlertaRio()
+        carregarAlertaRio(),
+
+        carregarDefesaCivil()
 
     ]);
 
@@ -3050,42 +2929,7 @@ window.addEventListener(
         }
 
         if(alertaRio){
-
-            const chuva =
-                alertaRio.chuva || {};
-
-            drawBarChart(
-                "graficoIraja",
-                [
-                    "5 min",
-                    "10 min",
-                    "15 min",
-                    "30 min",
-                    "1 h",
-                    "2 h",
-                    "3 h",
-                    "4 h",
-                    "6 h",
-                    "12 h",
-                    "24 h",
-                    "96 h"
-                ],
-                [
-                    numero(chuva.cinco_minutos),
-                    numero(chuva.dez_minutos),
-                    numero(chuva.quinze_minutos),
-                    numero(chuva.trinta_minutos),
-                    numero(chuva.uma_hora),
-                    numero(chuva.duas_horas),
-                    numero(chuva.tres_horas),
-                    numero(chuva.quatro_horas),
-                    numero(chuva.seis_horas),
-                    numero(chuva.doze_horas),
-                    numero(chuva.vinte_quatro_horas),
-                    numero(chuva.noventa_e_seis_horas)
-                ],
-                "mm"
-            );
+            renderRainDashboard(alertaRio.chuva || {});
         }
     }
 );
