@@ -7,19 +7,21 @@ export default {
     // CONFIGURAÇÕES
     // ============================================================
 
-    const ALERTA_RIO_URL =
-      "https://websempre.rio.rj.gov.br/estacoes/";
-
     const OPEN_METEO_URL =
       "https://api.open-meteo.com/v1/forecast";
 
-    // Coordenadas da Estação Meteorológica Constelación
+    const ALERTA_RIO_ESTACOES_URL =
+      "https://websempre.rio.rj.gov.br/estacoes/";
+
+    const ALERTA_RIO_METEOROLOGICO_SC_URL =
+      "https://websempre.rio.rj.gov.br/dados/meteorologicos/32/";
+
     const LATITUDE = -22.84563;
     const LONGITUDE = -43.33847;
 
 
     // ============================================================
-    // FUNÇÕES AUXILIARES
+    // RESPOSTA JSON PADRONIZADA
     // ============================================================
 
     function json(data, status = 200) {
@@ -29,9 +31,20 @@ export default {
         {
           status,
           headers: {
-            "Content-Type": "application/json; charset=UTF-8",
-            "Access-Control-Allow-Origin": "*",
-            "Cache-Control": "no-store"
+            "Content-Type":
+              "application/json; charset=UTF-8",
+
+            "Access-Control-Allow-Origin":
+              "*",
+
+            "Access-Control-Allow-Methods":
+              "GET, POST, OPTIONS",
+
+            "Access-Control-Allow-Headers":
+              "Content-Type, Authorization",
+
+            "Cache-Control":
+              "no-store, no-cache, must-revalidate"
           }
         }
       );
@@ -39,35 +52,36 @@ export default {
     }
 
 
-    function corsResponse(response) {
+    // ============================================================
+    // CORS
+    // ============================================================
 
-      const headers = new Headers(response.headers);
-
-      headers.set(
-        "Access-Control-Allow-Origin",
-        "*"
-      );
-
-      headers.set(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS"
-      );
-
-      headers.set(
-        "Access-Control-Allow-Headers",
-        "Content-Type, Authorization"
-      );
+    if (request.method === "OPTIONS") {
 
       return new Response(
-        response.body,
+        null,
         {
-          status: response.status,
-          headers
+          status: 204,
+
+          headers: {
+            "Access-Control-Allow-Origin":
+              "*",
+
+            "Access-Control-Allow-Methods":
+              "GET, POST, OPTIONS",
+
+            "Access-Control-Allow-Headers":
+              "Content-Type, Authorization"
+          }
         }
       );
 
     }
 
+
+    // ============================================================
+    // FUNÇÕES AUXILIARES
+    // ============================================================
 
     function numero(valor) {
 
@@ -76,156 +90,232 @@ export default {
         valor === undefined ||
         valor === ""
       ) {
-
         return null;
-
       }
 
-      const texto = String(valor)
-        .trim()
-        .replace(",", ".");
+      let texto =
+        String(valor)
+          .trim()
+          .replace(",", ".");
 
       if (
         texto === "-" ||
-        texto === "ND" ||
-        texto === "null" ||
-        texto === "undefined"
+        texto.toUpperCase() === "ND"
       ) {
-
         return null;
-
       }
 
-      const n = Number(texto);
+      const valorNumerico =
+        Number(texto);
 
-      return Number.isFinite(n)
-        ? n
+      return Number.isFinite(valorNumerico)
+        ? valorNumerico
         : null;
 
     }
 
 
-    function texto(valor) {
+    function limparTexto(valor) {
 
       if (
         valor === null ||
         valor === undefined
       ) {
-
-        return null;
-
+        return "";
       }
 
-      const t = String(valor).trim();
+      return String(valor)
+        .replace(/<script[\s\S]*?<\/script>/gi, "")
+        .replace(/<style[\s\S]*?<\/style>/gi, "")
+        .replace(/<[^>]*>/g, "")
+        .replace(/&nbsp;/gi, " ")
+        .replace(/&amp;/gi, "&")
+        .replace(/&quot;/gi, '"')
+        .replace(/&#39;/gi, "'")
+        .replace(/\s+/g, " ")
+        .trim();
 
-      if (
-        t === "" ||
-        t === "-" ||
-        t === "ND"
+    }
+
+
+    // ============================================================
+    // EXTRAI TODAS AS LINHAS <TR> DE UMA TABELA HTML
+    // ============================================================
+
+    function extrairLinhasTabela(html) {
+
+      const linhas = [];
+
+      const regex =
+        /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi;
+
+      let match;
+
+      while (
+        (match = regex.exec(html)) !== null
       ) {
 
-        return null;
+        const conteudo =
+          match[1];
+
+        const celulas = [];
+
+        const regexCelula =
+          /<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/gi;
+
+        let celula;
+
+        while (
+          (celula =
+            regexCelula.exec(conteudo)) !== null
+        ) {
+
+          celulas.push(
+            limparTexto(celula[1])
+          );
+
+        }
+
+        if (celulas.length > 0) {
+
+          linhas.push(celulas);
+
+        }
 
       }
 
-      return t;
+      return linhas;
 
     }
 
 
-    // Extrai uma linha da tabela do Alerta Rio.
-    function extrairLinhaTabela(html, nomeEstacao) {
+    // ============================================================
+    // ENCONTRA ESTAÇÃO POR NOME
+    // ============================================================
 
-      const escaped =
-        nomeEstacao.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    function encontrarEstacao(
+      linhas,
+      nome
+    ) {
 
-      const regex = new RegExp(
-        `<tr[^>]*>[\\s\\S]*?<td[^>]*>[^<]*<\\/td>[\\s\\S]*?${escaped}[\\s\\S]*?<\\/tr>`,
-        "i"
-      );
-
-      const encontrado = html.match(regex);
-
-      if (!encontrado) {
-
-        return null;
-
-      }
-
-      const linha = encontrado[0];
-
-      const celulas = [
-        ...linha.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)
-      ].map(match =>
-        match[1]
-          .replace(/<[^>]+>/g, "")
-          .replace(/&nbsp;/gi, " ")
-          .replace(/&amp;/gi, "&")
-          .replace(/\s+/g, " ")
-          .trim()
-      );
-
-      return celulas;
-
-    }
-
-
-    // Procura uma estação pelo nome no texto convertido da página.
-    function encontrarLinhaTexto(textoPagina, nomeEstacao) {
-
-      const linhas = textoPagina
-        .split(/\r?\n/)
-        .map(linha => linha.trim())
-        .filter(Boolean);
+      const alvo =
+        nome
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .trim();
 
       return linhas.find(
-        linha =>
-          linha.includes(`| ${nomeEstacao} |`)
+        linha => {
+
+          return linha.some(
+            celula => {
+
+              const normalizada =
+                String(celula)
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
+                  .toLowerCase()
+                  .trim();
+
+              return normalizada === alvo;
+
+            }
+          );
+
+        }
       ) || null;
 
     }
 
 
-    function separarLinha(linha) {
+    // ============================================================
+    // DATA/HORA
+    // ============================================================
 
-      if (!linha) {
+    function extrairDataHoraTexto(valor) {
 
-        return [];
+      if (!valor) {
+        return null;
+      }
+
+      return String(valor)
+        .replace(/\s+/g, " ")
+        .trim();
+
+    }
+
+
+    // ============================================================
+    // ============================================================
+    // GET /api/leituras
+    // ============================================================
+    // ============================================================
+
+    if (
+      url.pathname === "/api/leituras" &&
+      request.method === "GET"
+    ) {
+
+      try {
+
+        const resultado =
+          await env.DB.prepare(
+            `
+            SELECT
+              id,
+              data_hora,
+              temperatura,
+              umidade,
+              pressao,
+              chuva,
+              vento,
+              direcao_vento
+            FROM leituras
+            ORDER BY id DESC
+            LIMIT 20
+            `
+          )
+          .all();
+
+
+        return json(
+          {
+            sucesso: true,
+
+            quantidade:
+              resultado.results.length,
+
+            leituras:
+              resultado.results
+          }
+        );
+
+      } catch (erro) {
+
+        console.error(
+          "GET /api/leituras:",
+          erro
+        );
+
+        return json(
+          {
+            sucesso: false,
+            erro:
+              "Erro ao consultar as leituras da estação."
+          },
+          500
+        );
 
       }
 
-      return linha
-        .split("|")
-        .map(item => item.trim())
-        .filter(Boolean);
-
     }
 
 
     // ============================================================
-    // CORS / PREFLIGHT
     // ============================================================
-
-    if (request.method === "OPTIONS") {
-
-      return corsResponse(
-        new Response(null, {
-          status: 204,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-            "Access-Control-Allow-Headers":
-              "Content-Type, Authorization"
-          }
-        })
-      );
-
-    }
-
-
+    // POST /api/leituras
     // ============================================================
-    // ROTA POST /api/leituras
-    // RECEBE DADOS DA ESTAÇÃO FÍSICA
     // ============================================================
 
     if (
@@ -236,11 +326,14 @@ export default {
       try {
 
         // --------------------------------------------------------
-        // AUTENTICAÇÃO
+        // TOKEN
         // --------------------------------------------------------
 
         const authorization =
-          request.headers.get("Authorization");
+          request.headers.get(
+            "Authorization"
+          );
+
 
         if (
           !authorization ||
@@ -250,7 +343,8 @@ export default {
           return json(
             {
               sucesso: false,
-              erro: "Não autorizado."
+              erro:
+                "Não autorizado."
             },
             401
           );
@@ -259,7 +353,9 @@ export default {
 
 
         const token =
-          authorization.substring(7).trim();
+          authorization
+            .substring(7)
+            .trim();
 
 
         if (
@@ -270,7 +366,8 @@ export default {
           return json(
             {
               sucesso: false,
-              erro: "STATION_TOKEN inválido."
+              erro:
+                "STATION_TOKEN inválido."
             },
             401
           );
@@ -286,14 +383,16 @@ export default {
 
         try {
 
-          body = await request.json();
+          body =
+            await request.json();
 
         } catch {
 
           return json(
             {
               sucesso: false,
-              erro: "Corpo da requisição deve ser JSON válido."
+              erro:
+                "O corpo da requisição deve ser JSON válido."
             },
             400
           );
@@ -302,10 +401,10 @@ export default {
 
 
         // --------------------------------------------------------
-        // PARÂMETROS OBRIGATÓRIOS
+        // CAMPOS OBRIGATÓRIOS
         // --------------------------------------------------------
 
-        const camposObrigatorios = [
+        const obrigatorios = [
           "temperatura",
           "umidade",
           "pressao",
@@ -315,7 +414,9 @@ export default {
         ];
 
 
-        for (const campo of camposObrigatorios) {
+        for (
+          const campo of obrigatorios
+        ) {
 
           if (
             body[campo] === undefined ||
@@ -326,7 +427,8 @@ export default {
             return json(
               {
                 sucesso: false,
-                erro: `Parâmetro obrigatório ausente: ${campo}.`
+                erro:
+                  `Parâmetro obrigatório ausente: ${campo}.`
               },
               400
             );
@@ -362,7 +464,7 @@ export default {
 
 
         // --------------------------------------------------------
-        // VALIDAÇÃO NUMÉRICA RÍGIDA
+        // VALIDAÇÃO TEMPERATURA
         // --------------------------------------------------------
 
         if (
@@ -374,13 +476,18 @@ export default {
           return json(
             {
               sucesso: false,
-              erro: "Temperatura inválida. Deve estar entre -20 e 60 °C."
+              erro:
+                "Temperatura inválida."
             },
             400
           );
 
         }
 
+
+        // --------------------------------------------------------
+        // VALIDAÇÃO UMIDADE
+        // --------------------------------------------------------
 
         if (
           !Number.isFinite(umidade) ||
@@ -391,13 +498,18 @@ export default {
           return json(
             {
               sucesso: false,
-              erro: "Umidade inválida. Deve estar entre 0 e 100%."
+              erro:
+                "Umidade inválida."
             },
             400
           );
 
         }
 
+
+        // --------------------------------------------------------
+        // VALIDAÇÃO PRESSÃO
+        // --------------------------------------------------------
 
         if (
           !Number.isFinite(pressao) ||
@@ -408,13 +520,18 @@ export default {
           return json(
             {
               sucesso: false,
-              erro: "Pressão inválida. Deve estar entre 800 e 1100 hPa."
+              erro:
+                "Pressão atmosférica inválida."
             },
             400
           );
 
         }
 
+
+        // --------------------------------------------------------
+        // VALIDAÇÃO CHUVA
+        // --------------------------------------------------------
 
         if (
           !Number.isFinite(chuva) ||
@@ -425,13 +542,18 @@ export default {
           return json(
             {
               sucesso: false,
-              erro: "Chuva inválida. Deve estar entre 0 e 1000 mm."
+              erro:
+                "Valor de chuva inválido."
             },
             400
           );
 
         }
 
+
+        // --------------------------------------------------------
+        // VALIDAÇÃO VENTO
+        // --------------------------------------------------------
 
         if (
           !Number.isFinite(vento) ||
@@ -442,13 +564,18 @@ export default {
           return json(
             {
               sucesso: false,
-              erro: "Velocidade do vento inválida. Deve estar entre 0 e 300 km/h."
+              erro:
+                "Velocidade do vento inválida."
             },
             400
           );
 
         }
 
+
+        // --------------------------------------------------------
+        // VALIDAÇÃO DIREÇÃO
+        // --------------------------------------------------------
 
         const direcoesValidas = [
           "N",
@@ -463,35 +590,21 @@ export default {
 
 
         if (
-          !direcoesValidas.includes(direcaoVento)
+          !direcoesValidas.includes(
+            direcaoVento
+          )
         ) {
 
           return json(
             {
               sucesso: false,
               erro:
-                "Direção do vento inválida. Use N, NE, E, SE, S, SO, O ou NO."
+                "Direção do vento inválida."
             },
             400
           );
 
         }
-
-
-        // --------------------------------------------------------
-        // CAMPOS OPCIONAIS
-        // --------------------------------------------------------
-
-        const origem =
-          body.origem !== undefined
-            ? String(body.origem).trim()
-            : "Estação Meteorológica Constelación";
-
-
-        const dispositivo =
-          body.dispositivo !== undefined
-            ? String(body.dispositivo).trim()
-            : "DHT11 + Chuva";
 
 
         // --------------------------------------------------------
@@ -503,7 +616,7 @@ export default {
 
 
         // --------------------------------------------------------
-        // GRAVAÇÃO D1
+        // D1
         // --------------------------------------------------------
 
         const resultado =
@@ -517,11 +630,9 @@ export default {
               pressao,
               chuva,
               vento,
-              direcao_vento,
-              origem,
-              dispositivo
+              direcao_vento
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
             `
           )
           .bind(
@@ -531,9 +642,7 @@ export default {
             pressao,
             chuva,
             vento,
-            direcaoVento,
-            origem,
-            dispositivo
+            direcaoVento
           )
           .run();
 
@@ -541,425 +650,46 @@ export default {
         return json(
           {
             sucesso: true,
-            mensagem: "Leitura gravada com sucesso.",
-            id: resultado.meta.last_row_id,
+
+            mensagem:
+              "Leitura gravada com sucesso.",
+
+            id:
+              resultado.meta.last_row_id,
+
             leitura: {
-              data_hora: dataHora,
-              temperatura,
-              umidade,
-              pressao,
-              chuva,
-              vento,
-              direcao_vento: direcaoVento,
-              origem,
-              dispositivo
+
+              data_hora:
+                dataHora,
+
+              temperatura:
+                temperatura,
+
+              umidade:
+                umidade,
+
+              pressao:
+                pressao,
+
+              chuva:
+                chuva,
+
+              vento:
+                vento,
+
+              direcao_vento:
+                direcaoVento
+
             }
           },
           201
         );
 
-      } catch (erro) {
-
-        console.error(
-          "Erro POST /api/leituras:",
-          erro
-        );
-
-        return json(
-          {
-            sucesso: false,
-            erro: "Erro interno ao gravar leitura."
-          },
-          500
-        );
-
-      }
-
-    }
-
-
-    // ============================================================
-    // ROTA GET /api/leituras
-    // ÚLTIMAS LEITURAS DA ESTAÇÃO FÍSICA
-    // ============================================================
-
-    if (
-      url.pathname === "/api/leituras" &&
-      request.method === "GET"
-    ) {
-
-      try {
-
-        const resultado =
-          await env.DB.prepare(
-            `
-            SELECT
-              id,
-              data_hora,
-              temperatura,
-              umidade,
-              pressao,
-              chuva,
-              vento,
-              direcao_vento,
-              origem,
-              dispositivo
-            FROM leituras
-            ORDER BY id DESC
-            LIMIT 20
-            `
-          )
-          .all();
-
-
-        return json(
-          {
-            sucesso: true,
-            quantidade: resultado.results.length,
-            leituras: resultado.results
-          }
-        );
 
       } catch (erro) {
 
         console.error(
-          "Erro GET /api/leituras:",
-          erro
-        );
-
-        return json(
-          {
-            sucesso: false,
-            erro: "Erro ao consultar o banco de dados."
-          },
-          500
-        );
-
-      }
-
-    }
-
-
-    // ============================================================
-    // NOVA ROTA GET /api/alertario
-    //
-    // DADOS OFICIAIS DO SISTEMA ALERTA RIO
-    //
-    // IRAJÁ:
-    //   - chuva
-    //
-    // SÃO CRISTÓVÃO:
-    //   - temperatura
-    //   - umidade
-    //   - vento
-    //   - direção do vento
-    //   - chuva
-    // ============================================================
-
-    if (
-      url.pathname === "/api/alertario" &&
-      request.method === "GET"
-    ) {
-
-      try {
-
-        const resposta =
-          await fetch(
-            ALERTA_RIO_URL,
-            {
-              method: "GET",
-              headers: {
-                "User-Agent":
-                  "Estacao-Meteorologica-Constelacion/3.0",
-                "Accept":
-                  "text/html,application/xhtml+xml"
-              }
-            }
-          );
-
-
-        if (!resposta.ok) {
-
-          throw new Error(
-            `Alerta Rio HTTP ${resposta.status}`
-          );
-
-        }
-
-
-        const html =
-          await resposta.text();
-
-
-        // --------------------------------------------------------
-        // CONVERSÃO PARA TEXTO
-        // --------------------------------------------------------
-
-        const textoPagina =
-          html
-            .replace(/<script[\s\S]*?<\/script>/gi, "")
-            .replace(/<style[\s\S]*?<\/style>/gi, "")
-            .replace(/<[^>]+>/g, " ")
-            .replace(/&nbsp;/gi, " ")
-            .replace(/&amp;/gi, "&")
-            .replace(/\s+/g, " ");
-
-
-        // --------------------------------------------------------
-        // LOCALIZAÇÃO DAS ESTAÇÕES
-        // --------------------------------------------------------
-
-        const linhaIraja =
-          encontrarLinhaTexto(
-            textoPagina,
-            "Irajá"
-          );
-
-
-        const linhaSaoCristovao =
-          encontrarLinhaTexto(
-            textoPagina,
-            "São Cristóvão"
-          );
-
-
-        if (!linhaIraja) {
-
-          throw new Error(
-            "Estação Irajá não encontrada no Alerta Rio."
-          );
-
-        }
-
-
-        if (!linhaSaoCristovao) {
-
-          throw new Error(
-            "Estação São Cristóvão não encontrada no Alerta Rio."
-          );
-
-        }
-
-
-        const ira =
-          separarLinha(linhaIraja);
-
-
-        const sc =
-          separarLinha(linhaSaoCristovao);
-
-
-        /*
-         * TABELA PLUVIOMÉTRICA:
-         *
-         * [0] número
-         * [1] estação
-         * [2] localização
-         * [3] hora
-         * [4] 05 min
-         * [5] 10 min
-         * [6] 15 min
-         * [7] 30 min
-         * [8] 1h
-         * [9] 2h
-         * [10] 3h
-         * [11] 4h
-         * [12] 6h
-         * [13] 12h
-         * [14] 24h
-         * [15] 96h
-         * [16] mês
-         * [17] TX-15
-         */
-
-
-        const chuvaIraja = {
-          cinco_minutos: numero(ira[4]),
-          dez_minutos: numero(ira[5]),
-          quinze_minutos: numero(ira[6]),
-          trinta_minutos: numero(ira[7]),
-          uma_hora: numero(ira[8]),
-          duas_horas: numero(ira[9]),
-          tres_horas: numero(ira[10]),
-          quatro_horas: numero(ira[11]),
-          seis_horas: numero(ira[12]),
-          doze_horas: numero(ira[13]),
-          vinte_quatro_horas: numero(ira[14]),
-          noventa_seis_horas: numero(ira[15]),
-          mes: numero(ira[16])
-        };
-
-
-        const chuvaSaoCristovao = {
-          cinco_minutos: numero(sc[4]),
-          dez_minutos: numero(sc[5]),
-          quinze_minutos: numero(sc[6]),
-          trinta_minutos: numero(sc[7]),
-          uma_hora: numero(sc[8]),
-          duas_horas: numero(sc[9]),
-          tres_horas: numero(sc[10]),
-          quatro_horas: numero(sc[11]),
-          seis_horas: numero(sc[12]),
-          doze_horas: numero(sc[13]),
-          vinte_quatro_horas: numero(sc[14]),
-          noventa_seis_horas: numero(sc[15]),
-          mes: numero(sc[16])
-        };
-
-
-        // --------------------------------------------------------
-        // DADOS METEOROLÓGICOS
-        // --------------------------------------------------------
-
-        const blocoMeteorologico =
-          html.match(
-            /Dados Meteorológicos[\s\S]*?Situação Atual/i
-          );
-
-
-        let temperaturaSaoCristovao = null;
-        let umidadeSaoCristovao = null;
-        let ventoSaoCristovao = null;
-        let direcaoVentoSaoCristovao = null;
-        let horaMeteorologica = null;
-
-
-        if (blocoMeteorologico) {
-
-          const textoMeteorologico =
-            blocoMeteorologico[0]
-              .replace(/<script[\s\S]*?<\/script>/gi, "")
-              .replace(/<style[\s\S]*?<\/style>/gi, "")
-              .replace(/<[^>]+>/g, " ")
-              .replace(/&nbsp;/gi, " ")
-              .replace(/&amp;/gi, "&")
-              .replace(/\s+/g, " ");
-
-
-          const linhaSC =
-            encontrarLinhaTexto(
-              textoMeteorologico,
-              "São Cristóvão"
-            );
-
-
-          if (linhaSC) {
-
-            const dadosSC =
-              separarLinha(linhaSC);
-
-
-            /*
-             * Dados meteorológicos:
-             *
-             * [0] número
-             * [1] estação
-             * [2] hora
-             * [3] temperatura
-             * [4] umidade
-             * [5] pressão
-             * [6] ponto de orvalho
-             * [7] velocidade do vento
-             * [8] direção do vento
-             */
-
-            horaMeteorologica =
-              texto(dadosSC[2]);
-
-            temperaturaSaoCristovao =
-              numero(dadosSC[3]);
-
-            umidadeSaoCristovao =
-              numero(dadosSC[4]);
-
-            ventoSaoCristovao =
-              numero(dadosSC[7]);
-
-            direcaoVentoSaoCristovao =
-              numero(dadosSC[8]);
-
-          }
-
-        }
-
-
-        // --------------------------------------------------------
-        // RESPOSTA
-        // --------------------------------------------------------
-
-        return json(
-          {
-            sucesso: true,
-
-            fonte: {
-              nome: "Sistema Alerta Rio",
-              orgao: "Centro de Operações Rio",
-              url: ALERTA_RIO_URL
-            },
-
-            atualizado_em:
-              texto(ira[3]),
-
-            estacoes: {
-
-              iraja: {
-
-                nome: "Irajá",
-
-                temperatura: null,
-
-                umidade: null,
-
-                chuva: chuvaIraja,
-
-                vento: {
-                  velocidade_kmh: null,
-                  direcao_graus: null
-                },
-
-                hora_leitura:
-                  texto(ira[3])
-
-              },
-
-
-              sao_cristovao: {
-
-                nome: "São Cristóvão",
-
-                temperatura_c:
-                  temperaturaSaoCristovao,
-
-                umidade_percentual:
-                  umidadeSaoCristovao,
-
-                chuva:
-                  chuvaSaoCristovao,
-
-                vento: {
-
-                  velocidade_kmh:
-                    ventoSaoCristovao,
-
-                  direcao_graus:
-                    direcaoVentoSaoCristovao
-
-                },
-
-                hora_leitura:
-                  horaMeteorologica
-
-              }
-
-            }
-
-          }
-        );
-
-      } catch (erro) {
-
-        console.error(
-          "Erro GET /api/alertario:",
+          "POST /api/leituras:",
           erro
         );
 
@@ -967,13 +697,9 @@ export default {
           {
             sucesso: false,
             erro:
-              "Não foi possível obter os dados oficiais do Alerta Rio.",
-            detalhe:
-              erro instanceof Error
-                ? erro.message
-                : String(erro)
+              "Erro interno ao gravar a leitura."
           },
-          502
+          500
         );
 
       }
@@ -982,8 +708,9 @@ export default {
 
 
     // ============================================================
-    // ROTA GET /api/previsao
-    // PREVISÃO HORÁRIA - OPEN-METEO
+    // ============================================================
+    // GET /api/previsao
+    // ============================================================
     // ============================================================
 
     if (
@@ -1013,20 +740,7 @@ export default {
                 "temperature_2m",
                 "relative_humidity_2m",
                 "apparent_temperature",
-                "precipitation",
-                "rain",
                 "precipitation_probability",
-                "weather_code",
-                "wind_speed_10m",
-                "wind_direction_10m",
-                "wind_gusts_10m"
-              ].join(","),
-
-            current:
-              [
-                "temperature_2m",
-                "relative_humidity_2m",
-                "apparent_temperature",
                 "precipitation",
                 "rain",
                 "weather_code",
@@ -1043,7 +757,8 @@ export default {
             `${OPEN_METEO_URL}?${parametros.toString()}`,
             {
               headers: {
-                "Accept": "application/json"
+                "Accept":
+                  "application/json"
               }
             }
           );
@@ -1064,146 +779,489 @@ export default {
 
         if (
           !dados.hourly ||
-          !dados.hourly.time
+          !Array.isArray(
+            dados.hourly.time
+          )
         ) {
 
           throw new Error(
-            "Resposta horária inválida do Open-Meteo."
+            "Open-Meteo não retornou dados horários válidos."
           );
 
         }
 
 
-        // --------------------------------------------------------
-        // TRANSFORMA OS VETORES HORÁRIOS EM OBJETOS
-        // --------------------------------------------------------
-
-        const horas =
-          dados.hourly.time.map(
-            (hora, index) => ({
-
-              horario:
-                hora,
-
-              temperatura_c:
-                dados.hourly.temperature_2m?.[index] ?? null,
-
-              umidade_percentual:
-                dados.hourly.relative_humidity_2m?.[index] ?? null,
-
-              sensacao_c:
-                dados.hourly.apparent_temperature?.[index] ?? null,
-
-              precipitacao_mm:
-                dados.hourly.precipitation?.[index] ?? null,
-
-              chuva_mm:
-                dados.hourly.rain?.[index] ?? null,
-
-              probabilidade_chuva_percentual:
-                dados.hourly.precipitation_probability?.[index] ?? null,
-
-              codigo_tempo:
-                dados.hourly.weather_code?.[index] ?? null,
-
-              vento_kmh:
-                dados.hourly.wind_speed_10m?.[index] ?? null,
-
-              direcao_vento_graus:
-                dados.hourly.wind_direction_10m?.[index] ?? null,
-
-              rajada_kmh:
-                dados.hourly.wind_gusts_10m?.[index] ?? null
-
-            })
-          );
-
-
-        // --------------------------------------------------------
-        // RESPOSTA
-        // --------------------------------------------------------
+        // ========================================================
+        // FORMATO EXATO ESPERADO PELO INDEX.HTML
+        //
+        // dados.previsao.hourly.time
+        // dados.previsao.hourly.temperature_2m
+        // dados.previsao.hourly.precipitation_probability
+        // dados.previsao.hourly.precipitation
+        // ========================================================
 
         return json(
           {
             sucesso: true,
 
-            fonte: {
-              nome: "Open-Meteo",
-              url:
-                "https://open-meteo.com/"
-            },
+            fonte:
+              "Open-Meteo",
 
-            localizacao: {
-
-              latitude:
-                LATITUDE,
-
-              longitude:
-                LONGITUDE,
+            previsao: {
 
               timezone:
                 dados.timezone ||
-                "America/Sao_Paulo"
+                "America/Sao_Paulo",
 
-            },
+              latitude:
+                dados.latitude ??
+                LATITUDE,
 
-            atual:
+              longitude:
+                dados.longitude ??
+                LONGITUDE,
 
-              dados.current
-                ? {
+              hourly: {
 
-                    horario:
-                      dados.current.time,
+                time:
+                  dados.hourly.time,
 
-                    temperatura_c:
-                      dados.current.temperature_2m ?? null,
+                temperature_2m:
+                  dados.hourly.temperature_2m ||
+                  [],
 
-                    umidade_percentual:
-                      dados.current.relative_humidity_2m ?? null,
+                relative_humidity_2m:
+                  dados.hourly.relative_humidity_2m ||
+                  [],
 
-                    sensacao_c:
-                      dados.current.apparent_temperature ?? null,
+                apparent_temperature:
+                  dados.hourly.apparent_temperature ||
+                  [],
 
-                    precipitacao_mm:
-                      dados.current.precipitation ?? null,
+                precipitation_probability:
+                  dados.hourly.precipitation_probability ||
+                  [],
 
-                    chuva_mm:
-                      dados.current.rain ?? null,
+                precipitation:
+                  dados.hourly.precipitation ||
+                  [],
 
-                    codigo_tempo:
-                      dados.current.weather_code ?? null,
+                rain:
+                  dados.hourly.rain ||
+                  [],
 
-                    vento_kmh:
-                      dados.current.wind_speed_10m ?? null,
+                weather_code:
+                  dados.hourly.weather_code ||
+                  [],
 
-                    direcao_vento_graus:
-                      dados.current.wind_direction_10m ?? null,
+                wind_speed_10m:
+                  dados.hourly.wind_speed_10m ||
+                  [],
 
-                    rajada_kmh:
-                      dados.current.wind_gusts_10m ?? null
+                wind_direction_10m:
+                  dados.hourly.wind_direction_10m ||
+                  [],
 
-                  }
+                wind_gusts_10m:
+                  dados.hourly.wind_gusts_10m ||
+                  []
 
-                : null,
+              }
 
-            previsao_horaria:
-              horas
+            }
 
           }
         );
 
+
       } catch (erro) {
 
         console.error(
-          "Erro GET /api/previsao:",
+          "GET /api/previsao:",
           erro
         );
 
         return json(
           {
             sucesso: false,
+
             erro:
               "Não foi possível obter a previsão meteorológica.",
+
+            detalhe:
+              erro instanceof Error
+                ? erro.message
+                : String(erro)
+          },
+          502
+        );
+
+      }
+
+    }
+
+
+    // ============================================================
+    // ============================================================
+    // GET /api/alertario
+    // ============================================================
+    // ============================================================
+
+    if (
+      url.pathname === "/api/alertario" &&
+      request.method === "GET"
+    ) {
+
+      try {
+
+        // ========================================================
+        // 1. BUSCA TABELA OFICIAL DO ALERTA RIO
+        // ========================================================
+
+        const respostaEstacoes =
+          await fetch(
+            ALERTA_RIO_ESTACOES_URL,
+            {
+              headers: {
+                "User-Agent":
+                  "Mozilla/5.0 Estacao-Meteorologica-Constelacion",
+                "Accept":
+                  "text/html,application/xhtml+xml"
+              }
+            }
+          );
+
+
+        if (
+          !respostaEstacoes.ok
+        ) {
+
+          throw new Error(
+            `Alerta Rio estações HTTP ${respostaEstacoes.status}`
+          );
+
+        }
+
+
+        const htmlEstacoes =
+          await respostaEstacoes.text();
+
+
+        // ========================================================
+        // 2. EXTRAI LINHAS DAS TABELAS
+        // ========================================================
+
+        const linhasEstacoes =
+          extrairLinhasTabela(
+            htmlEstacoes
+          );
+
+
+        // ========================================================
+        // 3. LOCALIZA IRAJÁ
+        // ========================================================
+
+        const linhaIraja =
+          encontrarEstacao(
+            linhasEstacoes,
+            "Irajá"
+          );
+
+
+        if (!linhaIraja) {
+
+          throw new Error(
+            "Estação Irajá não encontrada na tabela oficial."
+          );
+
+        }
+
+
+        /*
+         * Tabela oficial:
+         *
+         * 0  Número
+         * 1  Estação
+         * 2  Localização
+         * 3  Hora leitura
+         * 4  05 min
+         * 5  10 min
+         * 6  15 min
+         * 7  30 min
+         * 8  1 h
+         * 9  2 h
+         * 10 3 h
+         * 11 4 h
+         * 12 6 h
+         * 13 12 h
+         * 14 24 h
+         * 15 96 h
+         * 16 No mês
+         * 17 TX-15
+         */
+
+
+        const chuva = {
+
+          cinco_minutos:
+            numero(linhaIraja[4]),
+
+          dez_minutos:
+            numero(linhaIraja[5]),
+
+          quinze_minutos:
+            numero(linhaIraja[6]),
+
+          trinta_minutos:
+            numero(linhaIraja[7]),
+
+          uma_hora:
+            numero(linhaIraja[8]),
+
+          duas_horas:
+            numero(linhaIraja[9]),
+
+          tres_horas:
+            numero(linhaIraja[10]),
+
+          quatro_horas:
+            numero(linhaIraja[11]),
+
+          seis_horas:
+            numero(linhaIraja[12]),
+
+          doze_horas:
+            numero(linhaIraja[13]),
+
+          vinte_quatro_horas:
+            numero(linhaIraja[14]),
+
+          noventa_e_seis_horas:
+            numero(linhaIraja[15]),
+
+          mes:
+            numero(linhaIraja[16]),
+
+          tx_15:
+            numero(linhaIraja[17])
+
+        };
+
+
+        // ========================================================
+        // 4. BUSCA DADOS METEOROLÓGICOS DE SÃO CRISTÓVÃO
+        // ========================================================
+
+        const respostaMeteorologica =
+          await fetch(
+            ALERTA_RIO_METEOROLOGICO_SC_URL,
+            {
+              headers: {
+                "User-Agent":
+                  "Mozilla/5.0 Estacao-Meteorologica-Constelacion",
+                "Accept":
+                  "text/html,application/xhtml+xml"
+              }
+            }
+          );
+
+
+        if (
+          !respostaMeteorologica.ok
+        ) {
+
+          throw new Error(
+            `Alerta Rio meteorológico HTTP ${respostaMeteorologica.status}`
+          );
+
+        }
+
+
+        const htmlMeteorologico =
+          await respostaMeteorologica.text();
+
+
+        const linhasMeteorologicas =
+          extrairLinhasTabela(
+            htmlMeteorologico
+          );
+
+
+        // ========================================================
+        // 5. LOCALIZA A PRIMEIRA LINHA DE DADOS
+        // ========================================================
+
+        const linhaMeteorologica =
+          linhasMeteorologicas.find(
+            linha => {
+
+              return (
+                linha.length >= 7 &&
+                /^\d{2}\/\d{2}\/\d{4}/
+                  .test(
+                    linha[0]
+                  )
+              );
+
+            }
+          );
+
+
+        if (!linhaMeteorologica) {
+
+          throw new Error(
+            "Dados meteorológicos de São Cristóvão não encontrados."
+          );
+
+        }
+
+
+        /*
+         * Relatório meteorológico oficial:
+         *
+         * 0 Dia
+         * 1 Hora
+         * 2 Direção vento
+         * 3 Velocidade vento
+         * 4 Temperatura
+         * 5 Pressão
+         * 6 Umidade
+         */
+
+
+        const dados = {
+
+          temperatura:
+            numero(
+              linhaMeteorologica[4]
+            ),
+
+          umidade:
+            numero(
+              linhaMeteorologica[6]
+            ),
+
+          pressao:
+            numero(
+              linhaMeteorologica[5]
+            ),
+
+          vento:
+            numero(
+              linhaMeteorologica[3]
+            ),
+
+          direcao_vento:
+            numero(
+              linhaMeteorologica[2]
+            ),
+
+          data:
+            linhaMeteorologica[0] ||
+            null,
+
+          hora:
+            linhaMeteorologica[1] ||
+            null
+
+        };
+
+
+        // ========================================================
+        // 6. RESPOSTA COMPATÍVEL COM O INDEX.HTML
+        // ========================================================
+
+        return json(
+          {
+
+            sucesso:
+              true,
+
+            fonte:
+              "Sistema Alerta Rio / Prefeitura do Rio / COR-Rio",
+
+            atualizado_em:
+              linhaIraja[3] ||
+              null,
+
+            dados:
+              dados,
+
+            chuva:
+              chuva,
+
+            estacoes: {
+
+              iraja: {
+
+                nome:
+                  "Irajá",
+
+                numero:
+                  linhaIraja[0] ||
+                  null,
+
+                localizacao:
+                  linhaIraja[2] ||
+                  null,
+
+                hora_leitura:
+                  linhaIraja[3] ||
+                  null,
+
+                chuva:
+                  chuva
+
+              },
+
+              sao_cristovao: {
+
+                nome:
+                  "São Cristóvão",
+
+                data:
+                  dados.data,
+
+                hora:
+                  dados.hora,
+
+                temperatura:
+                  dados.temperatura,
+
+                umidade:
+                  dados.umidade,
+
+                pressao:
+                  dados.pressao,
+
+                vento:
+                  dados.vento,
+
+                direcao_vento:
+                  dados.direcao_vento
+
+              }
+
+            }
+
+          }
+        );
+
+
+      } catch (erro) {
+
+        console.error(
+          "GET /api/alertario:",
+          erro
+        );
+
+        return json(
+          {
+            sucesso: false,
+
+            erro:
+              "Não foi possível obter os dados do Alerta Rio.",
+
             detalhe:
               erro instanceof Error
                 ? erro.message
@@ -1221,16 +1279,20 @@ export default {
     // ROTA NÃO ENCONTRADA
     // ============================================================
 
-    return corsResponse(
-      json(
-        {
-          sucesso: false,
-          erro: "Rota não encontrada.",
-          rota: url.pathname,
-          metodo: request.method
-        },
-        404
-      )
+    return json(
+      {
+        sucesso: false,
+
+        erro:
+          "Rota não encontrada.",
+
+        rota:
+          url.pathname,
+
+        metodo:
+          request.method
+      },
+      404
     );
 
   }
